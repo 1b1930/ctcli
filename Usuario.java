@@ -13,4 +13,12 @@ public class Usuario {
         this.nivelatv = nivelatv;
 
     }
+
+    void salvar() {}
+
+    void excluir() {}
+
+    void alterarDados() {}
+
+    
 }
