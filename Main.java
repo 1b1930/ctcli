@@ -5,8 +5,10 @@ public class Main {
         // TODO: Criar um .csv pessoal para cada usuário com os alimentos consumidos? Nem sei como faz isso
         System.out.println("fucktest");
         File csv = new File("/mnt/hdd/code/test1.csv");
-        // Criar instância da classe ArquivoOps
+
+        // Cria instância da classe ArquivoOps
         ArquivoOps arquivoOps = new ArquivoOps();
+        
         arquivoOps.lerCsv(csv);
 
         InterfaceCLI intf = new InterfaceCLI();
