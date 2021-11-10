@@ -1,28 +1,33 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import java.io.PrintWriter;
+
 
 // Essa classe contém todos os métodos que fazem operações com arquivos
 public class ArquivoOps {
 
-    public String converterParaCsv(String[] dado) {
-        return Stream.of(dado)
-            .map(this::escaparCaracteresEspeciais)
-            .collect(Collectors.joining(","));
-    }
-
-    public String escaparCaracteresEspeciais(String dado) {
-        String dadoEscapado = dado.replaceAll("\\R", " ");
-        if (dado.contains(",") || dado.contains("\"") || dado.contains("'")) {
-            dado = dado.replace("\"", "\"\"");
-            dadoEscapado = "\"" + dado + "\"";
+    /* TODO: Obviamente modificar essa função pra ser dinâmica e atender as necessidades do programa. */
+    void escreverCsv() {
+        PrintWriter pw = null;
+        try {
+            pw = new PrintWriter(new File("/mnt/hdd/code/DadosUsuario.csv"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
-        return dadoEscapado;
+        StringBuilder builder = new StringBuilder();
+        // A última coluna, DataAtt, refere-se a última vez que os dados foram atualizados.  
+        String nomeColunas = "UsrId,Nome,Peso,Altura,NivelAtividade,DataAtt";
+        // No need give the headers Like: id, Name on builder.append
+        builder.append(nomeColunas +"\n");
+        builder.append("1"+",");
+        builder.append("Daniel");
+        builder.append('\n');
+        pw.write(builder.toString());
+        pw.close();
+        System.out.println("CSV escrito.");
     }
-
-
 
     void lerCsv(File caminhoCsv) throws FileNotFoundException {
         // OK, esse funciona direito. Lê todas as linhas e colunas do arquivo csv

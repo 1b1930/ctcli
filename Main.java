@@ -8,8 +8,9 @@ public class Main {
 
         // Cria instância da classe ArquivoOps
         ArquivoOps arquivoOps = new ArquivoOps();
-        
+
         arquivoOps.lerCsv(csv);
+        arquivoOps.escreverCsv();
 
         InterfaceCLI intf = new InterfaceCLI();
         intf.mostrar();
