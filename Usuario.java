@@ -18,8 +18,15 @@ public class Usuario {
     }
 
     void criarUsuario() {
-        
-        System.out.println("Usuário criado");
+        String[] fileira = { nome, peso, altura, nivelatv };
+        ArquivoOps arquivoOps = new ArquivoOps();
+        arquivoOps.acrescentarAoCSV(Main.CSVUSUARIO, fileira);
+        if(Usuario.usuarioExiste(nome)) {
+            System.out.println("Usuário criado");
+
+        } else {
+            System.out.println("Oops, usuário não criado.");
+        }
 
     }
 
@@ -38,6 +45,15 @@ public class Usuario {
             }
         }
         return false;
+    }
+
+    static void printUsuarios() {
+        ArquivoOps arquivoOps = new ArquivoOps();
+        List<String> lista = arquivoOps.lerDadosCSV(Main.CSVUSUARIO);
+        // Printa a lista que só tem os elementos (sem cabeçalho)
+         for (int i=0; i<lista.size(); i++) {
+             System.out.println(lista.get(i));
+        }
     }
     
 }
