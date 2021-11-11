@@ -50,11 +50,12 @@ public class ArquivoOps {
     }
 }
 
+    // Lê os dados do arquivo csv especificado como parâmetro
+    // Remove o cabeçalho e retorna uma lista com os dados
     List<String> lerDadosCSV(String arq) {
 
         List<List<String>> records = new ArrayList<List<String>>();
         List<String> recordsNoHeader = new ArrayList<String>();
-
 
         try {
             CSVReader csvReader = new CSVReader(new FileReader(arq));
@@ -67,9 +68,9 @@ public class ArquivoOps {
 
             // Método mais flexível que o outro acima
             // Pula o cabeçalho.
-            for (int i=1; i<records.size(); i++) {
-                System.out.println(records.get(i));
-            }
+            // for (int i=1; i<records.size(); i++) {
+            //     System.out.println(records.get(i));
+            // }
             
             // Cria uma lista sem o cabeçalho
             for (int i=1; i<records.size(); i++) {
@@ -77,9 +78,9 @@ public class ArquivoOps {
             }
 
             // Printa a lista que só tem os elementos (sem cabeçalho)
-            for (int i=0; i<recordsNoHeader.size(); i++) {
-                System.out.println(recordsNoHeader.get(i));
-            }
+            // for (int i=0; i<recordsNoHeader.size(); i++) {
+            //     System.out.println(recordsNoHeader.get(i));
+            // }
             
             return recordsNoHeader;
 
@@ -88,7 +89,10 @@ public class ArquivoOps {
             }
         return recordsNoHeader;
 }
-
+    // É chamado se o arquivo CSV não existe
+    // Cria um CSV sem nenhum dado exceto o cabeçalho
+    // Qual CSV irá criar e qual cabeçalho irá usar depende no parâmetro passado
+    // Existem duas possibilidades: CSV c/ dados do usuário e CSV c/ os alimentos
     void criarCSVeMontarCabecalho(String caminhoArq) {
 
         // Cria objeto da classe File usando como parâmetro o caminho do arquivo csv
@@ -101,6 +105,7 @@ public class ArquivoOps {
             CSVWriter writer = new CSVWriter(outputfile);
 
             // Pegando a data atual para poder adicionar ao csv
+            // TODO: esse snipet não é usado
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
             LocalDateTime horaAgora = LocalDateTime.now();  
             System.out.println(dtf.format(horaAgora));
