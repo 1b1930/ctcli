@@ -7,13 +7,14 @@ public class CLIUtil {
         String str = scanner.nextLine();
         str.replace("\n", "");
         if (!str.trim().isEmpty() && str != "") {
-            System.out.println("string isn't null or only white spaces!");
-            scanner.close();
-            return str;
+            // System.out.println("string isn't null or only white spaces!");
+            // scanner.close();
+            // return str;
         } else {
             System.out.println("Invalid command.");
+            CLIUtil.getUserInput();
         }
-        scanner.close();
+        // scanner.close();
         return str;
 
 
