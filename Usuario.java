@@ -20,5 +20,9 @@ public class Usuario {
 
     void alterarDados() {}
 
+    boolean usuarioExiste(String nome) {
+        // ArquivoOps.lerDadosCSV(Main.CSVUSUARIO);
+        return true;
+    }
     
 }

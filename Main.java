@@ -1,23 +1,25 @@
 
 import java.io.FileNotFoundException;
 public class Main {
+    public static final String CSVUSUARIO = "/mnt/hdd/code/DadosUsuario.csv";
+    public static final String CSVALIMENTOS = "/mnt/hdd/code/DadosAlimentos.csv";
     public static void main(String[] args) throws FileNotFoundException {
         // TODO: Criar um .csv pessoal para cada usuário com os alimentos consumidos? Nem sei como faz isso
-        System.out.println("fucktest");
-//        File csv = new File("/mnt/hdd/code/DadosUsuario.csv");
-        final String CAMINHOARQUIVO = "/mnt/hdd/code/DadosUsuario.csv";
 
         // Cria instância da classe ArquivoOps
         ArquivoOps arquivoOps = new ArquivoOps();
+        String[] fileira1 = {"TEST7", "50", "51", "1"};
 
 //        arquivoOps.lerCsv(csv);
-        arquivoOps.escreverDadosLinhaPorLinha(CAMINHOARQUIVO, "Daniel", "190", "170", "1" );;
+        arquivoOps.escreverDadosLinhaPorLinha(CSVUSUARIO, "Daniel", "190", "170", "1" );;
         arquivoOps.lerDadosLinhaPorLinha("/mnt/hdd/code/DadosUsuario.csv");
-
-//        InterfaceCLI intf = new InterfaceCLI();
-//        intf.mostrar();
+        arquivoOps.acrescentarAoCSV(CSVUSUARIO, fileira1);
 
 
+        ArquivoOps.checarPrimeiraExecucao();
+
+        InterfaceCLI intf = new InterfaceCLI();
+        intf.mostrar();
         
     }
 }

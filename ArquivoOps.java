@@ -1,16 +1,16 @@
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Scanner;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 
-import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 // Essa classe contém todos os métodos que fazem operações com arquivos
@@ -19,7 +19,7 @@ public class ArquivoOps {
     public void lerDadosLinhaPorLinha(String arq) {
  
     try {
- 
+
         // Criar um objeto da classe FileReader
         // com o arquivo .csv como parâmetro
         FileReader fileReader = new FileReader(arq);
@@ -40,9 +40,6 @@ public class ArquivoOps {
                 } else {System.out.print(cell + "\t");}
                 
             }
-//            for (String cell : proximaEntrada) {
-//                System.out.print(cell + "\t");
-//            }
             System.out.println();
             it++;
         }
@@ -52,6 +49,45 @@ public class ArquivoOps {
     }
 }
 
+    // TODO: retirar essa classe do modo estático
+    List<String> lerDadosCSV(String arq) {
+
+        List<List<String>> records = new ArrayList<List<String>>();
+        List<String> recordsNoHeader = new ArrayList<String>();
+
+
+        try {
+            CSVReader csvReader = new CSVReader(new FileReader(arq));
+            String[] values = null;
+            while ((values = csvReader.readNext()) != null) {
+                records.add(Arrays.asList(values));
+            }
+            // Método bonito pra printar todos os elementos de uma lista
+            // records.forEach(System.out::println);
+
+            // Método mais flexível que o outro acima
+            // Pula o cabeçalho.
+            for (int i=1; i<records.size(); i++) {
+                System.out.println(records.get(i));
+            }
+            
+            // Cria uma lista sem o cabeçalho
+            for (int i=1; i<records.size(); i++) {
+                recordsNoHeader.add(records.get(i).toString());
+            }
+
+            // Printa a lista que só tem os elementos (sem cabeçalho)
+            for (int i=0; i<recordsNoHeader.size(); i++) {
+                System.out.println(recordsNoHeader.get(i));
+            }
+            
+            return recordsNoHeader;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            }
+        return recordsNoHeader;
+}
 
     void escreverDadosLinhaPorLinha(String caminhoArq, String nome, String peso, String altura, String nivelatv)
     {
@@ -74,20 +110,32 @@ public class ArquivoOps {
             String[] header = { "Nome", "Peso", "Altura", "Nível de Atividade", "Última Atualização" };
             writer.writeNext(header);
     
-            // adicionando dados ao csv
-            // TODO: Descobrir como editar dados e adicionar dados sem reescrever todo o arquivo
-            String[] data1 = { nome, peso, altura, nivelatv, dtf.format(horaAgora) };
-            writer.writeNext(data1);
-//            String[] data2 = { "Suraj", "10", "630" };
-//            writer.writeNext(data2);
-    
             // closing writer connection
             writer.close();
         }
         catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+
+
+
+    static boolean checarPrimeiraExecucao() {
+        File arqTemp = new File(Main.CSVUSUARIO);
+        boolean exists = arqTemp.exists();
+        //System.out.println("file exists:" + exists);
+        return !exists;
+    }
+
+    // Acrescenta dados ao final do arquivo csv
+    void acrescentarAoCSV(String arq, String[] fileira) {
+        try {
+            CSVWriter writer = new CSVWriter(new FileWriter(arq, true));
+            writer.writeNext(fileira);
+            writer.close();
+
+        } catch (IOException e) {e.printStackTrace();}
     }
 
 }
