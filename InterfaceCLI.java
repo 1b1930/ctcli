@@ -1,4 +1,6 @@
 public class InterfaceCLI {
+
+    MenuPrincipal mp = new MenuPrincipal();
     
     void mostrar() {
         // Caracteres especiais ANSI para fazer o texto ficar em negrito
@@ -12,7 +14,6 @@ public class InterfaceCLI {
         " excederem o valor do TDEE, você irá ganhar peso.");
         
         // Criando instância da subclasse MenuPrincipal
-        MenuPrincipal mp = new MenuPrincipal();
         // executando o método sobrescrito mostrar()
         mp.mostrar();
     }
@@ -28,6 +29,8 @@ public class InterfaceCLI {
                 System.out.println("addusuario [nome] [peso (kg)] [altura (cm)]");
                 System.out.println("remusuario [nome]");
                 System.out.println("editusuario [nome] [propriedade (peso, altura, nivelatv)]");
+                entradaUsuario();
+                
                 
 
             } else {
@@ -40,13 +43,68 @@ public class InterfaceCLI {
 
                 System.out.println("");
                 System.out.println("logaralimento [nome] [quantidade consumida (g)]");
-                // CLIUtil.getUserInput();
+                entradaUsuario();
 
             }
 
         }
 
+        void entradaUsuario() {
+            String[] cmd = CLIUtil.getUserInput().split(" ");
+            String cmdPrinc = cmd[0];
+            switch(cmdPrinc) {
+                case "addusuario":
+                    if(cmd.length != 4) {
+                        System.out.println("Quantidade de argumentos inválida. Tente novamente.");
+                        entradaUsuario();
+                        break;
+                    }
+                    System.out.println("Argumento aceito.");
+                    if(Usuario.usuarioExiste(cmd[1])) {
+                        System.out.println("O usuário já existe no banco de dados. Tente novamente.");
+                        try {Thread.sleep(500);} catch(InterruptedException e) {e.printStackTrace();};
+                        mp.mostrar();
+                    }
+                    break;
+
+                case "remusuario":
+                    if(cmd.length != 1) {
+                        System.out.println("Quantidade de argumentos inválida. Tente novamente.");
+                        entradaUsuario();
+                        break;
+                    }
+                    System.out.println("Argumento aceito");
+                    break;
+                
+                case "editusuario":
+                    if(cmd.length < 2) {
+                        System.out.println("Quantidade de argumentos insuficiente. Tente novamente.");
+                        entradaUsuario();
+                        break;
+                    } else if(cmd.length > 2) {
+                        System.out.println("Quantidade de argumentos excedida para esse comando. Tente novamente");
+                        entradaUsuario();
+                        break;
+                    }
+                    System.out.println("Argumento aceito.");
+                    break;
+                
+                default:
+                    System.out.println("Argumento inválido.");
+                    entradaUsuario();
+                    break;
+            }
+
+            for(int i=0;i<cmd.length; i++) {
+                // System.out.println(cmd.length);
+                System.out.println(cmd[i]);
+            }
+        }
+
+
     }
+
+
 
 
 

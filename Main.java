@@ -4,19 +4,28 @@ public class Main {
     public static final String CSVUSUARIO = "/mnt/hdd/code/DadosUsuario.csv";
     public static final String CSVALIMENTOS = "/mnt/hdd/code/DadosAlimentos.csv";
     public static void main(String[] args) throws FileNotFoundException {
-        // TODO: Criar um .csv pessoal para cada usuário com os alimentos consumidos? Nem sei como faz isso
+
 
         // Cria instância da classe ArquivoOps
-        ArquivoOps arquivoOps = new ArquivoOps();
-        String[] fileira1 = {"TEST7", "50", "51", "1"};
+        //ArquivoOps arquivoOps = new ArquivoOps();
+        // String[] fileira1 = {"TEST7", "50", "51", "1", "30/12/1990 55:33"};
 
 //        arquivoOps.lerCsv(csv);
-        arquivoOps.escreverDadosLinhaPorLinha(CSVUSUARIO, "Daniel", "190", "170", "1" );;
-        arquivoOps.lerDadosLinhaPorLinha("/mnt/hdd/code/DadosUsuario.csv");
-        arquivoOps.acrescentarAoCSV(CSVUSUARIO, fileira1);
+        //arquivoOps.criarCSVeMontarCabecalho(CSVUSUARIO);
+
+        // arquivoOps.lerDadosLinhaPorLinha("/mnt/hdd/code/DadosUsuario.csv");
+        //arquivoOps.acrescentarAoCSV(CSVUSUARIO, fileira1);
+        //arquivoOps.lerDadosLinhaPorLinha(CSVUSUARIO);
+
+        Usuario usuario = new Usuario("Daniel", "90", "10", "1");
+        if (usuario.usuarioExiste("TEST7")) {
+            System.out.println("funciona");
+        } else {
+            System.out.println("n funciona");
+        }
 
 
-        ArquivoOps.checarPrimeiraExecucao();
+        // ArquivoOps.checarPrimeiraExecucao();
 
         InterfaceCLI intf = new InterfaceCLI();
         intf.mostrar();
