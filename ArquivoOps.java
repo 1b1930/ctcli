@@ -16,6 +16,7 @@ import java.util.List;
 // Essa classe contém todos os métodos que fazem operações com arquivos
 public class ArquivoOps {
 
+    // TODO: Esse método deve ser movido pra Usuario.java e Alimento.java
     public void lerDadosLinhaPorLinha(String arq) {
  
     try {
@@ -49,7 +50,6 @@ public class ArquivoOps {
     }
 }
 
-    // TODO: retirar essa classe do modo estático
     List<String> lerDadosCSV(String arq) {
 
         List<List<String>> records = new ArrayList<List<String>>();
@@ -89,8 +89,7 @@ public class ArquivoOps {
         return recordsNoHeader;
 }
 
-    void escreverDadosLinhaPorLinha(String caminhoArq, String nome, String peso, String altura, String nivelatv)
-    {
+    void criarCSVeMontarCabecalho(String caminhoArq) {
 
         // Cria objeto da classe File usando como parâmetro o caminho do arquivo csv
         File file = new File(caminhoArq);
@@ -105,11 +104,15 @@ public class ArquivoOps {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
             LocalDateTime horaAgora = LocalDateTime.now();  
             System.out.println(dtf.format(horaAgora));
-    
-            // adicionando cabeçalho ao csv
-            String[] header = { "Nome", "Peso", "Altura", "Nível de Atividade", "Última Atualização" };
-            writer.writeNext(header);
-    
+            
+            if (caminhoArq.contains("Alimentos")) {
+                String[] header = {"Nome", "KCAL/100g"};
+                writer.writeNext(header);
+            } else {
+                String[] header = { "Nome", "Peso", "Altura", "Nível de Atividade", "Última Atualização" };
+                writer.writeNext(header);
+            }
+
             // closing writer connection
             writer.close();
         }
