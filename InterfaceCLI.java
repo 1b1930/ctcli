@@ -130,6 +130,10 @@ public class InterfaceCLI {
                     }
                     System.out.println("Argumento aceito.");
                     break;
+
+                case "printusuarios":
+                    Usuario.printUsuarios();
+                    break;
                 
                 default:
                     System.out.println("Argumento inválido.");
@@ -145,15 +149,6 @@ public class InterfaceCLI {
 
 
     }
-
-
-
-
-
-
-
-
-
 
     
 }
