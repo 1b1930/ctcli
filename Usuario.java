@@ -1,16 +1,25 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Usuario {
     
     String nome;
-    double peso;
-    int altura;
-    int nivelatv;
+    String peso;
+    String altura;
+    String nivelatv;
 
-    Usuario(String nome, double peso, int altura, int nivelatv) {
+    Usuario(String nome, String peso, String altura, String nivelatv) {
 
         this.nome = nome;
         this.peso = peso;
         this.altura = altura;
         this.nivelatv = nivelatv;
+
+    }
+
+    void criarUsuario() {
+        
+        System.out.println("Usuário criado");
 
     }
 
@@ -20,9 +29,15 @@ public class Usuario {
 
     void alterarDados() {}
 
-    boolean usuarioExiste(String nome) {
-        // ArquivoOps.lerDadosCSV(Main.CSVUSUARIO);
-        return true;
+    static boolean usuarioExiste(String nome) {
+        ArquivoOps arquivoOps = new ArquivoOps();
+        List<String> lista = new ArrayList<String>(arquivoOps.lerDadosCSV(Main.CSVUSUARIO));
+        for(int i=0; i<lista.size(); i++) {
+            if(lista.get(i).contains(nome)) {
+                return true;
+            }
+        }
+        return false;
     }
     
 }
