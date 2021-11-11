@@ -53,15 +53,19 @@ public class ArquivoOps {
     // Lê os dados do arquivo csv especificado como parâmetro
     // Remove o cabeçalho e retorna uma lista com os dados
     List<String> lerDadosCSV(String arq) {
-
+        
+        // Cria uma lista vazia que irá armazenar todos os dados do arquivo csv
         List<List<String>> records = new ArrayList<List<String>>();
+        // Cria uma lista vazia que irá armazenar tudo menos o cabeçalho
         List<String> recordsNoHeader = new ArrayList<String>();
 
         try {
+            // Criando objeto para ler o arquivo CSV
             CSVReader csvReader = new CSVReader(new FileReader(arq));
-            String[] values = null;
-            while ((values = csvReader.readNext()) != null) {
-                records.add(Arrays.asList(values));
+            String[] val = null;
+            // Enquanto uma linha não for nula, leia e adicione ela a lista
+            while ((val = csvReader.readNext()) != null) {
+                records.add(Arrays.asList(val));
             }
             // Método bonito pra printar todos os elementos de uma lista
             // records.forEach(System.out::println);
@@ -110,6 +114,7 @@ public class ArquivoOps {
             LocalDateTime horaAgora = LocalDateTime.now();  
             System.out.println(dtf.format(horaAgora));
             
+            // Decide se tem que escrever o cabeçalho de alimentos ou do usuário
             if (caminhoArq.contains("Alimentos")) {
                 String[] header = {"Nome", "KCAL/100g"};
                 writer.writeNext(header);
@@ -128,7 +133,7 @@ public class ArquivoOps {
 
 
 
-
+    // Checa se o arquivo CSV existe ou não.
     static boolean checarPrimeiraExecucao() {
         File arqTemp = new File(Main.CSVUSUARIO);
         boolean exists = arqTemp.exists();
