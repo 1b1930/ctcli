@@ -1,7 +1,12 @@
 public class InterfaceCLI {
 
-    MenuPrincipal mp = new MenuPrincipal();
-    
+    final String NEGRITO = "\033[0;1m";
+    final String ESTL = "\t\033[0;1m*\033[0;0m ";
+    final String NORMAL = "\033[0;0m";
+    final String SUBL = "\033[0;4m";
+    final String BIGL = "⊢ ";
+    final String SETA = "❯ ";
+
     void mostrar() {
         // Caracteres especiais ANSI para fazer o texto ficar em negrito
         System.out.println("\033[0;1m");
@@ -12,10 +17,14 @@ public class InterfaceCLI {
         " " + "(sigla em inglês: TDEE)");
         System.out.println("Isso ajuda você a controlar seu peso, já que se as calorias consumidas por dia" +
         " excederem o valor do TDEE, você irá ganhar peso.");
+
+        System.out.println("\nDigite \"ajuda\" para obter todos os comandos disponíveis");
+        // CLIUtil.waitNext();
         
         // Criando instância da subclasse MenuPrincipal
         // executando o método sobrescrito mostrar()
-        mp.mostrar();
+        MenuPrincipal mp = new MenuPrincipal();
+        mp.entradaUsuario();
     }
 
     // Printa a explicação sobre o nível de atividade física
@@ -44,44 +53,63 @@ public class InterfaceCLI {
  
     }
 
-    class MenuPrincipal {
+    public void mostrarComandos() {
+        CLIUtil.clear();
+        // System.out.println("\t\t"+NEGRITO+"Comandos"+NORMAL+"\n");       
+        // Checa se é a primeira vez que o programa está sendo executado
+        System.out.println("\t\t"+NEGRITO+"Comandos de Usuário"+NORMAL+"\n");
+        System.out.println(SETA+"Manipular usuários na base de dados");
+        System.out.println(ESTL+"addusuario [nome] [peso (kg)] [altura (cm)]");
+        // System.out.println("remusuario [nome]");
+        System.out.println(ESTL+"editusuario [nome] [propriedade (peso, altura, nivelatv)]");
+        System.out.println("\n"+SETA+"Verificar estatísticas de usuário");
+        System.out.println(ESTL+"checartdee");
+        System.out.println("\n"+SETA+"Manipular alimentos na base de dados:");
+        // TODO: Decidi juntar logaralimento e addalimento num só.
+        // O algoritmo irá checar se o alimento existe, se não, irá criar uma entrada
+        System.out.println(ESTL+"logaralimento [nome] [kcal/100g]");
+        System.out.println(ESTL+"remalimento [nome]");
+        System.out.println(ESTL+"editalimento [nome] [propriedade (kcal/100g)]");
+        System.out.println("\nDigite \"adc\" para obter comandos adicionais");
+
+        MenuPrincipal mp = new MenuPrincipal();
+        mp.entradaUsuario();
+
+    }
+    
+
+    void mostrarComandosAdicionais() {
+
+        System.out.println("\t\t"+NEGRITO+"Comandos adicionais\n");
+        System.out.println(ESTL+"clear - Limpar saída do terminal");
+        System.out.println(ESTL+"limparcsv - Limpar arquivo CSV, deletará todos os dados.");
+
+        System.out.println(ESTL+"printusuarios - Printa todos os usuários");
+        System.out.println(ESTL+"printdadosusuario - Printa os dados de um usuário");
+
+        System.out.println(ESTL+"criarcabecalho - Só pode ser usado se o .csv estiver limpo, cria um cabeçalho.");
+        MenuPrincipal mp = new MenuPrincipal();
+        mp.entradaUsuario();
+
+    }
+
+    class MenuPrincipal extends InterfaceCLI {
         // polimorfismo, sobrescrita do método mostrar();
         void mostrar() {
             // Caractere especial ANSI que faz o oposto do outro acima
-            System.out.println("\033[0;0m");
-            System.out.println("Comandos disponíveis:");
-            // Checa se é a primeira vez que o programa está sendo executado
-            if(ArquivoOps.checarPrimeiraExecucao()) {
-                System.out.println("Comandos de Usuário:");
-                System.out.println("addusuario [nome] [peso (kg)] [altura (cm)]");
-                // System.out.println("remusuario [nome]");
-                System.out.println("editusuario [nome] [propriedade (peso, altura, nivelatv)]");
-                entradaUsuario();
-                
-                
-
-            } else {
-                System.out.println("\n- Verificar estatísticas de usuário");
-                System.out.println("\tchecartdee");
-                System.out.println("\n- Adicionar novos alimentos na base de dados:");
-                System.out.println("\taddalimento [nome] [kcal/100g]");
-                System.out.println("\tremalimento [nome]");
-                System.out.println("\teditalimento [nome] [propriedade (kcal/100g)]");
-
-                System.out.println("");
-                System.out.println("logaralimento [nome] [quantidade consumida (g)]");
-                entradaUsuario();
-
-            }
-
+            // System.out.println("\033[0;0m");
+            // mostrarComandos();
         }
 
         // Método que cuida da entrada e sanitização de dados do usuário
         void entradaUsuario() {
             // TODO: Mais checagem de erros
             // ex: peso, altura, nivelatv só devem conter números
+            System.out.println();
             String[] cmd = CLIUtil.getUserInput().split(" ");
             String cmdPrinc = cmd[0];
+            
+            // Comandos que o usuário pode usar
             switch(cmdPrinc) {
                 case "addusuario":
                     // Checa se a quantidade de argumentos dados pelo usuário está correta
@@ -96,17 +124,19 @@ public class InterfaceCLI {
                     if(Usuario.usuarioExiste(cmd[1])) {
                         // Char especial ANSI pra limpar a tela do console
                         // TODO: Deve ter uma maneira melhor de fazer isso.
-                        System.out.print("\033[H\033[2J");
+                        CLIUtil.clear();
                         System.out.println("O usuário já existe no banco de dados. Tente novamente.");
                         try {Thread.sleep(3000);} catch(InterruptedException e) {e.printStackTrace();};
-                        mp.mostrar();
+                        mostrar();
                     }
 
                     expNivelAtv();
                     String resp = getNivelAtv();
                     Usuario usuario = new Usuario(cmd[1],cmd[2],cmd[3],resp);
-                    System.out.println(usuario.nome + usuario.peso + usuario.altura);
+                    // DEBUG
+                    // System.out.println(usuario.nome + usuario.peso + usuario.altura);
                     usuario.criarUsuario();
+                    entradaUsuario();
                     break;
 
                 case "remusuario":
@@ -133,8 +163,51 @@ public class InterfaceCLI {
 
                 case "printusuarios":
                     Usuario.printUsuarios();
+                    entradaUsuario();
                     break;
                 
+                // TODO: selecionar entre os dois CSVs
+                case "criarcabecalho":
+                    ArquivoOps arq = new ArquivoOps();
+                    arq.criarCSVeMontarCabecalho(Main.CSVUSUARIO);
+                    entradaUsuario();
+                    break;
+                // TODO: selecionar entre os dois CSVs
+                case "limparcsv":
+                    ArquivoOps.limparCSV();
+                    System.out.println("CSV limpo.");
+                    entradaUsuario();
+                    break;
+
+                case "sair":
+                    // System.out.println("Saindo...");
+                    CLIUtil.clear();
+                    System.exit(0);
+
+                case "clear":
+                    CLIUtil.clear();
+                    entradaUsuario();
+                    break;
+                    
+                case "ajuda":
+                    mostrarComandos();
+                    entradaUsuario();    
+                
+                case "adc":
+                    mostrarComandosAdicionais();
+                    entradaUsuario();
+
+                case "printdadosusuario":
+                    if(cmd.length != 2) {
+                        System.out.println("Argumento inválido.");
+                        entradaUsuario();
+                    } else {
+                        // TODO: Retirar println de getDadosUsuario, botar ele aqui, mas antes checar pra ver se o valor retornado pelo método não é null
+                        Usuario.getDadosUsuario(cmd[1]);
+                        entradaUsuario();
+                    }
+                    entradaUsuario();
+
                 default:
                     System.out.println("Argumento inválido.");
                     entradaUsuario();
@@ -149,6 +222,7 @@ public class InterfaceCLI {
 
 
     }
+}
 
     
-}
+
