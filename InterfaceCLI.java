@@ -1,3 +1,4 @@
+
 public class InterfaceCLI {
 
     final String NEGRITO = "\033[0;1m";
@@ -111,7 +112,11 @@ public class InterfaceCLI {
             // ex: peso, altura, nivelatv só devem conter números
             System.out.println();
             String[] cmd = new String[10];
-            String cmdStr = CLIUtil.getUserInput();
+            String cmdStr = "";
+            while(cmdStr.isEmpty()) {
+                cmdStr = CLIUtil.getUserInput();
+            }
+
             // Interpreta corretamente o comando se só tiver um argumento
             try {
                 // System.out.println(cmdStr);
@@ -123,6 +128,7 @@ public class InterfaceCLI {
                 System.out.println(cmdStr);
 
             }
+
             String cmdPrinc = cmd[0];
             
             // Comandos que o usuário pode usar
@@ -176,17 +182,27 @@ public class InterfaceCLI {
                     break;
                 
                 case "editusuario":
-                    if(cmd.length < 2) {
+                    if(cmd.length < 4) {
                         System.out.println("Quantidade de argumentos insuficiente. Tente novamente.");
                         entradaUsuario();
                         break;
-                    } else if(cmd.length > 2) {
+                    } else if(cmd.length > 4) {
                         System.out.println("Quantidade de argumentos excedida para esse comando. Tente novamente");
                         entradaUsuario();
                         break;
+                    } 
+                    // System.out.println("+"+cmd[2]+"+");
+                    if(!(cmd[2].matches("peso") || cmd[2].matches("altura") || cmd[2].matches("nome") || cmd[2].matches("nivelatv"))) {
+                        System.out.println("Propriedade inválida.");
+                        System.out.println("Comando: editusuario [nome] [propriedade (peso, altura, nivelatv)] [valor]");
+                        entradaUsuario();
                     }
-                    // PLACEHOLDER
-                    System.out.println("Argumento aceito.");
+
+                    Usuario u2 = new Usuario();
+                    u2.alterarDados(cmd[1], cmd[2], cmd[3]);
+                    System.out.println("Usuário editado com sucesso.");
+                    
+                    entradaUsuario();
                     break;
                 
                 case "printusuarios":
@@ -237,40 +253,16 @@ public class InterfaceCLI {
                         System.out.println("Argumentos inválidos/insuficientes.");
                         entradaUsuario();
                     } else {
-                        String[] dados = Usuario.getDadosUsuario(cmd[1]);
-                        if(dados == null) {
-                            entradaUsuario();
-                        } else {
-                            System.out.println("Nome: "+dados[0]);
-                            System.out.println("Peso: "+dados[1]+"kg");
-                            System.out.println("Altura: "+dados[2]+"cm");
-                            switch(dados[3]) {
-                                case "1":
-                                System.out.println("Nível de Atividade: Sedentário");
-                                break;
-                                case "2":
-                                System.out.println("Nível de Atividade: Levemente Ativo");
-                                break;
-                                case "3":
-                                System.out.println("Nível de Atividade: Moderadamente Ativo");
-                                break;
-                                case "4":
-                                System.out.println("Nível de Atividade: Muito Ativo");
-                                break;
-                                case "5":
-                                System.out.println("Nível de Atividade: Atleta");
-                                break;
-                            }
-                        }
-
+                        Usuario.printDadosUsuario(cmd[1]);
                         entradaUsuario();
                     }
+                        entradaUsuario();
+
+                case default:
+                    System.out.println("Comando inválido.");
                     entradaUsuario();
 
-                default:
-                    System.out.println("Argumento inválido.");
-                    entradaUsuario();
-                    break;
+
             }
 
             // for(int i=0;i<cmd.length; i++) {
