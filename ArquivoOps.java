@@ -77,6 +77,7 @@ public class ArquivoOps {
     // Cria um CSV sem nenhum dado exceto o cabeçalho
     // Qual CSV irá criar e qual cabeçalho irá usar depende no parâmetro passado
     // Existem duas possibilidades: CSV c/ dados do usuário e CSV c/ os alimentos
+    // TODO: Esses comandos de manipular arquivos deviam estar em um try{}
     void criarCSVeMontarCabecalho(String caminhoArq) {
 
         // Cria objeto da classe File usando como parâmetro o caminho do arquivo csv
@@ -89,16 +90,10 @@ public class ArquivoOps {
         
                 // Cria objeto da classe CSVWriter com objeto da classe FileWriter como parâmetro
                 CSVWriter writer = new CSVWriter(outputfile);
-    
-                // Pegando a data atual para poder adicionar ao csv
-                // TODO: esse snipet não é usado
-                //DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
-                //LocalDateTime horaAgora = LocalDateTime.now();  
-                // System.out.println(dtf.format(horaAgora));
                 
                 // Decide se tem que escrever o cabeçalho de alimentos ou do usuário
                 if (caminhoArq.contains("Alimentos")) {
-                    String[] header = {"Nome", "KCAL/100g"};
+                    String[] header = {"Nome", "KCAL/100g", "Data da Adição"};
                     writer.writeNext(header);
                     // TODO: DEBUG print, remover antes de enviar o código
                     System.out.println("header criado");
@@ -107,6 +102,35 @@ public class ArquivoOps {
                     String[] header = { "Nome", "Peso", "Altura", "Nível de Atividade", "Última Atualização" };
                     writer.writeNext(header);
                     // TODO: DEBUG print, remover antes de enviar o código
+                    System.out.println("header criado");
+                }
+                // closing writer connection
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // Mesma coisa do de cima, mas pro CSV pessoal contendo os alimentos consumidos pelo usuário
+    // TODO: Adicionar suporte pra esse método nos comandos limparcsv em InterfaceCLI
+    void criarCSVeMontarCabecalho(String caminhoArq, String uNome) {
+
+        // Cria objeto da classe File usando como parâmetro o caminho do arquivo csv
+        File file = new File(caminhoArq);
+        if (file.length() != 0) {System.out.println("Arquivo não está vazio, abortando..."); System.exit(0);}
+        else {
+            try {
+                // Cria objeto da classe FileWriter com file como parâmetro
+                FileWriter outputfile = new FileWriter(file);
+        
+                // Cria objeto da classe CSVWriter com objeto da classe FileWriter como parâmetro
+                CSVWriter writer = new CSVWriter(outputfile);
+                
+                // Decide se tem que escrever o cabeçalho de alimentos ou do usuário
+                if (caminhoArq.contains(uNome)) {
+                    String[] header = {"Nome", "KCAL", "Data da Adição", "Notas", "Usuário que Consumiu"};
+                    writer.writeNext(header);
                     System.out.println("header criado");
                 }
                 // closing writer connection
