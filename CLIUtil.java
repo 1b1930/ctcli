@@ -1,7 +1,5 @@
 import java.util.Scanner;
 
-import javax.print.event.PrintEvent;
-
 public class CLIUtil {
 
     // Segundo um cara no stackoverflow, scanners usados em múltiplos lugares

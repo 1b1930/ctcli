@@ -141,12 +141,10 @@ public class InterfaceCLI {
                         entradaUsuario();
                         break;
                     }
-                    // System.out.println("Argumento aceito.");
                     // Checa se o usuário existe, se já existe, manda o usuário tentar novamente
                     if(Usuario.usuarioExiste(cmd[1])) {
                         // Char especial ANSI pra limpar a tela do console
                         // TODO: Deve ter uma maneira melhor de fazer isso.
-                        // CLIUtil.clear();
                         System.out.println("O usuário já existe no banco de dados. Tente novamente.");
                         entradaUsuario();
                         try {Thread.sleep(3000);} catch(InterruptedException e) {e.printStackTrace();};
@@ -156,8 +154,6 @@ public class InterfaceCLI {
                     expNivelAtv();
                     String resp = getNivelAtv();
                     Usuario usuario = new Usuario(cmd[1],cmd[2],cmd[3],resp);
-                    // DEBUG
-                    // System.out.println(usuario.nome + usuario.peso + usuario.altura);
                     usuario.criarUsuario();
                     entradaUsuario();
                     break;
@@ -256,24 +252,112 @@ public class InterfaceCLI {
                         Usuario.printDadosUsuario(cmd[1]);
                         entradaUsuario();
                     }
+                    entradaUsuario();
+
+                /* PARTE DOS COMANDOS DE ALIMENTOS */
+                
+                // "loga" o usuário, joga ele no submenu de alimentos para que possa adicionar ou logar alimentos
+                // TODO: talvez seja melhor jogar o usuário num menu intermediário que tenha opção de ir pro menu
+                // de alimentos além de outros menus como o de TDEE e a lista de calorias gastas no dia.
+                case "logar":
+                    if(cmd.length != 2) {
+                        System.out.println("Campo de usuário em branco. Digite um usuário para logar");
+                        System.out.println("Comando: logar [usuario]");
                         entradaUsuario();
+                        break;
+                    } else if(!(Usuario.usuarioExiste(cmd[1]))) {
+                        System.out.println("Usuário não encontrado. Tente novamente");
+                        entradaUsuario();
+                        break;
+                    } else {
+                        entradaAlimentos(cmd[1]);
+                        entradaUsuario();
+                        break;
+
+                    }
 
                 case default:
                     System.out.println("Comando inválido.");
                     entradaUsuario();
 
+            }
+
+        }
+
+        // TODO: Submenu que vai tomar conta dos comandos de alimentos, igual entradaUsuario
+        void entradaAlimentos(String usuario) {
+            System.out.println("werks");
+            // TODO: Mais checagem de erros
+            // ex: peso, altura, nivelatv só devem conter números
+            System.out.println();
+            String[] cmd = new String[10];
+            String cmdStr = "";
+            while(cmdStr.isEmpty()) {
+                cmdStr = CLIUtil.getUserInput();
+            }
+
+            // Interpreta corretamente o comando se só tiver um argumento
+            try {
+                // System.out.println(cmdStr);
+                cmd = cmdStr.split(" ");
+
+            } catch (NullPointerException e) {
+                // System.out.println("caught");
+                cmd[0] = cmdStr;
+                System.out.println(cmdStr);
 
             }
 
-            // for(int i=0;i<cmd.length; i++) {
-            //     // System.out.println(cmd.length);
-            //     System.out.println(cmd[i]);
-            // }
+            String cmdPrinc = cmd[0];
+            // submenu, basicamente a mesma coisa de entradaUsuarios
+
+            // TODO: Codar o resto disso fdp
+            // TODO: função printAlimentos
+            // TODO: função printAlimentosConsumidos
+            // TODO: Função deletar alimentos
+            // TODO: Função editar alimentos
+            switch(cmdPrinc) {
+                // TODO: tentando fazer um bagulho dinâmico que vai permitir ao usuário digitar qualquer alimento, até nomes com espaço
+                // sem nenhum problema
+                case "addalimento":
+                   if(cmd.length < 3) {
+                       System.out.println("Número de argumentos inválido. Tente novamente.");
+                       entradaAlimentos(usuario);
+
+                   }
+                    int c = 0;
+                    for(int i=0;i<cmd.length;i++) {
+                        // se conter somente letras
+                        if(cmd[i].matches("[a-zA-Z]+")) {
+                            System.out.println("match"+c);
+                            c++;
+                        }
+                    }
+                    System.exit(0);
+                    break;
+                
+                // comando de teste pra checar se alimentoExiste() tá funcionando
+                case "ax":
+                    if(Alimento.alimentoExiste("eileen")) {
+                        System.out.println("werks");
+                        System.exit(0);
+                    } else {
+                        System.out.println("dont werk");
+                        System.exit(0);
+                    }
+
+
+                    //else {
+                       
+                //        Alimento ali = new Alimento(cmd[1], cmd[2]);
+                //        ali.adicionarAlimento();
+                //        entradaAlimentos(usuario);
+
+                   }
+                }
+            }
         }
 
-
-    }
-}
 
     
 
