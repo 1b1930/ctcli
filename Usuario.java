@@ -103,12 +103,25 @@ public class Usuario {
 
 
     // Retorna true se o usuário existe, se não, false
+    // Novo método! não aceita mais nomes incompletos, agora o nome do usuário tem que ser exato.
     static boolean usuarioExiste(String nome) {
+        String[] arrt;
+        String element; 
         // ArquivoOps arquivoOps = new ArquivoOps();
         List<String> lista = new ArrayList<String>(arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO)));
         for(int i=0; i<lista.size(); i++) {
             if(lista.get(i).contains(nome)) {
-                return true;
+                // Limpando a string, removendo caracteres inúteis
+                element = lista.get(i).replaceAll("[\\[\\]]", "");
+                // quebrando a string em um array usando , como ponto de quebra
+                arrt = element.split(",");
+                for (int j=0;j<arrt.length;j++) {
+                    if(arrt[j].equals(nome)) {
+                        return true;
+                    }
+                }
+                // System.out.println(lista.get(i).toString());
+                return false;
             }
         }
         return false;
@@ -120,12 +133,6 @@ public class Usuario {
         List<String> lista = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO));
             // Método bonito pra printar todos os elementos de uma lista
             // lista.forEach(System.out::println);
-
-            // Método mais flexível que o outro acima
-            // Pula o cabeçalho.
-            // for (int i=1; i<lista.size(); i++) {
-            //     System.out.println(lista.get(i));
-            // }
 
         // Printa a lista que só tem os elementos (sem cabeçalho)
          for (int i=0; i<lista.size(); i++) {
