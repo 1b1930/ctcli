@@ -7,6 +7,8 @@ public class InterfaceCLI {
     final String BIGL = "⊢ ";
     final String SETA = "❯ ";
 
+    public static final ArquivoOps aq = new ArquivoOps();
+
     void mostrar() {
         // Caracteres especiais ANSI para fazer o texto ficar em negrito
         System.out.println("\033[0;1m");
@@ -44,10 +46,12 @@ public class InterfaceCLI {
             System.out.println("Nível de atividade inválido. Tente novamente.");
             getNivelAtv();
         // também pede pra tentar novamente se a resposta não estiver entre 1 e 4.
-        } else if (Integer.parseInt(resp) < 1 || Integer.parseInt(resp) > 4) {
+        } else if (Integer.parseInt(resp) < 1 || Integer.parseInt(resp) > 5) {
             System.out.println("Nível de atividade inválido. Tente novamente.");
             getNivelAtv();
 
+        } else {
+            return resp;
         }
         return resp;
  
@@ -106,7 +110,19 @@ public class InterfaceCLI {
             // TODO: Mais checagem de erros
             // ex: peso, altura, nivelatv só devem conter números
             System.out.println();
-            String[] cmd = CLIUtil.getUserInput().split(" ");
+            String[] cmd = new String[10];
+            String cmdStr = CLIUtil.getUserInput();
+            // Interpreta corretamente o comando se só tiver um argumento
+            try {
+                // System.out.println(cmdStr);
+                cmd = cmdStr.split(" ");
+
+            } catch (NullPointerException e) {
+                // System.out.println("caught");
+                cmd[0] = cmdStr;
+                System.out.println(cmdStr);
+
+            }
             String cmdPrinc = cmd[0];
             
             // Comandos que o usuário pode usar
@@ -115,17 +131,18 @@ public class InterfaceCLI {
                     // Checa se a quantidade de argumentos dados pelo usuário está correta
                     // Essa descrição vale para todos os ifs diretamente abaixo dos cases
                     if(cmd.length < 4 || cmd.length > 4) {
-                        System.out.println("Quantidade de argumentos maior ou menor do que o esperado. Tente novamente.");
+                        System.out.println("Número de argumentos inválido. Tente novamente.");
                         entradaUsuario();
                         break;
                     }
-                    System.out.println("Argumento aceito.");
+                    // System.out.println("Argumento aceito.");
                     // Checa se o usuário existe, se já existe, manda o usuário tentar novamente
                     if(Usuario.usuarioExiste(cmd[1])) {
                         // Char especial ANSI pra limpar a tela do console
                         // TODO: Deve ter uma maneira melhor de fazer isso.
-                        CLIUtil.clear();
+                        // CLIUtil.clear();
                         System.out.println("O usuário já existe no banco de dados. Tente novamente.");
+                        entradaUsuario();
                         try {Thread.sleep(3000);} catch(InterruptedException e) {e.printStackTrace();};
                         mostrar();
                     }
@@ -140,12 +157,22 @@ public class InterfaceCLI {
                     break;
 
                 case "remusuario":
-                    if(cmd.length != 1) {
+                    if(cmd.length != 2) {
                         System.out.println("Quantidade de argumentos inválida. Tente novamente.");
                         entradaUsuario();
                         break;
                     }
+                    Usuario u = new Usuario();
+                    if(u.removerUsuario(cmd[1])) {
+                        System.out.println("Usuário removido");
+                        entradaUsuario();
+                    } else {
+                        System.out.println("Usuário não removido"+
+                        " pois não foi encontrado ou deu merda em outro lugar.");
+                        entradaUsuario();
+                    }
                     System.out.println("Argumento aceito");
+                    entradaUsuario();
                     break;
                 
                 case "editusuario":
@@ -158,41 +185,46 @@ public class InterfaceCLI {
                         entradaUsuario();
                         break;
                     }
+                    // PLACEHOLDER
                     System.out.println("Argumento aceito.");
                     break;
-
+                
                 case "printusuarios":
                     Usuario.printUsuarios();
                     entradaUsuario();
                     break;
                 
-                // TODO: selecionar entre os dois CSVs
+                // TODO: add suporte pra selecionar entre os dois CSVs
                 case "criarcabecalho":
-                    ArquivoOps arq = new ArquivoOps();
-                    arq.criarCSVeMontarCabecalho(Main.CSVUSUARIO);
+                    aq.criarCSVeMontarCabecalho(Main.CSVUSUARIO);
                     entradaUsuario();
                     break;
-                // TODO: selecionar entre os dois CSVs
+
+                // TODO: add suporte pra selecionar entre os dois CSVs
                 case "limparcsv":
-                    ArquivoOps.limparCSV();
+                    aq.escreverAoCSV(Main.CSVUSUARIO, null);
                     System.out.println("CSV limpo.");
                     entradaUsuario();
                     break;
 
+                // Termina o programa
                 case "sair":
                     // System.out.println("Saindo...");
                     CLIUtil.clear();
                     System.exit(0);
 
+                // Limpa a janela do terminal
                 case "clear":
                     CLIUtil.clear();
                     entradaUsuario();
                     break;
-                    
+                
+                // lista os comandos principais
                 case "ajuda":
                     mostrarComandos();
                     entradaUsuario();    
                 
+                // lista os comandos adicionais
                 case "adc":
                     mostrarComandosAdicionais();
                     entradaUsuario();
@@ -207,14 +239,29 @@ public class InterfaceCLI {
                     } else {
                         String[] dados = Usuario.getDadosUsuario(cmd[1]);
                         if(dados == null) {
-                            entradaUsuario();;
+                            entradaUsuario();
                         } else {
                             System.out.println("Nome: "+dados[0]);
                             System.out.println("Peso: "+dados[1]+"kg");
                             System.out.println("Altura: "+dados[2]+"cm");
+                            switch(dados[3]) {
+                                case "1":
+                                System.out.println("Nível de Atividade: Sedentário");
+                                break;
+                                case "2":
+                                System.out.println("Nível de Atividade: Levemente Ativo");
+                                break;
+                                case "3":
+                                System.out.println("Nível de Atividade: Moderadamente Ativo");
+                                break;
+                                case "4":
+                                System.out.println("Nível de Atividade: Muito Ativo");
+                                break;
+                                case "5":
+                                System.out.println("Nível de Atividade: Atleta");
+                                break;
+                            }
                         }
-                        
-
 
                         entradaUsuario();
                     }
