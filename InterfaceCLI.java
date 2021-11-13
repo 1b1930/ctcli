@@ -196,14 +196,26 @@ public class InterfaceCLI {
                 case "adc":
                     mostrarComandosAdicionais();
                     entradaUsuario();
-
-                case "printdadosusuario":
+                
+                // printdadosusuario - Printar os dados do usuário
+                // abreviado pra debugar mais rápido ;)
+                case "pdu":
+                    // TODO: talvez mover a checagem de existência do usuário pra cá?
                     if(cmd.length != 2) {
-                        System.out.println("Argumento inválido.");
+                        System.out.println("Argumentos inválidos/insuficientes.");
                         entradaUsuario();
                     } else {
-                        // TODO: Retirar println de getDadosUsuario, botar ele aqui, mas antes checar pra ver se o valor retornado pelo método não é null
-                        Usuario.getDadosUsuario(cmd[1]);
+                        String[] dados = Usuario.getDadosUsuario(cmd[1]);
+                        if(dados == null) {
+                            entradaUsuario();;
+                        } else {
+                            System.out.println("Nome: "+dados[0]);
+                            System.out.println("Peso: "+dados[1]+"kg");
+                            System.out.println("Altura: "+dados[2]+"cm");
+                        }
+                        
+
+
                         entradaUsuario();
                     }
                     entradaUsuario();
