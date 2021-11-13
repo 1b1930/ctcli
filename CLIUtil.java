@@ -18,4 +18,16 @@ public class CLIUtil {
 
 
     }
+
+    // Esperar pela próxima nova linha antes de continuar
+    static void waitNext() {
+        Scanner scanner = new Scanner(System.in);
+        scanner.nextLine();
+        // scanner.close();
+    }
+
+    // Limpar saída do terminal
+    static void clear() {
+        System.out.print("\033[H\033[2J");
+    }
 }
