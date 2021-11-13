@@ -51,13 +51,11 @@ public class ArquivoOps {
 }
 
     // Lê os dados do arquivo csv especificado como parâmetro
-    // Remove o cabeçalho e retorna uma lista com os dados
-    List<String> lerDadosCSV(String arq) {
+    List<List<String>> lerDadosCSV(String arq) {
         
         // Cria uma lista vazia que irá armazenar todos os dados do arquivo csv
         List<List<String>> records = new ArrayList<List<String>>();
         // Cria uma lista vazia que irá armazenar tudo menos o cabeçalho
-        List<String> recordsNoHeader = new ArrayList<String>();
 
         try {
             // Criando objeto para ler o arquivo CSV
@@ -67,31 +65,13 @@ public class ArquivoOps {
             while ((val = csvReader.readNext()) != null) {
                 records.add(Arrays.asList(val));
             }
-            // Método bonito pra printar todos os elementos de uma lista
-            // records.forEach(System.out::println);
 
-            // Método mais flexível que o outro acima
-            // Pula o cabeçalho.
-            // for (int i=1; i<records.size(); i++) {
-            //     System.out.println(records.get(i));
-            // }
-            
-            // Cria uma lista sem o cabeçalho
-            for (int i=1; i<records.size(); i++) {
-                recordsNoHeader.add(records.get(i).toString());
-            }
-
-            // Printa a lista que só tem os elementos (sem cabeçalho)
-            // for (int i=0; i<recordsNoHeader.size(); i++) {
-            //     System.out.println(recordsNoHeader.get(i));
-            // }
-            
-            return recordsNoHeader;
+            return records;
 
         } catch (Exception e) {
             e.printStackTrace();
             }
-        return recordsNoHeader;
+        return records;
 }
     // É chamado se o arquivo CSV não existe
     // Cria um CSV sem nenhum dado exceto o cabeçalho
@@ -101,34 +81,45 @@ public class ArquivoOps {
 
         // Cria objeto da classe File usando como parâmetro o caminho do arquivo csv
         File file = new File(caminhoArq);
-        try {
-            // Cria objeto da classe FileWriter com file como parâmetro
-            FileWriter outputfile = new FileWriter(file);
+        if (file.length() != 0) {System.out.println("Arquivo não está vazio, abortando..."); System.exit(0);}
+        else {
+            try {
+                // Cria objeto da classe FileWriter com file como parâmetro
+                FileWriter outputfile = new FileWriter(file);
+        
+                // Cria objeto da classe CSVWriter com objeto da classe FileWriter como parâmetro
+                CSVWriter writer = new CSVWriter(outputfile);
     
-            // Cria objeto da classe CSVWriter com objeto da classe FileWriter como parâmetro
-            CSVWriter writer = new CSVWriter(outputfile);
+                // Pegando a data atual para poder adicionar ao csv
+                // TODO: esse snipet não é usado
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+                LocalDateTime horaAgora = LocalDateTime.now();  
+                // System.out.println(dtf.format(horaAgora));
+                
+                // Decide se tem que escrever o cabeçalho de alimentos ou do usuário
+                if (caminhoArq.contains("Alimentos")) {
+                    String[] header = {"Nome", "KCAL/100g"};
+                    writer.writeNext(header);
+                    // TODO: DEBUG print, remover antes de enviar o código
+                    System.out.println("header criado");
 
-            // Pegando a data atual para poder adicionar ao csv
-            // TODO: esse snipet não é usado
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
-            LocalDateTime horaAgora = LocalDateTime.now();  
-            System.out.println(dtf.format(horaAgora));
-            
-            // Decide se tem que escrever o cabeçalho de alimentos ou do usuário
-            if (caminhoArq.contains("Alimentos")) {
-                String[] header = {"Nome", "KCAL/100g"};
-                writer.writeNext(header);
-            } else {
-                String[] header = { "Nome", "Peso", "Altura", "Nível de Atividade", "Última Atualização" };
-                writer.writeNext(header);
+                } else {
+                    String[] header = { "Nome", "Peso", "Altura", "Nível de Atividade", "Última Atualização" };
+                    writer.writeNext(header);
+                    // TODO: DEBUG print, remover antes de enviar o código
+                    System.out.println("header criado");
+                }
+    
+                // closing writer connection
+                writer.close();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
             }
 
-            // closing writer connection
-            writer.close();
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+
+
     }
 
 
@@ -149,6 +140,38 @@ public class ArquivoOps {
             writer.close();
 
         } catch (IOException e) {e.printStackTrace();}
+    }
+
+    // Deleta tudo, e escreve um String[] array ao CSV
+    void escreverAoCSV(String arq, String[] fileira) {
+        try {
+            CSVWriter writer = new CSVWriter (new FileWriter(arq, false));
+            writer.writeNext(fileira);
+            writer.close();
+        } catch (IOException e) {e.printStackTrace();}
+    }
+
+    // Remove o cabeçalho da lista CSV lida por lerDadosCSV();
+    List<String> listaCSVRemoverHeader(List<List<String>> listaHeader) {
+        List<String> listaNoHeader = new ArrayList<String>();
+
+        for (int i=1; i<listaHeader.size(); i++) {
+            listaNoHeader.add(listaHeader.get(i).toString());
+        }
+
+        return listaNoHeader;
+    }
+
+    // Remove tudo do arquivo CSV
+    static void limparCSV() {
+        ArquivoOps arquivoOps = new ArquivoOps();
+        String[] em = null;
+        arquivoOps.escreverAoCSV(Main.CSVUSUARIO, em);
+        List<String> lista = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO));
+        for (int i=0; i<lista.size(); i++) {
+            System.out.println(lista.get(i));
+
+        }
     }
 
 }
