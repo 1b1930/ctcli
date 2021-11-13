@@ -1,5 +1,7 @@
 import java.util.Scanner;
 
+import javax.print.event.PrintEvent;
+
 public class CLIUtil {
 
     // Segundo um cara no stackoverflow, scanners usados em múltiplos lugares
@@ -10,24 +12,9 @@ public class CLIUtil {
     // Método que cuida de pegar os dados entrados pelo usuário
     static String getUserInput() {
         System.out.print("\033[0;4m>>\033[0;0m ");
-        if(scanner.hasNextLine()) {
-            String str = scanner.nextLine();
-            str.replace("\n", "");
-
-            if (!str.trim().isEmpty() && str != "") {
-
-            } else {
-                System.out.println("Comando inválido.");
-                CLIUtil.getUserInput();
-            }
-            return str;
-
-        }
-        return "aaa";
-
-
-
-
+        String str = scanner.nextLine();
+        str.replace("\n", "");
+        return str.trim();
     }
 
     // Esperar pela próxima nova linha antes de continuar
@@ -39,6 +26,8 @@ public class CLIUtil {
 
     // Limpar saída do terminal
     static void clear() {
-        System.out.print("\033[H\033[2J");
+        // Sempre use println e não print quando usar esse caractere especial
+        // Se usar print(), dá erro depois de um tempo.
+        System.out.println("\033[H\033[2J");
     }
 }
