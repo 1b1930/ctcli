@@ -43,18 +43,66 @@ public class Usuario {
             if(b.get(i).contains(uNome)) {
                 // o +1 é porque o removerFila() lê todo o arquivo, incluindo o cabeçalho
                 // então é necessário pular o cabeçalho, por isso o +1
-                arquivoOps.removerFila(Main.CSVUSUARIO, i+1);
+                arquivoOps.substituirFila(Main.CSVUSUARIO, i+1);
                 return true;
             }
         }
         return false;
     }
 
-    void alterarDados() {
-        
+    // altera um dado de um usuário específico dentro do CSV
+    // Parâmetros: nome do usuário, propriedade a ser alterada, novo valor da propriedade
+    boolean alterarDados(String nome, String prop, String valAlt) {
+        // Pegando a lista de usuários
+        List<String> lista = new ArrayList<String>(arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO)));
+        // Iterando a lista
+        for(int i=0;i<lista.size();i++) {
+            // tenta acha o nome do usuário
+            if(lista.get(i).contains(nome)) {
+                // controla qual propriedade irá ser substituida
+                switch(prop) {
+                    case "peso":
+                        String[] alt = getDadosUsuario(nome);
+                        alt[1] = valAlt;
+                        arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt);
+                        System.out.println("bleh");
+                        return true;
+                    case "nome":
+                        String[] alt2 = getDadosUsuario(nome);
+                        alt2[0] = valAlt;
+                        arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt2);
+                        System.out.println("bleh2");
+                        return true;
+                    
+                    case "altura":
+                        String[] alt3 = getDadosUsuario(nome);
+                        alt3[2] = valAlt;
+                        arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt3);
+                        System.out.println("bleh3");
+                        return true;
+
+                    case "nivelatv":
+                        String[] alt4 = getDadosUsuario(nome);
+                        alt4[2] = valAlt;
+                        arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt4);
+                        System.out.println("bleh4");
+                        return true;
+
+
+                    case default:
+                        System.out.println("lol");
+
+                }
+
+            }
+
+        }
+        return false;
 
     }
 
+
+    // Retorna true se o usuário existe, se não, false
     static boolean usuarioExiste(String nome) {
         // ArquivoOps arquivoOps = new ArquivoOps();
         List<String> lista = new ArrayList<String>(arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO)));
@@ -85,6 +133,7 @@ public class Usuario {
         }
     }
 
+    // Retorna os dados do usuário em um array[]
     static String[] getDadosUsuario(String nome) {
         // inicializações tão dentro do if porque se estivessem fora,
         // e o usuário não existisse, seria perda de tempo iniciar e instanciar tudo isso
@@ -120,6 +169,37 @@ public class Usuario {
         } else {System.out.println("Usuário não existe."); return null;}
         return null;
 
+    }
+
+    // printa os dados do usuário para o stdout
+    static void printDadosUsuario(String nome) {
+            String[] dados = Usuario.getDadosUsuario(nome);
+            if(dados != null) {
+                System.out.println("Nome: "+dados[0]);
+                System.out.println("Peso: "+dados[1]+"kg");
+                System.out.println("Altura: "+dados[2]+"cm");
+                switch(dados[3]) {
+                    case "1":
+                    System.out.println("Nível de Atividade: Sedentário");
+                    break;
+                    case "2":
+                    System.out.println("Nível de Atividade: Levemente Ativo");
+                    break;
+                    case "3":
+                    System.out.println("Nível de Atividade: Moderadamente Ativo");
+                    break;
+                    case "4":
+                    System.out.println("Nível de Atividade: Muito Ativo");
+                    break;
+                    case "5":
+                    System.out.println("Nível de Atividade: Atleta");
+                    break;
+                    case default:
+                    System.out.println("Argumento inválido.");
+                    break;
+            }
+                
+        }
     }
     
 }
