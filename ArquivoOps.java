@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -73,7 +74,7 @@ public class ArquivoOps {
             }
         return records;
 }
-    // É chamado se o arquivo CSV não existe
+    // Só executa se o arquivo CSV não existe
     // Cria um CSV sem nenhum dado exceto o cabeçalho
     // Qual CSV irá criar e qual cabeçalho irá usar depende no parâmetro passado
     // Existem duas possibilidades: CSV c/ dados do usuário e CSV c/ os alimentos
@@ -109,20 +110,13 @@ public class ArquivoOps {
                     // TODO: DEBUG print, remover antes de enviar o código
                     System.out.println("header criado");
                 }
-    
                 // closing writer connection
                 writer.close();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
-
-
     }
-
-
 
     // Checa se o arquivo CSV existe ou não.
     static boolean checarPrimeiraExecucao() {
@@ -143,6 +137,7 @@ public class ArquivoOps {
     }
 
     // Deleta tudo, e escreve um String[] array ao CSV
+    // array pode ser nulo pra limpar o arquivo completamente
     void escreverAoCSV(String arq, String[] fileira) {
         try {
             CSVWriter writer = new CSVWriter (new FileWriter(arq, false));
@@ -162,16 +157,27 @@ public class ArquivoOps {
         return listaNoHeader;
     }
 
-    // Remove tudo do arquivo CSV
-    static void limparCSV() {
-        ArquivoOps arquivoOps = new ArquivoOps();
-        String[] em = null;
-        arquivoOps.escreverAoCSV(Main.CSVUSUARIO, em);
-        List<String> lista = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO));
-        for (int i=0; i<lista.size(); i++) {
-            System.out.println(lista.get(i));
+    void removerFila(String arq, int numFila) {
+        // Caminho do arquivo
+        String arqRem = arq;
+        // Index de numFila começa com 0, não 1.
 
+        try {
+            CSVReader reader2 = new CSVReader(new FileReader(arqRem));
+            // Lê todos os elementos e joga eles numa lista
+            List<String[]> allElements = reader2.readAll();
+            // Remove o elemento na linha de número numFila
+            allElements.remove(numFila);
+            // Cria objeto da classe FileWriter para reescrever todo o arquivo, agora sem a linha
+            FileWriter sw = new FileWriter(arqRem);
+            // Nova instância de CSVWriter, que irá escrever os dados no arquivo
+            CSVWriter writer = new CSVWriter(sw);
+            writer.writeAll(allElements);
+            writer.close();
+        } catch (IOException | CsvException e) {
+            e.printStackTrace();
         }
+
     }
 
 }

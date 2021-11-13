@@ -8,6 +8,8 @@ public class Usuario {
     String altura;
     String nivelatv;
 
+    public static final ArquivoOps arquivoOps = new ArquivoOps();
+
     Usuario(String nome, String peso, String altura, String nivelatv) {
 
         this.nome = nome;
@@ -17,9 +19,13 @@ public class Usuario {
 
     }
 
+    Usuario() {
+        
+    }
+
     void criarUsuario() {
         String[] fileira = { nome, peso, altura, nivelatv };
-        ArquivoOps arquivoOps = new ArquivoOps();
+        // ArquivoOps arquivoOps = new ArquivoOps();
         arquivoOps.acrescentarAoCSV(Main.CSVUSUARIO, fileira);
         if(Usuario.usuarioExiste(nome)) {
             System.out.println("Usuário criado");
@@ -30,16 +36,27 @@ public class Usuario {
 
     }
 
-    void excluirUsuario() {
-
+    // Remove um usuário, se achou o usuário dado como parâmetro no arquivo e removeu, retorna true, se não, false
+    boolean removerUsuario(String uNome) {
+        List<String> b = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO));
+        for(int i=0;i<b.size();i++) {
+            if(b.get(i).contains(uNome)) {
+                // o +1 é porque o removerFila() lê todo o arquivo, incluindo o cabeçalho
+                // então é necessário pular o cabeçalho, por isso o +1
+                arquivoOps.removerFila(Main.CSVUSUARIO, i+1);
+                return true;
+            }
+        }
+        return false;
     }
 
     void alterarDados() {
         
+
     }
 
     static boolean usuarioExiste(String nome) {
-        ArquivoOps arquivoOps = new ArquivoOps();
+        // ArquivoOps arquivoOps = new ArquivoOps();
         List<String> lista = new ArrayList<String>(arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO)));
         for(int i=0; i<lista.size(); i++) {
             if(lista.get(i).contains(nome)) {
@@ -51,7 +68,7 @@ public class Usuario {
 
     // Printa todos os usuários
     static void printUsuarios() {
-        ArquivoOps arquivoOps = new ArquivoOps();
+        // ArquivoOps arquivoOps = new ArquivoOps();
         List<String> lista = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO));
             // Método bonito pra printar todos os elementos de uma lista
             // lista.forEach(System.out::println);
@@ -72,8 +89,8 @@ public class Usuario {
         // inicializações tão dentro do if porque se estivessem fora,
         // e o usuário não existisse, seria perda de tempo iniciar e instanciar tudo isso
         if(usuarioExiste(nome)) {
-            ArquivoOps a = new ArquivoOps();
-            List<String> b = a.listaCSVRemoverHeader(a.lerDadosCSV(Main.CSVUSUARIO));
+            // ArquivoOps a = new ArquivoOps();
+            List<String> b = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO));
             String[] arrt;
             String element; 
             for (int i=0; i<b.size(); i++) {
