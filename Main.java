@@ -21,7 +21,11 @@ public class Main {
         //arquivoOps.lerDadosLinhaPorLinha(CSVUSUARIO);
 
         // ArquivoOps.checarPrimeiraExecucao();
-        Usuario.printUsuarios();
+        // Usuario.printUsuarios();
+        // Usuario.testFormat();
+        // ArquivoOps arq = new ArquivoOps();
+        // TODO: Sempre lembrar de chamar o criador de cabeçalho!
+        // arq.criarCSVeMontarCabecalho(CSVUSUARIO);
         InterfaceCLI intf = new InterfaceCLI();
         intf.mostrar();
         
