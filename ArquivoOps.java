@@ -7,8 +7,6 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,6 +43,7 @@ public class ArquivoOps {
             System.out.println();
             it++;
         }
+        leitorCsv.close();
     }
     catch (Exception e) {
         e.printStackTrace();
@@ -93,8 +92,8 @@ public class ArquivoOps {
     
                 // Pegando a data atual para poder adicionar ao csv
                 // TODO: esse snipet não é usado
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
-                LocalDateTime horaAgora = LocalDateTime.now();  
+                //DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+                //LocalDateTime horaAgora = LocalDateTime.now();  
                 // System.out.println(dtf.format(horaAgora));
                 
                 // Decide se tem que escrever o cabeçalho de alimentos ou do usuário
@@ -157,7 +156,36 @@ public class ArquivoOps {
         return listaNoHeader;
     }
 
-    void removerFila(String arq, int numFila) {
+    // Substitui uma linha (fila) no arquivo CSV por outra.
+    void substituirFila(String arq, int numFila, String[] novaFila) {
+        
+        String arqRem = arq;
+        // Index de numFila começa com 0, não 1.
+
+        try {
+            CSVReader reader2 = new CSVReader(new FileReader(arqRem));
+            // Lê todos os elementos e joga eles numa lista
+            List<String[]> allElements = reader2.readAll();
+            // Remove o elemento na linha de número numFila
+            allElements.remove(numFila);
+            // Adiciona os novos dados (novaFila) no lugar do objeto removido
+            allElements.add(numFila, novaFila);
+            // Cria objeto da classe FileWriter para reescrever todo o arquivo, agora sem a linha
+            FileWriter sw = new FileWriter(arqRem);
+            // Nova instância de CSVWriter, que irá escrever os dados no arquivo
+            CSVWriter writer = new CSVWriter(sw);
+            writer.writeAll(allElements);
+            writer.close();
+        } catch (IOException | CsvException e) {
+            e.printStackTrace();
+        }
+
+        
+    }
+
+    // Método sobrecarregado que faz a mesma coisa desse de cima, porém não adiciona nenhum elemento
+    // Só remove.
+    void substituirFila(String arq, int numFila) {
         // Caminho do arquivo
         String arqRem = arq;
         // Index de numFila começa com 0, não 1.
@@ -179,5 +207,7 @@ public class ArquivoOps {
         }
 
     }
+
+
 
 }
