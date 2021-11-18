@@ -1,5 +1,5 @@
 
-import java.io.File;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -19,8 +19,8 @@ public class Main {
 
 
         
-        //InterfaceCLI intf = new InterfaceCLI();
-        // intf.mostrar();
+        InterfaceCLI intf = new InterfaceCLI();
+        intf.mostrar();
         
     }
 }

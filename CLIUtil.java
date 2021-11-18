@@ -40,7 +40,7 @@ public class CLIUtil {
     }
 
     static String getDataHora() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");  
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd-HH:mm");  
         LocalDateTime now = LocalDateTime.now();  
         return(dtf.format(now).toString());
 

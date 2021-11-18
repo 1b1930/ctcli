@@ -1,9 +1,8 @@
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
+
 import java.util.List;
 
-import javax.swing.event.SwingPropertyChangeSupport;
 
 public class Usuario {
     
@@ -121,7 +120,7 @@ public class Usuario {
         for(int i=0; i<lista.size(); i++) {
             if(lista.get(i).contains(nome)) {
                 // Limpando a string, removendo caracteres inúteis
-                element = lista.get(i).replaceAll("[\\[\\]]", "");
+                element = lista.get(i).replaceAll("[\\[\\] ]", "");
                 // quebrando a string em um array usando , como ponto de quebra
                 arrt = element.split(",");
                 for (int j=0;j<arrt.length;j++) {
@@ -164,7 +163,7 @@ public class Usuario {
                     // System.out.println("funciona.");
 
                     // Limpando a string, removendo caracteres inúteis
-                    element = b.get(i).replaceAll("[\\[\\]]", "");
+                    element = b.get(i).replaceAll("[\\[\\] ]", "");
                     // quebrando a string em um array usando , como ponto de quebra
                     arrt = element.split(",");
 
@@ -214,7 +213,7 @@ public class Usuario {
                     System.out.println("Argumento inválido.");
                     break;
             }
-            System.out.println("Última atualização: "+dados[4]);
+            System.out.println("Última atualização: "+dados[4].replace("-"," "));
                 
         }
     }

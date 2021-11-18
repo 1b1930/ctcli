@@ -145,7 +145,7 @@ public class ArquivoOps {
     void checarPrimeiraExecucao() {
         // essa condição dentro do if só retorna true se o diretório e subdiretórios foram criados
         if(new File(Main.CSVLOGDIR).mkdirs()) {
-            System.out.println("Diretório 'dados' + subdiretórios criados.");
+            System.out.println("PRIMEIRA EXECUÇÃO: Diretório 'dados' + subdiretórios criados.");
         }
         if(!(new File(Main.CSVALIMENTOS).exists())) {
             criarCSVeMontarCabecalho(Main.CSVALIMENTOS);
