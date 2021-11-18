@@ -482,7 +482,7 @@ public class InterfaceCLI {
                     System.out.println("Alimento removido.");
                     entradaAlimentos(usuario);
 
-
+                
                 case "altalimento":
                     if(cmd.length < 4 || cmd.length > 15) {
                         System.out.println("ERRO: Quantidade de parâmetros inválida.");
@@ -586,7 +586,32 @@ public class InterfaceCLI {
                             
 
                     }
-                   }
+
+                case "printalimentos":
+                    Alimento.printAlimentos();
+                    entradaAlimentos(usuario);
+
+                case "pdap":
+                ali = new Alimento();
+                if(cmd.length < 2 || cmd.length > 10) {
+                    System.out.println("Argumentos insuficientes.");
+                    entradaAlimentos(usuario);
+                } else {
+                    for(int i=1;i<cmd.length;i++) {
+                        sb.append(" "+cmd[i]);
+                    }
+                    ali.printDadosAlimento(sb.toString().trim().replace(" ","_"));
+                    entradaAlimentos(usuario);
+                    
+                        
+                }
+
+
+                
+                }
+
+
+
                 }
             }
         }

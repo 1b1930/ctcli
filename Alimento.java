@@ -5,8 +5,6 @@ import java.util.List;
 // import org.apache.commons.lang3.StringUtils;
 
 
-// TODO: Hack pra adicionar alimentos com espaço: substituir todos os espaços do nome do alimento com - e substituir devolta antes de printar
-
 public class Alimento {
 
     String nome;
@@ -47,7 +45,6 @@ public class Alimento {
      }
 
      // mais relax que o verificador de usuario, acho que é melhor assim
-     // TODO: Terminar de codar essa porra
      boolean alimentoExiste(String nome) {
         String[] arrt;
         String element; 
@@ -96,7 +93,7 @@ public class Alimento {
 
             }
 
-        } else {System.out.println("Alimento não existe."); return null;}
+        } else {return null;}
         return null;
 
     }
@@ -150,6 +147,28 @@ public class Alimento {
         return false;
         
 
+    }
+
+    void printDadosAlimento(String nome) {
+        String[] dados = getDadosAlimento(nome);
+        if(dados != null) {
+            System.out.println("Nome: "+dados[0].replace("_"," "));
+            System.out.println("KCAL/100g: "+dados[1]);
+            System.out.println("Data da Modificação: "+dados[2]);
+            
+        } else {System.out.println("Usuário não existe.");}
+    }
+
+    static void printAlimentos() {
+        // ArquivoOps arquivoOps = new ArquivoOps();
+        List<String> lista = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVALIMENTOS));
+            // Método bonito pra printar todos os elementos de uma lista
+            // lista.forEach(System.out::println);
+
+        // Printa a lista que só tem os elementos (sem cabeçalho)
+         for (int i=0; i<lista.size(); i++) {
+             System.out.println(lista.get(i));
+        }
     }
 }
 
