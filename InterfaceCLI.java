@@ -1,6 +1,7 @@
+import java.lang.reflect.Array;
 import java.util.Arrays;
 
-// TODO: Reescrever essa classe, substituir estilo de comando [comando] [par] por [categoria de comando] [comando] [par]
+
 // Ex: usuario logar daniel; alimento adicionar arroz 40; usuario remover daniel
 
 public class InterfaceCLI {
@@ -69,6 +70,7 @@ public class InterfaceCLI {
 
     public void mostrarComandos() {
         CLIUtil.clear();
+        // TODO: Isso tá muuuuuito desatualizado
         // System.out.println("\t\t"+NEGRITO+"Comandos"+NORMAL+"\n");       
         // Checa se é a primeira vez que o programa está sendo executado
         System.out.println("\t\t"+NEGRITO+"Comandos de Usuário"+NORMAL+"\n");
@@ -79,7 +81,6 @@ public class InterfaceCLI {
         System.out.println("\n"+SETA+"Verificar estatísticas de usuário");
         System.out.println(ESTL+"checartdee");
         System.out.println("\n"+SETA+"Manipular alimentos na base de dados:");
-        // TODO: Decidi juntar logaralimento e addalimento num só.
         // O algoritmo irá checar se o alimento existe, se não, irá criar uma entrada
         System.out.println(ESTL+"logaralimento [nome] [kcal/100g]");
         System.out.println(ESTL+"remalimento [nome]");
@@ -120,7 +121,7 @@ public class InterfaceCLI {
             // TODO: Mais checagem de erros
             // ex: peso, altura, nivelatv só devem conter números
             System.out.println();
-            String[] cmd = new String[10];
+            String[] cmd = new String[15];
             String cmdStr = "";
             while(cmdStr.isEmpty()) {
                 cmdStr = CLIUtil.getUserInput();
@@ -139,19 +140,27 @@ public class InterfaceCLI {
             }
 
             String cmdPrinc = cmd[0];
+            String cmdSec;
+            try {
+                cmdSec = cmd[1];
+            } catch (ArrayIndexOutOfBoundsException e) {
+                cmdSec = null;
+            }
             
             // Comandos que o usuário pode usar
-            switch(cmdPrinc) {
-                case "addusuario":
-                    // Checa se a quantidade de argumentos dados pelo usuário está correta
-                    // Essa descrição vale para todos os ifs diretamente abaixo dos cases
-                    if(cmd.length < 4 || cmd.length > 4) {
+            // sintaxe: [categoria de comando] [comando] [parametros...]
+            // ex: usuario logar daniel
+            // ex2: usuario editar daniel peso 80
+
+            if(cmdPrinc.matches("usuario") || cmdPrinc.matches("u")) {
+                // adiciona um novo usuário ao csv
+                if(cmdSec.matches("adicionar") || cmdSec.matches("a")) {
+                    if(cmd.length < 5 || cmd.length > 5) {
                         System.out.println("Número de argumentos inválido. Tente novamente.");
                         entradaUsuario();
-                        break;
                     }
                     // Checa se o usuário existe, se já existe, manda o usuário tentar novamente
-                    if(Usuario.usuarioExiste(cmd[1])) {
+                    if(Usuario.usuarioExiste(cmd[2])) {
                         // Char especial ANSI pra limpar a tela do console
                         // TODO: Deve ter uma maneira melhor de fazer isso.
                         System.out.println("O usuário já existe no banco de dados. Tente novamente.");
@@ -162,147 +171,144 @@ public class InterfaceCLI {
 
                     expNivelAtv();
                     String resp = getNivelAtv();
-                    Usuario usuario = new Usuario(cmd[1],cmd[2],cmd[3],resp);
+                    Usuario usuario = new Usuario(cmd[2],cmd[3],cmd[4],resp);
                     usuario.criarUsuario();
                     entradaUsuario();
-                    break;
-
-                case "remusuario":
-                    if(cmd.length != 2) {
+                    
+                // remove um usuário do csv
+                } else if(cmdSec.matches("remover") || cmdSec.matches("r")) {
+                    if(cmd.length != 3) {
                         System.out.println("Quantidade de argumentos inválida. Tente novamente.");
                         entradaUsuario();
-                        break;
                     }
                     Usuario u = new Usuario();
-                    if(u.removerUsuario(cmd[1])) {
+                    if(u.removerUsuario(cmd[2])) {
                         System.out.println("Usuário removido");
                         entradaUsuario();
                     } else {
                         System.out.println("Usuário não removido"+
-                        " pois não foi encontrado ou deu merda em outro lugar.");
+                        " pois não foi encontrado.");
                         entradaUsuario();
                     }
-                    System.out.println("Argumento aceito");
+                    // System.out.println("Argumento aceito");
                     entradaUsuario();
-                    break;
                 
-                case "editusuario":
-                    if(cmd.length < 4) {
+                // edita o dado especificado
+                } else if(cmdSec.matches("editar") || cmdSec.matches("e")) {
+                    if(cmd.length < 5) {
                         System.out.println("Quantidade de argumentos insuficiente. Tente novamente.");
                         entradaUsuario();
-                        break;
-                    } else if(cmd.length > 4) {
+
+                    } else if(cmd.length > 5) {
                         System.out.println("Quantidade de argumentos excedida para esse comando. Tente novamente");
                         entradaUsuario();
-                        break;
+
                     } 
                     // System.out.println("+"+cmd[2]+"+");
-                    if(!(cmd[2].matches("peso") || cmd[2].matches("altura") || cmd[2].matches("nome") || cmd[2].matches("nivelatv"))) {
+                    if(!(cmd[3].matches("peso") || cmd[3].matches("altura") || cmd[3].matches("nome") || cmd[3].matches("nivelatv"))) {
                         System.out.println("Propriedade inválida.");
                         System.out.println("Comando: editusuario [nome] [propriedade (peso, altura, nivelatv)] [valor]");
                         entradaUsuario();
                     }
 
                     Usuario u2 = new Usuario();
-                    u2.alterarDados(cmd[1], cmd[2], cmd[3]);
+                    u2.alterarDados(cmd[2], cmd[3], cmd[4]);
                     System.out.println("Usuário editado com sucesso.");
                     
                     entradaUsuario();
-                    break;
                 
-                case "printusuarios":
+                // printa os dados de todos os usuários no csv
+                } else if(cmdSec.matches("printall") || cmdSec.matches("pa")) {
                     Usuario.printUsuarios();
                     entradaUsuario();
-                    break;
                 
-                // TODO: add suporte pra selecionar entre os dois CSVs
-                case "criarcabecalho":
+                // printa os dados do usuário especificado
+                } else if(cmdSec.matches("print") || cmdSec.matches("p")) {
+
+                    if(cmd.length != 3) {
+                        System.out.println("Argumentos inválidos/insuficientes.");
+                            entradaUsuario();
+                        } else {
+                            Usuario.printDadosUsuario(cmd[2]);
+                            entradaUsuario();
+                        }
+                        entradaUsuario();
+                
+                // cria o cabeçalho do CSV com os dados dos usuários, se o arquivo estiver vazio
+                } else if(cmdSec.matches("criarcabecalho") || cmdSec.matches("cc")) {
                     aq.criarCSVeMontarCabecalho(Main.CSVUSUARIO);
                     entradaUsuario();
-                    break;
-
-                // TODO: add suporte pra selecionar entre os dois CSVs
-                case "limparcsv":
+                
+                // limpa o arquivo csv do usuário, incluindo o cabeçalho
+                } else if(cmdSec.matches("limparcsv") || cmdSec.matches("lcsv")) {
                     aq.escreverAoCSV(Main.CSVUSUARIO, null);
                     System.out.println("CSV limpo.");
                     entradaUsuario();
-                    break;
 
-                // Termina o programa
-                case "sair":
-                    // System.out.println("Saindo...");
-                    CLIUtil.clear();
-                    System.exit(0);
-
-                // Limpa a janela do terminal
-                case "clear":
-                    CLIUtil.clear();
-                    entradaUsuario();
-                    break;
-                
-                // lista os comandos principais
-                case "ajuda":
-                    mostrarComandos();
-                    entradaUsuario();    
-                
-                // lista os comandos adicionais
-                case "adc":
-                    mostrarComandosAdicionais();
-                    entradaUsuario();
-                
-                // printdadosusuario - Printar os dados do usuário
-                // abreviado pra debugar mais rápido ;)
-                case "pdu":
-                    // TODO: talvez mover a checagem de existência do usuário pra cá?
-                    if(cmd.length != 2) {
-                        System.out.println("Argumentos inválidos/insuficientes.");
-                        entradaUsuario();
-                    } else {
-                        Usuario.printDadosUsuario(cmd[1]);
-                        entradaUsuario();
-                    }
-                    entradaUsuario();
-
-                /* PARTE DOS COMANDOS DE ALIMENTOS */
-                
-                // "loga" o usuário, joga ele no submenu de alimentos para que possa adicionar ou logar alimentos
-                // TODO: talvez seja melhor jogar o usuário num menu intermediário que tenha opção de ir pro menu
-                // de alimentos além de outros menus como o de TDEE e a lista de calorias gastas no dia.
-                case "logar":
-                    if(cmd.length != 2) {
+                // "loga" o usuário no app
+                // TODO: perguntar se o usuário quer logar pra sempre no aplicativo, salvar dados num arquivo config
+                // tipo permalogin=username em dados/ctcli.config
+                } else if(cmdSec.matches("logar") || cmdSec.matches("l")) {
+                    if(cmd.length != 3) {
                         System.out.println("Campo de usuário em branco. Digite um usuário para logar");
                         System.out.println("Comando: logar [usuario]");
                         entradaUsuario();
-                        break;
-                    } else if(!(Usuario.usuarioExiste(cmd[1]))) {
+
+                    } else if(!(Usuario.usuarioExiste(cmd[2]))) {
                         System.out.println("Usuário não encontrado. Tente novamente");
                         entradaUsuario();
-                        break;
+
                     } else {
-                        entradaAlimentos(cmd[1]);
+                        System.out.println("Indo para o menu de alimentos");
+                        entradaAlimentos(cmd[2]);
                         entradaUsuario();
-                        break;
-
                     }
+                }
+                
+                
+                
+                else {System.out.println("Comando inválido."); entradaUsuario();}
 
-                case default:
-                    System.out.println("Comando inválido.");
-                    entradaUsuario();
+            /* COMANDOS PRINCIPAIS */
+            } else if(cmdPrinc.matches("alimento") || cmdPrinc.matches("a")) {
+                System.out.print("\nPara obter acesso aos comandos de alimento, você precisa logar como um usuário salvo usando ");
+                System.out.print("\"usuario logar [nome do usuário]\n\"");
+                System.out.println("Caso não tenha salvo seus dados, use \"usuario adicionar [nome] [peso] [altura]\"");
+                entradaUsuario();
+            } else if(cmdPrinc.matches("sair") || cmdPrinc.matches("s")) {
+                CLIUtil.clear();
+                System.exit(0);
+                
+            } else if(cmdPrinc.matches("clear") || cmdPrinc.matches("c")) {
+                CLIUtil.clear();
+                entradaUsuario();
 
+            } else if(cmdPrinc.matches("ajuda")) {
+                mostrarComandos();
+                entradaUsuario();
+
+            } else if(cmdPrinc.matches("adc")) {
+                mostrarComandosAdicionais();
+                entradaUsuario();
             }
+
+
+            else {System.out.println("entradaUsuario: Comando inválido."); entradaUsuario();}
+
 
         }
 
-        // TODO: Submenu que vai tomar conta dos comandos de alimentos, igual entradaUsuario
+
         void entradaAlimentos(String usuario) {
             sb.setLength(0);
             // System.out.println("werks");
-            // TODO: Mais checagem de erros
+
             // ex: peso, altura, nivelatv só devem conter números
             System.out.println();
             String[] cmd = new String[10];
             String cmdStr = "";
             while(cmdStr.isEmpty()) {
+                System.out.print(usuario+" ");
                 cmdStr = CLIUtil.getUserInput();
             }
 
@@ -321,11 +327,12 @@ public class InterfaceCLI {
             String cmdPrinc = cmd[0];
             // submenu, basicamente a mesma coisa de entradaUsuarios
 
+            // TODO: Refazer isso usando if-else
+
             // TODO: Codar o resto disso fdp
-            // TODO: função printAlimentos
+
             // TODO: função printAlimentosConsumidos
-            // TODO: Função deletar alimentos
-            // TODO: Função editar alimentos
+
             switch(cmdPrinc) {
                 // TODO: tentando fazer um bagulho dinâmico que vai permitir ao usuário digitar qualquer alimento, até nomes com espaço
                 // sem nenhum problema
