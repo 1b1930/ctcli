@@ -2,6 +2,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import ExcecoesCustom.AlimentoNaoExisteException;
+
+
+// TODO: Hack pra adicionar alimentos com espaço: substituir todos os espaços do nome do alimento com - e substituir devolta antes de printar
 
 public class Alimento {
 
@@ -24,16 +28,19 @@ public class Alimento {
 
      // adiciona um alimento usando acrescentaraocsv
      // TODO: Adicionar checks pra saber se o alimento já existe no banco de dados
-     void adicionarAlimento() {
+     boolean adicionarAlimento() {
+
+        if(alimentoExiste(this.nome)) {
+            // System.out.println("Alimento existe. Abortando...");
+            return false;
+        }
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");  
         LocalDateTime now = LocalDateTime.now();  
         data = dtf.format(now).toString();
         System.out.println(data);  
         String[] fileira = { nome, kcal, data };
         arquivoOps.acrescentarAoCSV(Main.CSVALIMENTOS, fileira);
-
-
-
+        return true;
      }
 
      // mais relax que o verificador de usuario, acho que é melhor assim
@@ -47,17 +54,22 @@ public class Alimento {
             element = lista.get(i).replaceAll("[\\[\\]]", "");
             // quebrando a string em um array usando , como ponto de quebra
             arrt = element.split(",");
-            for (int j=0;j<arrt.length;j++) {
-                if(arrt[j].equals(nome)) {
-                    return true;
-                }
+            // ao invés de iterar todos os itens, é só verificar arrt[0]
+            if(arrt[0].equalsIgnoreCase(nome)) {
+                return true;
             }
+
+            // for (int j=0;j<arrt.length;j++) {
+            //     System.out.println(arrt[j]);
+            //     if(arrt[j].equalsIgnoreCase(nome)) {
+            //         return true;
+            //     }
+            // }
         }
         return false;
         
      }
 
-     // port de getDadosUsuario
      // TODO: port de getDadosUsuario. Ainda não é usável, consertar isso
      static String[] getDadosAlimento(String nome) {
         // inicializações tão dentro do if porque se estivessem fora,
@@ -98,3 +110,4 @@ public class Alimento {
 
 
 }
+

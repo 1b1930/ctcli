@@ -1,5 +1,9 @@
+import ExcecoesCustom.AlimentoNaoExisteException;
 
 public class InterfaceCLI {
+
+    // É, eu sei que seria melhor criar uma classe num outro arquivo só pra interpretar os comandos
+    // É minha primeira vez fazendo algo assim e percebi isso muito tarde, agora não tem tempo.
 
     final String NEGRITO = "\033[0;1m";
     final String ESTL = "\t\033[0;1m*\033[0;0m ";
@@ -320,19 +324,104 @@ public class InterfaceCLI {
                 // TODO: tentando fazer um bagulho dinâmico que vai permitir ao usuário digitar qualquer alimento, até nomes com espaço
                 // sem nenhum problema
                 case "addalimento":
+                    // o numero de parâmetros minimo é 2 (comprimento do array 3)
                    if(cmd.length < 3) {
-                       System.out.println("Número de argumentos inválido. Tente novamente.");
-                       entradaAlimentos(usuario);
+                        System.out.println("cmd length:"+cmd.length);
 
-                   }
+                        System.out.println("Número de argumentos inválido. Tente novamente.");
+                        entradaAlimentos(usuario);
+
+                    // detecta se o usuário errou a ordem dos parâmetros
+                   } else if(cmd[1].matches("[0-9]+")) {
+                       System.out.println("O nome do alimento vem antes das calorias.");
+                       System.out.println("Tente novamente.");
+                       entradaAlimentos(usuario);
+                   } 
+
+
+                   System.out.println("cmd length:"+cmd.length);
+                    // c contém o número de partes do comando que tem letras
+                    // ATENÇÃO: Também conta o comando em si (addalimento)
                     int c = 0;
+                    // localização do número de calorias em cmd[]
+                    int temNum = 0;
+                    // Controle: usado pra checar se o usuário digitou mais de um argumento [kcal]
+                    int temNumQ = 0;
+
                     for(int i=0;i<cmd.length;i++) {
-                        // se conter somente letras
+                        // verdadeiro se cmd[i] conter SOMENTE letras
                         if(cmd[i].matches("[a-zA-Z]+")) {
-                            System.out.println("match"+c);
+                            System.out.println("match "+c);
                             c++;
                         }
+                        
+                        // verdadeiro se cmd[i] conter SOMENTE números
+                        if(cmd[i].matches("[0-9]+")) {
+                            temNumQ++;
+                            temNum = i;
+                            System.out.println("matches!");
+                        }
+
                     }
+
+                    //System.out.println(cmd.length);
+                    //System.out.println(temNum+1);
+                    //entradaAlimentos(usuario);
+                    
+                    // checa se o usuário realmente adicionou as calorias antes de continuar
+                    if(temNum == 0) {
+                        System.out.println("Você esqueceu de adicionar as calorias");
+                        System.out.println("Tente novamente.");
+                        entradaAlimentos(usuario);
+
+                    } else if(temNumQ > 1) {
+                        System.out.println("Comando inválido. (mais de um argumento [kcal])");
+                        System.out.println("Tente novamente.");
+                        entradaAlimentos(usuario);
+                    
+                    // checa se existe algum outro comando depois de [kcal], se sim, printar erro.
+                    } else if (temNum+1 < cmd.length) {
+                        System.out.println("Comando inválido. (Ordem incorreta)");
+                        System.out.println("Tente novamente.");
+                        entradaAlimentos(usuario);
+                    }
+
+                    // checa se o nome do alimento tem muitos espaços
+                    if(c > 5) {
+                        System.out.println("Nome do alimento muito grande. (Muitos espaços)");
+                        System.out.println("Tente novamente.");
+                        entradaAlimentos(usuario);
+
+                    }
+
+                    // debug
+                    System.out.println("num array position: "+temNum);
+                    System.out.println(c);
+                    // Objeto StringBuilder pra juntar as partes do comando que são o nome do alimento
+                    StringBuilder strBuilder = new StringBuilder(50);
+                    for(int i=1; i<c;i++) {
+                        // Se o nome do alimento for muito grande, printar erro.
+                        if(cmd[i].length() > 10) {
+                            System.out.println("Nome do alimento muito grande!");
+                            System.out.println("Tente novamente.");
+                            entradaAlimentos(usuario);
+                        }
+                        strBuilder.append(" "+cmd[i]);
+
+                    }
+                    // no CSV, os espaços serão substituidos por underlines
+                    System.out.println(strBuilder.toString().trim().replace(" ","_"));
+                    String validA = strBuilder.toString().trim().replace(" ","_");
+                    Alimento ali = new Alimento(validA,cmd[temNum]);
+                    if(ali.adicionarAlimento() == true) {
+                        System.out.println("Alimento adicionado com sucesso!");
+                        entradaAlimentos(usuario);
+
+                    } else {
+                        System.out.println("Alimento não adicionado pois já existe. Tente novamente");
+                        entradaAlimentos(usuario);
+                    }
+
                     System.exit(0);
                     break;
                 
@@ -345,6 +434,9 @@ public class InterfaceCLI {
                         System.out.println("dont werk");
                         System.exit(0);
                     }
+
+                case "pda":
+                    
 
 
                     //else {
