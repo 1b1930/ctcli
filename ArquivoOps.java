@@ -142,6 +142,7 @@ public class ArquivoOps {
     }
 
     // Checa se o arquivo CSV existe ou não.
+    // se os diretórios e os CSV não existirem, cria eles + monta cabeçalho
     void checarPrimeiraExecucao() {
         // essa condição dentro do if só retorna true se o diretório e subdiretórios foram criados
         if(new File(Main.CSVLOGDIR).mkdirs()) {

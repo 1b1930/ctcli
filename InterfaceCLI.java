@@ -118,7 +118,6 @@ public class InterfaceCLI {
 
         // Método que cuida da entrada e sanitização de dados do usuário
         void entradaUsuario() {
-            // TODO: Mais checagem de erros
             // ex: peso, altura, nivelatv só devem conter números
             System.out.println();
             String[] cmd = new String[15];
@@ -334,8 +333,7 @@ public class InterfaceCLI {
             // TODO: função printAlimentosConsumidos
 
             switch(cmdPrinc) {
-                // TODO: tentando fazer um bagulho dinâmico que vai permitir ao usuário digitar qualquer alimento, até nomes com espaço
-                // sem nenhum problema
+
                 case "addalimento":
                     // o numero de parâmetros minimo é 2 (comprimento do array 3)
                    if(cmd.length < 3) {
@@ -461,7 +459,7 @@ public class InterfaceCLI {
                         sb.append(" "+cmd[i]);
 
                     }
-                    // TODO: Posso ganhar performance não chamando o replace(), botando underlines direto em sb.append();
+
                     // System.out.println(sb.toString().trim().replace(" ","_"));
 
                     ali = new Alimento(sb.toString().trim().replace(" ","_"));
