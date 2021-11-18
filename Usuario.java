@@ -1,5 +1,9 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.event.SwingPropertyChangeSupport;
 
 public class Usuario {
     
@@ -24,7 +28,8 @@ public class Usuario {
     }
 
     void criarUsuario() {
-        String[] fileira = { nome, peso, altura, nivelatv };
+        String data = CLIUtil.getDataHora();
+        String[] fileira = { nome, peso, altura, nivelatv, data };
         // ArquivoOps arquivoOps = new ArquivoOps();
         arquivoOps.acrescentarAoCSV(Main.CSVUSUARIO, fileira);
         if(Usuario.usuarioExiste(nome)) {
@@ -64,12 +69,14 @@ public class Usuario {
                     case "peso":
                         String[] alt = getDadosUsuario(nome);
                         alt[1] = valAlt;
+                        alt[4] = CLIUtil.getDataHora();
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt);
                         System.out.println("bleh");
                         return true;
                     case "nome":
                         String[] alt2 = getDadosUsuario(nome);
                         alt2[0] = valAlt;
+                        alt2[4] = CLIUtil.getDataHora();
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt2);
                         System.out.println("bleh2");
                         return true;
@@ -77,13 +84,15 @@ public class Usuario {
                     case "altura":
                         String[] alt3 = getDadosUsuario(nome);
                         alt3[2] = valAlt;
+                        alt3[4] = CLIUtil.getDataHora();
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt3);
                         System.out.println("bleh3");
                         return true;
 
                     case "nivelatv":
                         String[] alt4 = getDadosUsuario(nome);
-                        alt4[2] = valAlt;
+                        alt4[3] = valAlt;
+                        alt4[4] = CLIUtil.getDataHora();
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt4);
                         System.out.println("bleh4");
                         return true;
@@ -155,7 +164,7 @@ public class Usuario {
                     // System.out.println("funciona.");
 
                     // Limpando a string, removendo caracteres inúteis
-                    element = b.get(i).replaceAll("[\\[\\] ]", "");
+                    element = b.get(i).replaceAll("[\\[\\]]", "");
                     // quebrando a string em um array usando , como ponto de quebra
                     arrt = element.split(",");
 
@@ -205,6 +214,7 @@ public class Usuario {
                     System.out.println("Argumento inválido.");
                     break;
             }
+            System.out.println("Última atualização: "+dados[4]);
                 
         }
     }
