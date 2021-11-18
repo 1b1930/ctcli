@@ -104,7 +104,7 @@ public class ArquivoOps {
                     // TODO: DEBUG print, remover antes de enviar o código
                     System.out.println("header criado");
                 }
-                // closing writer connection
+                // fechando o writer
                 writer.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -142,11 +142,19 @@ public class ArquivoOps {
     }
 
     // Checa se o arquivo CSV existe ou não.
-    static boolean checarPrimeiraExecucao() {
-        File arqTemp = new File(Main.CSVUSUARIO);
-        boolean exists = arqTemp.exists();
-        //System.out.println("file exists:" + exists);
-        return !exists;
+    void checarPrimeiraExecucao() {
+        // essa condição dentro do if só retorna true se o diretório e subdiretórios foram criados
+        if(new File(Main.CSVLOGDIR).mkdirs()) {
+            System.out.println("Diretório 'dados' + subdiretórios criados.");
+        }
+        if(!(new File(Main.CSVALIMENTOS).exists())) {
+            criarCSVeMontarCabecalho(Main.CSVALIMENTOS);
+        } 
+        if(!(new File(Main.CSVUSUARIO).exists())) {
+            criarCSVeMontarCabecalho(Main.CSVUSUARIO);
+
+        }
+
     }
 
     // Acrescenta dados ao final do arquivo csv
