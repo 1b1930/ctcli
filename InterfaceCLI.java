@@ -1,4 +1,7 @@
-import ExcecoesCustom.AlimentoNaoExisteException;
+import java.util.Arrays;
+
+// TODO: Reescrever essa classe, substituir estilo de comando [comando] [par] por [categoria de comando] [comando] [par]
+// Ex: usuario logar daniel; alimento adicionar arroz 40; usuario remover daniel
 
 public class InterfaceCLI {
 
@@ -13,6 +16,8 @@ public class InterfaceCLI {
     final String SETA = "❯ ";
 
     public static final ArquivoOps aq = new ArquivoOps();
+    public static final StringBuilder sb = new StringBuilder(50);
+    public static final Alimento ali = new Alimento();
 
     void mostrar() {
         // Caracteres especiais ANSI para fazer o texto ficar em negrito
@@ -290,7 +295,8 @@ public class InterfaceCLI {
 
         // TODO: Submenu que vai tomar conta dos comandos de alimentos, igual entradaUsuario
         void entradaAlimentos(String usuario) {
-            System.out.println("werks");
+            sb.setLength(0);
+            // System.out.println("werks");
             // TODO: Mais checagem de erros
             // ex: peso, altura, nivelatv só devem conter números
             System.out.println();
@@ -398,7 +404,7 @@ public class InterfaceCLI {
                     System.out.println("num array position: "+temNum);
                     System.out.println(c);
                     // Objeto StringBuilder pra juntar as partes do comando que são o nome do alimento
-                    StringBuilder strBuilder = new StringBuilder(50);
+                    // StringBuilder sb = new StringBuilder(50);
                     for(int i=1; i<c;i++) {
                         // Se o nome do alimento for muito grande, printar erro.
                         if(cmd[i].length() > 10) {
@@ -406,19 +412,19 @@ public class InterfaceCLI {
                             System.out.println("Tente novamente.");
                             entradaAlimentos(usuario);
                         }
-                        strBuilder.append(" "+cmd[i]);
+                        sb.append(" "+cmd[i]);
 
                     }
                     // no CSV, os espaços serão substituidos por underlines
-                    System.out.println(strBuilder.toString().trim().replace(" ","_"));
-                    String validA = strBuilder.toString().trim().replace(" ","_");
+                    System.out.println(sb.toString().trim().replace(" ","_"));
+                    String validA = sb.toString().trim().replace(" ","_");
                     Alimento ali = new Alimento(validA,cmd[temNum]);
                     if(ali.adicionarAlimento() == true) {
                         System.out.println("Alimento adicionado com sucesso!");
                         entradaAlimentos(usuario);
 
                     } else {
-                        System.out.println("Alimento não adicionado pois já existe. Tente novamente");
+                        System.out.println("Alimento não adicionado pois já existe. Tente novamente.");
                         entradaAlimentos(usuario);
                     }
 
@@ -427,24 +433,159 @@ public class InterfaceCLI {
                 
                 // comando de teste pra checar se alimentoExiste() tá funcionando
                 case "ax":
-                    if(Alimento.alimentoExiste("eileen")) {
+                    ali = new Alimento();
+                    if(ali.alimentoExiste("eileen")) {
                         System.out.println("werks");
                         System.exit(0);
                     } else {
                         System.out.println("dont werk");
                         System.exit(0);
                     }
-
+                
+                // printar os dados do alimento dado como parâmetro
                 case "pda":
-                    
+                    if(cmd.length < 2 || cmd.length > 10) {
+                        System.out.println("Argumento inválido");
+                        entradaAlimentos(usuario);
+
+                    }
+                    // acrescentando nome ao objeto sb
+                    for(int i=1;i<cmd.length;i++) {
+                        sb.append(" "+cmd[i]);
+
+                    }
+                    // TODO: Posso ganhar performance não chamando o replace(), botando underlines direto em sb.append();
+                    // System.out.println(sb.toString().trim().replace(" ","_"));
+
+                    ali = new Alimento(sb.toString().trim().replace(" ","_"));
+                    System.out.println(Arrays.toString(ali.getDadosAlimento(sb.toString().trim().replace(" ","_"))));
+                    entradaAlimentos(usuario);
 
 
-                    //else {
-                       
-                //        Alimento ali = new Alimento(cmd[1], cmd[2]);
-                //        ali.adicionarAlimento();
-                //        entradaAlimentos(usuario);
+                case "remalimento":
+                    if(cmd.length<2) {
+                        System.out.println("Argumento inválido");
+                        entradaAlimentos(usuario);
+                    }
+                    // acrescentando todas as partes do nome do alimento ao objeto sb (StringBuilder)
+                    for(int i=1;i<cmd.length;i++) {
+                        sb.append(" "+cmd[i]);
 
+                    }
+                    // recriando o objeto ali denovo
+                    ali = new Alimento(sb.toString().trim().replace(" ","_"));
+                    if(ali.removerAlimento(ali.nome) == false) {
+                        System.out.println("Alimento não removido pois não existe.");
+                        entradaAlimentos(usuario);
+
+                    }
+                    System.out.println("Alimento removido.");
+                    entradaAlimentos(usuario);
+
+
+                case "altalimento":
+                    if(cmd.length < 4 || cmd.length > 15) {
+                        System.out.println("ERRO: Quantidade de parâmetros inválida.");
+                        entradaAlimentos(usuario);
+                    }
+                    // armazena em qual posição o campo [propriedade] está em cmd[]
+                    int c2 = 0;
+                    // indica se o algoritmo achou mais de uma propriedade
+                    int match = 0;
+
+                    for(int i=1;i<cmd.length;i++) {
+                        if(cmd[i].matches("kcal")) {
+                            c2 = i;
+                            match++;
+                            try {
+                                if(!(cmd[i+1].matches("[0-9]+"))) {
+                                    System.out.println("Comando inválido. (Valor inválido depois de [propriedade], deveria ser [kcal].");
+                                    entradaAlimentos(usuario);
+                                
+                                // se a diferença entre o comprimento do array de comando e a posição do valor depois de kcal for
+                                // um valor diferente de 1, significa que o usuario adicionou um valor a mais depois
+                                // desse valor, então printar erro.
+                                } else if ((cmd.length - (i+1)) != 1) {
+                                    //System.out.println("cmd length: "+cmd.length);
+                                    //System.out.println("i+1: "+(i+1));
+                                    System.out.println("ERRO: Só é necessário um [valor].");
+                                    entradaAlimentos(usuario);
+                                }
+
+                            } catch (ArrayIndexOutOfBoundsException e) {
+                                System.out.println("Comando inválido. (Valor inválido depois de [propriedade], deveria ser [kcal].");
+                                entradaAlimentos(usuario);
+                                
+                            }
+
+                        } else if(cmd[i].matches("nome")) {
+                            c2 = i;
+                            match++;
+                            try {
+                                if(!(cmd[i+1].matches("[a-zA-Z]+"))) {
+                                    System.out.println("Comando inválido. (Valor inválido depois de [propriedade], deveria ser [nome].");
+                                    entradaAlimentos(usuario);
+                                }
+
+                            } catch (ArrayIndexOutOfBoundsException e) {
+                                System.out.println("Comando inválido. (Valor inválido depois de [propriedade], deveria ser [nome].");
+                                entradaAlimentos(usuario);
+                            }
+                            // System.out.println("cmd length: "+cmd.length+" i: "+i);
+
+                        }
+                    }
+
+                    System.out.println("c2: "+c2+" match: "+match);
+
+
+                    if(c2==0) {
+                        System.out.println("Comando inválido. (Valor inválido no campo [propriedade]).");
+                        entradaAlimentos(usuario);
+                    } else if(match > 1) {
+                        System.out.println("Comando inválido. (Múltiplas propriedades).");
+                        entradaAlimentos(usuario);
+                    }
+
+                    // adiciona o nome do alimento no objeto StringBuilder
+                    // necessário para suporte a espaços nos nomes
+                    for(int i=1;i<c2;i++) {
+                        sb.append(" "+cmd[i]);
+                    }
+                    String nomeLimpo = sb.toString().trim().replace(" ","_");
+                    System.out.println(nomeLimpo);
+                    // recriar instância do objeto Alimento
+                    ali = new Alimento(nomeLimpo);
+                    if(!(ali.alimentoExiste(ali.nome))) {
+                        System.out.println("Erro: o alimento que você está tentando editar não existe.");
+                        entradaAlimentos(usuario);
+                    }
+
+
+                    // chama o método alterarDados() dependendo em qual propriedade o usuário escolheu
+                    switch(cmd[c2]) {
+                        case "kcal":
+                            System.out.println(cmd[c2]+" "+cmd[c2+1]);
+                            entradaAlimentos(usuario);
+                            ali.alterarDados(ali.nome, cmd[c2], cmd[c2+1], false);
+                            entradaAlimentos(usuario);
+                            break;
+
+                        case "nome":
+                            StringBuilder nom = new StringBuilder(50);
+                            int diff = cmd.length - c2;
+                            for(int i=1;i<diff;i++) {
+                                nom.append(" "+cmd[c2+i]);
+                            }
+                            String no = nom.toString().trim().replace(" ","_");
+                            ali.alterarDados(ali.nome, cmd[c2], no, true);
+                            entradaAlimentos(usuario);
+
+                        case default:
+                            System.exit(0);
+                            
+
+                    }
                    }
                 }
             }
