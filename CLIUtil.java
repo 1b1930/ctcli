@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -46,18 +47,29 @@ public class CLIUtil {
 
     }
 
-    static void printFileDirList(String dir) {
-        try {
-            List<File> files = Files.list(Paths.get(dir))
-            .filter(Files::isRegularFile)
-            .map(Path::toFile)
-            .collect(Collectors.toList());
-            //return files;
-            files.forEach(System.out::println);
+    static List<String> getListaArq(String dir) {
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        // TODO: Tem que retornar uma List<String>
+        List<String> arqs = new ArrayList<String>();
+
+        // Creates an array in which we will store the names of files and directories
+        String[] pathnames;
+
+        // Creates a new File instance by converting the given pathname string
+        // into an abstract pathname
+        File f = new File(dir);
+
+        // Populates the array with names of files and directories
+        pathnames = f.list();
+
+        // For each pathname in the pathnames array
+        for (String pathname : pathnames) {
+            arqs.add(pathname);
+            
+            // Print the names of files and directories
+            // System.out.println(pathname);
         }
+        return arqs;
 
 
 
