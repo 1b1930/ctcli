@@ -1,6 +1,5 @@
-import java.lang.reflect.Array;
+// import java.lang.reflect.Array;
 import java.util.Arrays;
-
 
 // Ex: usuario logar daniel; alimento adicionar arroz 40; usuario remover daniel
 
@@ -291,12 +290,9 @@ public class InterfaceCLI {
                 entradaUsuario();
             }
 
-
             else {System.out.println("entradaUsuario: Comando inválido."); entradaUsuario();}
 
-
         }
-
 
         void entradaAlimentos(String usuario) {
             sb.setLength(0);
@@ -324,32 +320,33 @@ public class InterfaceCLI {
             }
 
             String cmdPrinc = cmd[0];
-            // submenu, basicamente a mesma coisa de entradaUsuarios
+            String cmdSec;
+            try {
+                cmdSec = cmd[1];
+            } catch (ArrayIndexOutOfBoundsException e) {
+                cmdSec = "";
+            }
 
-            // TODO: Refazer isso usando if-else
+            // TODO: comandos de logar no CSV pessoal
 
-            // TODO: Codar o resto disso fdp
+            if(cmdPrinc.matches("alimento") || cmdPrinc.matches("a")) {
 
-            // TODO: função printAlimentosConsumidos
-
-            switch(cmdPrinc) {
-
-                case "addalimento":
-                    // o numero de parâmetros minimo é 2 (comprimento do array 3)
-                   if(cmd.length < 3) {
-                        System.out.println("cmd length:"+cmd.length);
+                // *CMD - descrição: adiciona um alimento ao CSVALIMENTOS (Não pessoal)
+                // Sintaxe: alimento adicionar [nome] [kcal/100g]
+                // Atalho(s): [a]dicionar - a
+                if(cmdSec.matches("adicionar") || cmdSec.matches("a")) {
+                    if(cmd.length < 4) {
+                        // System.out.println("cmd length:"+cmd.length);
 
                         System.out.println("Número de argumentos inválido. Tente novamente.");
                         entradaAlimentos(usuario);
 
                     // detecta se o usuário errou a ordem dos parâmetros
-                   } else if(cmd[1].matches("[0-9]+")) {
+                   } else if(cmd[2].matches("[0-9]+")) {
                        System.out.println("O nome do alimento vem antes das calorias.");
                        System.out.println("Tente novamente.");
                        entradaAlimentos(usuario);
-                   } 
-
-
+                   }
                    System.out.println("cmd length:"+cmd.length);
                     // c contém o número de partes do comando que tem letras
                     // ATENÇÃO: Também conta o comando em si (addalimento)
@@ -410,7 +407,7 @@ public class InterfaceCLI {
                     System.out.println(c);
                     // Objeto StringBuilder pra juntar as partes do comando que são o nome do alimento
                     // StringBuilder sb = new StringBuilder(50);
-                    for(int i=1; i<c;i++) {
+                    for(int i=2; i<c;i++) {
                         // Se o nome do alimento for muito grande, printar erro.
                         if(cmd[i].length() > 10) {
                             System.out.println("Nome do alimento muito grande!");
@@ -433,52 +430,68 @@ public class InterfaceCLI {
                         entradaAlimentos(usuario);
                     }
 
+                    System.out.println("Você não é suposto a ver essa mensagem. Oops!");
                     System.exit(0);
-                    break;
                 
-                // comando de teste pra checar se alimentoExiste() tá funcionando
-                case "ax":
-                    ali = new Alimento();
-                    if(ali.alimentoExiste("eileen")) {
-                        System.out.println("werks");
-                        System.exit(0);
-                    } else {
-                        System.out.println("dont werk");
-                        System.exit(0);
-                    }
-                
-                // printar os dados do alimento dado como parâmetro
-                case "pda":
-                    if(cmd.length < 2 || cmd.length > 10) {
+                // *CMD - descrição: printa os dados de um usuário
+                // Sintaxe: alimento print [nome do usuário]
+                // Atalho(s): [p]rint - p
+                } else if(cmdSec.matches("print") || cmdSec.matches("p")) {
+                    if(cmd.length < 3 || cmd.length > 10) {
                         System.out.println("Argumento inválido");
                         entradaAlimentos(usuario);
 
                     }
                     // acrescentando nome ao objeto sb
-                    for(int i=1;i<cmd.length;i++) {
+                    for(int i=2;i<cmd.length;i++) {
                         sb.append(" "+cmd[i]);
 
                     }
 
                     // System.out.println(sb.toString().trim().replace(" ","_"));
 
-                    ali = new Alimento(sb.toString().trim().replace(" ","_"));
+                    Alimento ali = new Alimento(sb.toString().trim().replace(" ","_"));
                     System.out.println(Arrays.toString(ali.getDadosAlimento(sb.toString().trim().replace(" ","_"))));
                     entradaAlimentos(usuario);
 
+                // *CMD - descrição: printa os dados do alimento, com descrições
+                // Sintaxe: alimento printpretty [alimento]
+                // Atalho(s): [p]rint[p]retty - pp
+                } else if(cmdSec.matches("printpretty") || cmdSec.matches("pp")) {
+                    Alimento ali = new Alimento();
+                    if(cmd.length < 3 || cmd.length > 10) {
+                        System.out.println("Argumentos insuficientes.");
+                        entradaAlimentos(usuario);
+                    } else {
+                        for(int i=2;i<cmd.length;i++) {
+                            sb.append(" "+cmd[i]);
+                        }
+                        ali.printDadosAlimento(sb.toString().trim().replace(" ","_"));
+                        entradaAlimentos(usuario);
+                    }
 
-                case "remalimento":
-                    if(cmd.length<2) {
+                // *CMD - descrição: printar todos os alimentos em Main.CSVALIMENTOS
+                // Sintaxe: alimento printall
+                // Atalho(s): [p]rint[a]ll - pa
+                } else if(cmdSec.matches("printall") || cmdSec.matches("pa")) {
+                    Alimento.printAlimentos();
+                    entradaAlimentos(usuario);
+                
+                // *CMD - descrição: remover um alimento
+                // Sintaxe: alimento remover [alimento]
+                // Atalho(s): [r]emover - r
+                } else if(cmdSec.matches("remover") || cmdSec.matches("r")) {
+                    if(cmd.length<3) {
                         System.out.println("Argumento inválido");
                         entradaAlimentos(usuario);
                     }
                     // acrescentando todas as partes do nome do alimento ao objeto sb (StringBuilder)
-                    for(int i=1;i<cmd.length;i++) {
+                    for(int i=2;i<cmd.length;i++) {
                         sb.append(" "+cmd[i]);
 
                     }
                     // recriando o objeto ali denovo
-                    ali = new Alimento(sb.toString().trim().replace(" ","_"));
+                    Alimento ali = new Alimento(sb.toString().trim().replace(" ","_"));
                     if(ali.removerAlimento(ali.nome) == false) {
                         System.out.println("Alimento não removido pois não existe.");
                         entradaAlimentos(usuario);
@@ -487,9 +500,11 @@ public class InterfaceCLI {
                     System.out.println("Alimento removido.");
                     entradaAlimentos(usuario);
 
-                
-                case "altalimento":
-                    if(cmd.length < 4 || cmd.length > 15) {
+                // *CMD - descrição: alterar dados do alimento
+                // Sintaxe: alimento alterar [nome] [propriedade] [novo valor da propriedade]
+                // Atalho(s): [alt]erar - alt
+                } else if(cmdSec.matches("alterar") || cmdSec.matches("alt")) {
+                    if(cmd.length < 5 || cmd.length > 15) {
                         System.out.println("ERRO: Quantidade de parâmetros inválida.");
                         entradaAlimentos(usuario);
                     }
@@ -498,7 +513,7 @@ public class InterfaceCLI {
                     // indica se o algoritmo achou mais de uma propriedade
                     int match = 0;
 
-                    for(int i=1;i<cmd.length;i++) {
+                    for(int i=2;i<cmd.length;i++) {
                         if(cmd[i].matches("kcal")) {
                             c2 = i;
                             match++;
@@ -554,18 +569,17 @@ public class InterfaceCLI {
 
                     // adiciona o nome do alimento no objeto StringBuilder
                     // necessário para suporte a espaços nos nomes
-                    for(int i=1;i<c2;i++) {
+                    for(int i=2;i<c2;i++) {
                         sb.append(" "+cmd[i]);
                     }
                     String nomeLimpo = sb.toString().trim().replace(" ","_");
                     System.out.println(nomeLimpo);
                     // recriar instância do objeto Alimento
-                    ali = new Alimento(nomeLimpo);
+                    Alimento ali = new Alimento(nomeLimpo);
                     if(!(ali.alimentoExiste(ali.nome))) {
                         System.out.println("Erro: o alimento que você está tentando editar não existe.");
                         entradaAlimentos(usuario);
                     }
-
 
                     // chama o método alterarDados() dependendo em qual propriedade o usuário escolheu
                     switch(cmd[c2]) {
@@ -579,7 +593,7 @@ public class InterfaceCLI {
                         case "nome":
                             StringBuilder nom = new StringBuilder(50);
                             int diff = cmd.length - c2;
-                            for(int i=1;i<diff;i++) {
+                            for(int i=2;i<diff;i++) {
                                 nom.append(" "+cmd[c2+i]);
                             }
                             String no = nom.toString().trim().replace(" ","_");
@@ -588,38 +602,23 @@ public class InterfaceCLI {
 
                         case default:
                             System.exit(0);
-                            
-
                     }
 
-                case "printalimentos":
-                    Alimento.printAlimentos();
-                    entradaAlimentos(usuario);
-
-                case "pdap":
-                ali = new Alimento();
-                if(cmd.length < 2 || cmd.length > 10) {
-                    System.out.println("Argumentos insuficientes.");
-                    entradaAlimentos(usuario);
-                } else {
-                    for(int i=1;i<cmd.length;i++) {
-                        sb.append(" "+cmd[i]);
-                    }
-                    ali.printDadosAlimento(sb.toString().trim().replace(" ","_"));
-                    entradaAlimentos(usuario);
-                    
-                        
-                }
-
-
+                } // outros else ifs de cmdSec ficam aqui
                 
+                
+                else {
+                    System.out.println("entradaAlimentos: comando inválido [secundário]"); entradaAlimentos(usuario);
                 }
 
-
-
-                }
+            } else if(cmdPrinc.matches("voltar")) {
+                entradaUsuario();
+            } else {
+                System.out.println("entradaAlimentos: comando inválido [primário]"); entradaAlimentos(usuario);
             }
         }
+    }
+}
 
 
     
