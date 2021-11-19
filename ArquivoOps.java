@@ -15,41 +15,6 @@ import java.util.List;
 // Essa classe contém todos os métodos que fazem operações com arquivos
 public class ArquivoOps {
 
-    // TODO: Esse método deve ser movido pra Usuario.java e Alimento.java
-    public void lerDadosLinhaPorLinha(String arq) {
- 
-    try {
-
-        // Criar um objeto da classe FileReader
-        // com o arquivo .csv como parâmetro
-        FileReader fileReader = new FileReader(arq);
- 
-        // Criar um objeto da classe CSVReader 
-        // usa fileReader como parâmetro
-        CSVReader leitorCsv = new CSVReader(fileReader);
-        String[] proximaEntrada;
-        // Controle de iteração pra consertar um probleminha estético no loop a seguir
-        int it = 0;
-        // Lendo os dados linha por linha
-        while ((proximaEntrada = leitorCsv.readNext()) != null) {
-
-            for (int i=0;i<proximaEntrada.length; i++) {
-                String cell = proximaEntrada[i];
-                if (i==proximaEntrada.length-1 && it == 1) {
-                    System.out.print("\t\t" + cell);
-                } else {System.out.print(cell + "\t");}
-                
-            }
-            System.out.println();
-            it++;
-        }
-        leitorCsv.close();
-    }
-    catch (Exception e) {
-        e.printStackTrace();
-    }
-}
-
     // Lê os dados do arquivo csv especificado como parâmetro
     List<List<String>> lerDadosCSV(String arq) {
         
@@ -77,12 +42,12 @@ public class ArquivoOps {
     // Cria um CSV sem nenhum dado exceto o cabeçalho
     // Qual CSV irá criar e qual cabeçalho irá usar depende no parâmetro passado
     // Existem duas possibilidades: CSV c/ dados do usuário e CSV c/ os alimentos
-    // TODO: Esses comandos de manipular arquivos deviam estar em um try{}
-    void criarCSVeMontarCabecalho(String caminhoArq) {
+    // TODO: usar método escreverAoCSV() ao invés de fazer toda essa porra ai em baixo
+    boolean criarCSVeMontarCabecalho(String caminhoArq) {
 
         // Cria objeto da classe File usando como parâmetro o caminho do arquivo csv
         File file = new File(caminhoArq);
-        if (file.length() != 0) {System.out.println("Arquivo não está vazio, abortando..."); System.exit(0);}
+        if (file.length() != 0) {System.out.println("Arquivo não está vazio, abortando..."); return false;}
         else {
             try {
                 // Cria objeto da classe FileWriter com file como parâmetro
@@ -99,63 +64,117 @@ public class ArquivoOps {
                     System.out.println("header criado");
 
                 } else {
-                    String[] header = { "Nome", "Peso", "Altura", "Nível de Atividade", "Última Atualização" };
+                    String[] header = { "Nome", "Peso", "Altura", "Idade", "Nível de Atividade", "Última Atualização" };
                     writer.writeNext(header);
                     // TODO: DEBUG print, remover antes de enviar o código
                     System.out.println("header criado");
                 }
                 // fechando o writer
                 writer.close();
+                return true;
             } catch (IOException e) {
                 e.printStackTrace();
+                return false;
             }
         }
     }
 
     // Mesma coisa do de cima, mas pro CSV pessoal contendo os alimentos consumidos pelo usuário
-    // TODO: Adicionar suporte pra esse método nos comandos limparcsv em InterfaceCLI
-    void criarCSVeMontarCabecalho(String caminhoArq, String uNome) {
+    boolean criarCSVeMontarCabecalho(String caminhoDir, String uNome) {
+        Usuario u = new Usuario();
+        u.csvPessoalExiste(uNome);
+        if(u.csvPessoalExiste(uNome)) {
+           System.out.println("Arquivo CSV pessoal do usuário já existe. Abortando...");
+           return false;
+        } else {
+            String arq = caminhoDir+uNome+".csv";
+            String[] header = {"Nome", "KCAL", "Data da Adição", "Notas"};
+            if(escreverAoCSV(arq, header)) {
+                return true;
+
+            } else {
+                return false;
+            }
+
+            // String arq = caminhoDir+uNome;
+            // File file = new File(arq);
+            // if (file.length() != 0) {System.out.println("Arquivo não está vazio, abortando..."); System.exit(0);}
+            // else {
+            //     try {
+            //         // Cria objeto da classe FileWriter com file como parâmetro
+            //         FileWriter outputfile = new FileWriter(file);
+            
+            //         // Cria objeto da classe CSVWriter com objeto da classe FileWriter como parâmetro
+            //         CSVWriter writer = new CSVWriter(outputfile);
+                    
+            //         // Decide se tem que escrever o cabeçalho de alimentos ou do usuári
+            //         String[] header = {"Nome", "KCAL", "Data da Adição", "Notas", "Usuário que Consumiu"};
+            //         writer.writeNext(header);
+            //         System.out.println("header criado");
+            //         // closing writer connection
+            //         writer.close();
+            //         return true;
+            //     } catch (IOException e) {
+            //         e.printStackTrace();
+            //         return false;
+            //     }
+            // }
+
+        }
 
         // Cria objeto da classe File usando como parâmetro o caminho do arquivo csv
-        File file = new File(caminhoArq);
-        if (file.length() != 0) {System.out.println("Arquivo não está vazio, abortando..."); System.exit(0);}
-        else {
-            try {
-                // Cria objeto da classe FileWriter com file como parâmetro
-                FileWriter outputfile = new FileWriter(file);
-        
-                // Cria objeto da classe CSVWriter com objeto da classe FileWriter como parâmetro
-                CSVWriter writer = new CSVWriter(outputfile);
-                
-                // Decide se tem que escrever o cabeçalho de alimentos ou do usuário
-                if (caminhoArq.contains(uNome)) {
-                    String[] header = {"Nome", "KCAL", "Data da Adição", "Notas", "Usuário que Consumiu"};
-                    writer.writeNext(header);
-                    System.out.println("header criado");
-                }
-                // closing writer connection
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+
     }
 
-    // Checa se o arquivo CSV existe ou não.
-    // se os diretórios e os CSV não existirem, cria eles + monta cabeçalho
-    void checarPrimeiraExecucao() {
-        // essa condição dentro do if só retorna true se o diretório e subdiretórios foram criados
-        if(new File(Main.CSVLOGDIR).mkdirs()) {
-            System.out.println("PRIMEIRA EXECUÇÃO: Diretório 'dados' + subdiretórios criados.");
+    boolean csvExiste(String caminhoArq) {
+        if(new File(caminhoArq).exists()) {
+            return true;
+        } else {return false;}
+
+    }
+
+    // verifica várias coisas antes de iniciar o programa
+    boolean init() {
+
+        File logdir = new File(Main.CSVLOGDIR);
+
+        // verifica se logdir existe, se não existir, tenta criar
+        if(!(logdir.exists())) {
+            // mkdirs() só retorna verdadeiro se todos os diretórios e subdiretórios foram criados
+            if(logdir.mkdirs()) {
+                System.out.println("DIR: Diretório 'dados' + subdiretórios criados.");
+            } else {
+                System.out.println("ERRO: Diretórios não foram criados!");
+                return false;
+            }
+
         }
-        if(!(new File(Main.CSVALIMENTOS).exists())) {
-            criarCSVeMontarCabecalho(Main.CSVALIMENTOS);
+
+        // se CSV não existe, tenta criar, se não conseguir criar, retorna falso
+        if(!(csvExiste(Main.CSVALIMENTOS))) {
+            if(criarCSVeMontarCabecalho(Main.CSVALIMENTOS)) {
+                System.out.println("CSV: DadosAlimentos.csv não existia e foi criado.");
+
+            } else {
+                System.out.println("CSV: DadosAlimentos.csv não foi criado.");
+                return false;
+            }
         } 
-        if(!(new File(Main.CSVUSUARIO).exists())) {
-            criarCSVeMontarCabecalho(Main.CSVUSUARIO);
 
+        // se CSV não existe, tenta criar, se não conseguir criar, retorna falso
+        if(!(csvExiste(Main.CSVUSUARIO))) {
+            if(criarCSVeMontarCabecalho(Main.CSVUSUARIO)) {
+                System.out.println("CSV: DadosUsuario.csv não existia e foi criado.");
+
+            } else {
+                System.out.println("CSV: DadosUsuario.csv não foi criado.");
+                return false;
+            }
+    
         }
 
+        // só retorna verdadeiro se tudo foi executado sem erro
+        return true;
     }
 
     // Acrescenta dados ao final do arquivo csv
@@ -170,12 +189,13 @@ public class ArquivoOps {
 
     // Deleta tudo, e escreve um String[] array ao CSV
     // array pode ser nulo pra limpar o arquivo completamente
-    void escreverAoCSV(String arq, String[] fileira) {
+    boolean escreverAoCSV(String arq, String[] fileira) {
         try {
             CSVWriter writer = new CSVWriter (new FileWriter(arq, false));
             writer.writeNext(fileira);
             writer.close();
-        } catch (IOException e) {e.printStackTrace();}
+            return true;
+        } catch (IOException e) {e.printStackTrace(); return false;}
     }
 
     // Remove o cabeçalho da lista CSV lida por lerDadosCSV();
