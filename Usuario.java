@@ -10,35 +10,80 @@ public class Usuario {
     String peso;
     String altura;
     String nivelatv;
+    String idade;
 
     public static final ArquivoOps arquivoOps = new ArquivoOps();
 
-    Usuario(String nome, String peso, String altura, String nivelatv) {
+    Usuario(String nome, String peso, String altura, String idade, String nivelatv) {
 
         this.nome = nome;
         this.peso = peso;
         this.altura = altura;
         this.nivelatv = nivelatv;
+        this.idade = idade;
 
     }
 
-    Usuario() {
-        
-    }
+    Usuario() {}
 
-    void criarUsuario() {
-        String data = CLIUtil.getDataHora();
-        String[] fileira = { nome, peso, altura, nivelatv, data };
-        // ArquivoOps arquivoOps = new ArquivoOps();
-        arquivoOps.acrescentarAoCSV(Main.CSVUSUARIO, fileira);
-        if(Usuario.usuarioExiste(nome)) {
-            System.out.println("Usuário criado");
+    // retorna verdadeiro somente se conseguiu criar o usuário + csv pessoal dele
+    boolean criarUsuario() {
+        if(!(usuarioExiste(nome) && csvPessoalExiste(nome))) {
+            String data = CLIUtil.getDataHora();
+            String[] fileira = { nome, peso, altura, idade, nivelatv, data };
+            // ArquivoOps arquivoOps = new ArquivoOps();
+            arquivoOps.acrescentarAoCSV(Main.CSVUSUARIO, fileira);
+            if(Usuario.usuarioExiste(nome)) {
+                System.out.println("Usuário criado");
+                if(criarCSVPessoal(nome)) {
+                    System.out.println("CSV Pessoal criado");
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                // System.out.println("Oops, usuário não criado.");
+                return false;
+            }
 
-        } else {
-            System.out.println("Oops, usuário não criado.");
         }
 
+        return false;
+
     }
+
+    // retorna verdadeiro se e somente se o CSV pessoal de uNome existe.
+    boolean csvPessoalExiste(String uNome) {
+        List<String> arqs = new ArrayList<String>();
+        arqs.addAll(CLIUtil.getListaArq(Main.CSVLOGDIR));
+
+        for(int i=0;i<arqs.size();i++) {
+            // System.out.println("match: "+arqs.get(i));
+            if(arqs.get(i).contains(uNome)) {
+                System.out.println("existe!");
+                return true;
+
+            }
+        }
+        return false;
+    }
+
+    // retorna verdadeiro só se conseguiu criar o CSV pessoal.
+    boolean criarCSVPessoal(String uNome) {
+        if(usuarioExiste(uNome)) {
+            if(!(csvPessoalExiste(uNome))) {
+                if(arquivoOps.criarCSVeMontarCabecalho(Main.CSVLOGDIR, uNome)) {
+                    // System.out.println("CSV criado");
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
+
 
     // Remove um usuário, se achou o usuário dado como parâmetro no arquivo e removeu, retorna true, se não, false
     boolean removerUsuario(String uNome) {
@@ -68,14 +113,14 @@ public class Usuario {
                     case "peso":
                         String[] alt = getDadosUsuario(nome);
                         alt[1] = valAlt;
-                        alt[4] = CLIUtil.getDataHora();
+                        alt[5] = CLIUtil.getDataHora();
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt);
                         System.out.println("bleh");
                         return true;
                     case "nome":
                         String[] alt2 = getDadosUsuario(nome);
                         alt2[0] = valAlt;
-                        alt2[4] = CLIUtil.getDataHora();
+                        alt2[5] = CLIUtil.getDataHora();
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt2);
                         System.out.println("bleh2");
                         return true;
@@ -83,18 +128,27 @@ public class Usuario {
                     case "altura":
                         String[] alt3 = getDadosUsuario(nome);
                         alt3[2] = valAlt;
-                        alt3[4] = CLIUtil.getDataHora();
+                        alt3[5] = CLIUtil.getDataHora();
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt3);
                         System.out.println("bleh3");
                         return true;
 
                     case "nivelatv":
                         String[] alt4 = getDadosUsuario(nome);
-                        alt4[3] = valAlt;
-                        alt4[4] = CLIUtil.getDataHora();
+                        alt4[4] = valAlt;
+                        alt4[5] = CLIUtil.getDataHora();
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt4);
                         System.out.println("bleh4");
                         return true;
+
+                    case "idade":
+                        String[] alt5 = getDadosUsuario(nome);
+                        alt5[3] = valAlt;
+                        alt5[5] = CLIUtil.getDataHora();
+                        arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt5);
+                        System.out.println("bleh5");
+                        return true;
+
 
 
                     case default:
@@ -193,7 +247,8 @@ public class Usuario {
                 System.out.println("Nome: "+dados[0]);
                 System.out.println("Peso: "+dados[1]+"kg");
                 System.out.println("Altura: "+dados[2]+"cm");
-                switch(dados[3]) {
+                System.out.println("Idade: "+dados[3]+" anos");
+                switch(dados[4]) {
                     case "1":
                     System.out.println("Nível de Atividade: Sedentário");
                     break;
@@ -213,7 +268,7 @@ public class Usuario {
                     System.out.println("Argumento inválido.");
                     break;
             }
-            System.out.println("Última atualização: "+dados[4].replace("-"," "));
+            System.out.println("Última atualização: "+dados[5].replace("-"," "));
                 
         }
     }
