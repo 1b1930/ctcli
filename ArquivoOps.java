@@ -134,48 +134,7 @@ public class ArquivoOps {
     }
 
     // verifica várias coisas antes de iniciar o programa
-    boolean init() {
 
-        File logdir = new File(Main.CSVLOGDIR);
-
-        // verifica se logdir existe, se não existir, tenta criar
-        if(!(logdir.exists())) {
-            // mkdirs() só retorna verdadeiro se todos os diretórios e subdiretórios foram criados
-            if(logdir.mkdirs()) {
-                System.out.println("DIR: Diretório 'dados' + subdiretórios criados.");
-            } else {
-                System.out.println("ERRO: Diretórios não foram criados!");
-                return false;
-            }
-
-        }
-
-        // se CSV não existe, tenta criar, se não conseguir criar, retorna falso
-        if(!(csvExiste(Main.CSVALIMENTOS))) {
-            if(criarCSVeMontarCabecalho(Main.CSVALIMENTOS)) {
-                System.out.println("CSV: DadosAlimentos.csv não existia e foi criado.");
-
-            } else {
-                System.out.println("CSV: DadosAlimentos.csv não foi criado.");
-                return false;
-            }
-        } 
-
-        // se CSV não existe, tenta criar, se não conseguir criar, retorna falso
-        if(!(csvExiste(Main.CSVUSUARIO))) {
-            if(criarCSVeMontarCabecalho(Main.CSVUSUARIO)) {
-                System.out.println("CSV: DadosUsuario.csv não existia e foi criado.");
-
-            } else {
-                System.out.println("CSV: DadosUsuario.csv não foi criado.");
-                return false;
-            }
-    
-        }
-
-        // só retorna verdadeiro se tudo foi executado sem erro
-        return true;
-    }
 
     // Acrescenta dados ao final do arquivo csv
     void acrescentarAoCSV(String arq, String[] fileira) {
@@ -261,6 +220,23 @@ public class ArquivoOps {
 
     }
 
+    boolean criarArquivo(String arquivo) {
+        try {
+            File arq = new File(arquivo);
+            if (arq.createNewFile()) {
+              //System.out.println("Arquivo de configuração criado: " + arq.getName());
+              return true;
+            } else {
+              //System.out.println("Arquivo já existe.");
+              return false;
+              
+            }
+          } catch (IOException e) {
+            System.out.println("ERRO: IOException.");
+            e.printStackTrace();
+            return false;
+          }
 
+    }
 
 }
