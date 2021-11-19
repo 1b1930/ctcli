@@ -40,8 +40,26 @@ public class InterfaceCLI {
         // " " + "(sigla em inglês: TDEE)");
         // System.out.println("Isso ajuda você a controlar seu peso, já que se as calorias consumidas por dia" +
         // " excederem o valor do TDEE, você irá ganhar peso.");
+        String usr = Config.getPermaLoginUsr();
+        if(!(usr.equals("") || usr.equals(null))) {
+            if(Usuario.usuarioExiste(usr)) {
+                MenuPrincipal mp = new MenuPrincipal();
+                System.out.println("\nLogado automaticamente como "+usr);
+                System.out.println("\nPara desabilitar o login automático, digite: permalogin 0");
+                System.out.println(ANSI_GREEN+"\nDigite \"ajuda\" para obter os comandos disponíveis."+ANSI_RESET);
+                mp.entradaAlimentos(usr);
+            } else {
+                System.out.println(ANSI_RED+"\nERRO: Usuário especificado em $permalogin não existe (ctcli.config)"+ANSI_RESET);
+            }
+        }
 
-        System.out.println("\nDigite \"ajuda\" para obter todos os comandos disponíveis");
+        System.out.println("\n"+NEGRITO+"Entre como um usuário para obter acesso aos demais comandos.");
+        System.out.println("Use: usuario logar [nome do usuário]");
+
+        System.out.println("\n"+ANSI_GREEN+"Digite \"ajuda\" para obter todos os comandos disponíveis"+ANSI_RESET);
+
+
+
         // CLIUtil.waitNext();
         
         // Criando instância da subclasse MenuPrincipal
@@ -86,11 +104,16 @@ public class InterfaceCLI {
         System.out.println(NEGRITO+"Comandos de Usuário"+NORMAL);
         System.out.println("Para usar os comandos de usuário, use como prefixo \"usuario\" ou o seu atalho \"u\"");
         System.out.println("Ex: usuario remover [usuario]\n");
-        System.out.println("\t\"adicionar\" [nome] [peso (kg)] [altura em cm] [idade]\t\tAtalho: \"a\"");
+
+        System.out.println("\t\"adicionar\" [nome] [peso (kg)] [altura (cm)] [idade]\t\tAtalho: \"a\"");
         System.out.println("\tDescrição: adiciona um usuário à base de dados.\n");
+
         // System.out.println("remusuario [nome]");
-        System.out.println("\t\"editar\" [nome] [propriedade (peso, altura, idade, nivelatv)]\tAtalho: \"e\"");
+
+        System.out.println("\t\"editar\" [nome] [propriedade a ser alterada] [novo valor]\tAtalho: \"e\"");
+        System.out.println("\tPropriedades válidas: nome, peso, altura, idade, nivelatv");
         System.out.println("\tDescrição: edita uma propriedade do usuário dado como parâmetro.\n");
+
         System.out.println("\t\"remover\" [nome]\t\t\t\t\t\tAtalho: \"r\"");
         System.out.println("\tDescrição: remove o usuário dado como parâmetro.\n");
 
@@ -136,13 +159,40 @@ public class InterfaceCLI {
 
     }
 
+    void mostrarComandosAlimentos() {
+        CLIUtil.clear();
+        System.out.println(NEGRITO+"Comandos do Submenu Pessoal"+NORMAL);
+        System.out.println(NEGRITO+"\nComandos Referentes aos Alimentos\n"+NORMAL);
+        System.out.println("Para usar os comandos de alimentos, use como prefixo \"alimento\" ou o seu atalho \"a\"");
+        System.out.println("Ex: alimento remover [nome], que é a mesma coisa que \"a r [nome]\"\n");
+        System.out.println("\t\"adicionar\" [nome] [kcal/100g]\t\t\t\t\tAtalho: \"a\"");
+        System.out.println("\tDescrição: Adiciona um alimento à base de dados."+
+        "\n\tKcal/100g são quantas calorias tem 100g desse alimento.\n");
+
+        System.out.println("\t\"print\" [nome]\tAtalho: \"p\"");
+        System.out.println("\tDescrição: edita uma propriedade do usuário dado como parâmetro.\n");
+
+        System.out.println("\t\"remover\" [nome]\t\t\t\t\t\tAtalho: \"r\"");
+        System.out.println("\tDescrição: remove o alimento dado como parâmetro do banco de dados.\n");
+
+        System.out.println("\t\"alterar\" [nome] [propriedade a ser alterada] [novo valor]\tAtalho: \"alt\"");
+        System.out.println("\tPropriedades válidas: nome, kcal");
+        System.out.println("\tDescrição: alterar uma propriedade do alimento dado como parâmetro.\n");
+
+
+        System.out.println("\t\"print\" [nome]\t\t\t\t\t\t\tAtalho: \"p\"");
+        System.out.println("\tDescrição: printa os dados do alimento dado como parâmetro.\n");
+
+        System.out.println("\t\"printpretty\" [nome]\t\t\t\t\t\tAtalho: \"pp\"");
+        System.out.println("\tDescrição: printa os dados do alimento dado como parâmetro, de forma mais bonitinha.\n");
+
+        System.out.println("\t\"printall\" [nome]\t\t\t\t\t\tAtalho: \"pa\"");
+        System.out.println("\tDescrição: printa todos os alimentos.\n");
+        
+
+    }
+
     class MenuPrincipal extends InterfaceCLI {
-        // polimorfismo, sobrescrita do método mostrar();
-        void mostrar() {
-            // Caractere especial ANSI que faz o oposto do outro acima
-            // System.out.println("\033[0;0m");
-            // mostrarComandosUsuario();
-        }
 
         // Método que cuida da entrada e sanitização de dados do usuário
         void entradaUsuario() {
@@ -184,6 +234,7 @@ public class InterfaceCLI {
                 if(cmdSec.matches("adicionar") || cmdSec.matches("a")) {
                     if(cmd.length < 6 || cmd.length > 6) {
                         System.out.println("Número de argumentos inválido. Tente novamente.");
+                        System.out.println("Uso: usuario adicionar [nome] [peso (kg)] [altura (cm)] [idade]");
                         entradaUsuario();
                     }
                     // Checa se o usuário existe, se já existe, manda o usuário tentar novamente
@@ -191,6 +242,7 @@ public class InterfaceCLI {
                         // Char especial ANSI pra limpar a tela do console
                         // TODO: Deve ter uma maneira melhor de fazer isso.
                         System.out.println("O usuário já existe no banco de dados. Tente novamente.");
+                        System.out.println("Uso: usuario adicionar [nome] [peso (kg)] [altura (cm)] [idade]");
                         entradaUsuario();
                         try {Thread.sleep(3000);} catch(InterruptedException e) {e.printStackTrace();};
                     }
@@ -204,6 +256,7 @@ public class InterfaceCLI {
                         System.out.println("Use: usuario logar [nome do usuário]");
                     } else {
                         System.out.println("Usuário não criado. Tente novamente.");
+                        System.out.println("Uso: usuario adicionar [nome] [peso (kg)] [altura (cm)] [idade]");
                     }
                     entradaUsuario();
                     
@@ -211,6 +264,7 @@ public class InterfaceCLI {
                 } else if(cmdSec.matches("remover") || cmdSec.matches("r")) {
                     if(cmd.length != 3) {
                         System.out.println("Quantidade de argumentos inválida. Tente novamente.");
+                        System.out.println("Uso: usuario remover [nome]");
                         entradaUsuario();
                     }
                     Usuario u = new Usuario();
@@ -220,6 +274,7 @@ public class InterfaceCLI {
                     } else {
                         System.out.println("Usuário não removido"+
                         " pois não foi encontrado.");
+                        System.out.println("Uso: usuario remover [nome]");
                         entradaUsuario();
                     }
                     // System.out.println("Argumento aceito");
@@ -229,17 +284,21 @@ public class InterfaceCLI {
                 } else if(cmdSec.matches("editar") || cmdSec.matches("e")) {
                     if(cmd.length < 5) {
                         System.out.println("Quantidade de argumentos insuficiente. Tente novamente.");
+                        System.out.println("Uso: usuario editar [nome] [propriedade] [novo valor]");
+
                         entradaUsuario();
 
                     } else if(cmd.length > 5) {
                         System.out.println("Quantidade de argumentos excedida para esse comando. Tente novamente");
+                        System.out.println("Uso: usuario editar [nome] [propriedade] [novo valor]");
                         entradaUsuario();
 
                     } 
                     // System.out.println("+"+cmd[2]+"+");
                     if(!(cmd[3].matches("peso") || cmd[3].matches("altura") || cmd[3].matches("nome") || cmd[3].matches("nivelatv") || cmd[3].matches("idade"))) {
                         System.out.println("Propriedade inválida.");
-                        System.out.println("Comando: editusuario [nome] [propriedade (peso, altura, nivelatv)] [valor]");
+                        System.out.println("Uso: usuario editar [nome] [propriedade] [novo valor]");
+                        System.out.println("Propriedades válidas: nome, peso, altura, idade, nivelatv");
                         entradaUsuario();
                     }
 
@@ -290,7 +349,11 @@ public class InterfaceCLI {
                         CLIUtil.clear();
                         System.out.println("Logado com sucesso.\n");
                         System.out.println("Você está no seu submenu pessoal.");
-                        System.out.println(ANSI_GREEN+"Digite \"ajuda\" para obter os comandos disponíveis neste submenu."+ANSI_RESET);
+                        System.out.println(ANSI_GREEN+"\nDigite \"ajuda\" para obter os comandos disponíveis neste submenu.\n"+ANSI_RESET);
+                        // System.out.println();
+                        System.out.println(ANSI_GREEN+"Digite \"permalogin 1\" para habilitar login automático para esse usuário."+ANSI_RESET);
+
+
                         entradaAlimentos(cmd[2]);
                         entradaUsuario();
                     }
@@ -372,12 +435,13 @@ public class InterfaceCLI {
                         // System.out.println("cmd length:"+cmd.length);
 
                         System.out.println("Número de argumentos inválido. Tente novamente.");
+                        System.out.println("Uso: alimento adicionar [nome] [kcal/100g]");
                         entradaAlimentos(usuario);
 
                     // detecta se o usuário errou a ordem dos parâmetros
                    } else if(cmd[2].matches("[0-9]+")) {
                        System.out.println("O nome do alimento vem antes das calorias.");
-                       System.out.println("Tente novamente.");
+                       System.out.println("Uso: alimento adicionar [nome] [kcal/100g]");
                        entradaAlimentos(usuario);
                    }
                    System.out.println("cmd length:"+cmd.length);
@@ -392,7 +456,7 @@ public class InterfaceCLI {
                     for(int i=0;i<cmd.length;i++) {
                         // verdadeiro se cmd[i] conter SOMENTE letras
                         if(cmd[i].matches("[a-zA-Z]+")) {
-                            System.out.println("match "+c);
+                            // System.out.println("match "+c);
                             c++;
                         }
                         
@@ -400,7 +464,7 @@ public class InterfaceCLI {
                         if(cmd[i].matches("[0-9]+")) {
                             temNumQ++;
                             temNum = i;
-                            System.out.println("matches!");
+                            // System.out.println("matches!");
                         }
 
                     }
@@ -412,39 +476,39 @@ public class InterfaceCLI {
                     // checa se o usuário realmente adicionou as calorias antes de continuar
                     if(temNum == 0) {
                         System.out.println("Você esqueceu de adicionar as calorias");
-                        System.out.println("Tente novamente.");
+                        System.out.println("Uso: alimento adicionar [nome] [kcal/100g]");
                         entradaAlimentos(usuario);
 
                     } else if(temNumQ > 1) {
                         System.out.println("Comando inválido. (mais de um argumento [kcal])");
-                        System.out.println("Tente novamente.");
+                        System.out.println("Uso: alimento adicionar [nome] [kcal/100g]");
                         entradaAlimentos(usuario);
                     
                     // checa se existe algum outro comando depois de [kcal], se sim, printar erro.
                     } else if (temNum+1 < cmd.length) {
                         System.out.println("Comando inválido. (Ordem incorreta)");
-                        System.out.println("Tente novamente.");
+                        System.out.println("Uso: alimento adicionar [nome] [kcal/100g]");
                         entradaAlimentos(usuario);
                     }
 
                     // checa se o nome do alimento tem muitos espaços
                     if(c > 5) {
                         System.out.println("Nome do alimento muito grande. (Muitos espaços)");
-                        System.out.println("Tente novamente.");
+                        System.out.println("Uso: alimento adicionar [nome] [kcal/100g]");
                         entradaAlimentos(usuario);
 
                     }
 
                     // debug
-                    System.out.println("num array position: "+temNum);
-                    System.out.println(c);
+                    //System.out.println("num array position: "+temNum);
+                    // System.out.println(c);
                     // Objeto StringBuilder pra juntar as partes do comando que são o nome do alimento
                     // StringBuilder sb = new StringBuilder(50);
                     for(int i=2; i<c;i++) {
                         // Se o nome do alimento for muito grande, printar erro.
                         if(cmd[i].length() > 10) {
                             System.out.println("Nome do alimento muito grande!");
-                            System.out.println("Tente novamente.");
+                            System.out.println("Uso: alimento adicionar [nome] [kcal/100g]");
                             entradaAlimentos(usuario);
                         }
                         sb.append(" "+cmd[i]);
@@ -460,6 +524,7 @@ public class InterfaceCLI {
 
                     } else {
                         System.out.println("Alimento não adicionado pois já existe. Tente novamente.");
+                        System.out.println("Uso: alimento adicionar [nome] [kcal/100g]");
                         entradaAlimentos(usuario);
                     }
 
@@ -472,6 +537,7 @@ public class InterfaceCLI {
                 } else if(cmdSec.matches("print") || cmdSec.matches("p")) {
                     if(cmd.length < 3 || cmd.length > 10) {
                         System.out.println("Argumento inválido");
+                        System.out.println("Uso: alimento print [nome]");
                         entradaAlimentos(usuario);
 
                     }
@@ -494,6 +560,8 @@ public class InterfaceCLI {
                     Alimento ali = new Alimento();
                     if(cmd.length < 3 || cmd.length > 10) {
                         System.out.println("Argumentos insuficientes.");
+                        System.out.println("Uso: alimento printpretty [nome]");
+
                         entradaAlimentos(usuario);
                     } else {
                         for(int i=2;i<cmd.length;i++) {
@@ -516,6 +584,7 @@ public class InterfaceCLI {
                 } else if(cmdSec.matches("remover") || cmdSec.matches("r")) {
                     if(cmd.length<3) {
                         System.out.println("Argumento inválido");
+                        System.out.println("Uso: alimento remover [nome]");
                         entradaAlimentos(usuario);
                     }
                     // acrescentando todas as partes do nome do alimento ao objeto sb (StringBuilder)
@@ -527,6 +596,7 @@ public class InterfaceCLI {
                     Alimento ali = new Alimento(sb.toString().trim().replace(" ","_"));
                     if(ali.removerAlimento(ali.nome) == false) {
                         System.out.println("Alimento não removido pois não existe.");
+                        System.out.println("Uso: alimento remover [nome]");
                         entradaAlimentos(usuario);
 
                     }
@@ -641,14 +711,62 @@ public class InterfaceCLI {
                 
                 
                 else {
-                    System.out.println("entradaAlimentos: comando inválido [secundário]"); entradaAlimentos(usuario);
+                    System.out.println("Comando inválido. [secundário]"); entradaAlimentos(usuario);
                 }
 
             } else if(cmdPrinc.matches("voltar")) {
                 entradaUsuario();
-            } else {
-                System.out.println("entradaAlimentos: comando inválido [primário]"); entradaAlimentos(usuario);
+            } else if(cmdPrinc.matches("sair") || cmdPrinc.matches("s")) {
+                CLIUtil.clear();
+                System.exit(0);
+            } else if(cmdPrinc.matches("clear") || cmdPrinc.matches("c")) {
+                CLIUtil.clear();
+            } else if(cmdPrinc.matches("ajuda")) {
+                mostrarComandosAlimentos();
+
+            } else if(cmdPrinc.matches("permalogin")) {
+                if(cmd.length<2) {
+                    System.out.println("Argumentos insuficientes.");
+                    System.out.println("Uso: permalogin [0 ou 1]");
+                } else if(cmd.length>2) {
+                    System.out.println("Quantidade de argumentos excedida.");
+                    System.out.println("Uso: permalogin [0 ou 1]");
+                } else if(cmdSec.matches("1")) {
+                    if(Config.getPermaLoginUsr().equals(usuario)) {
+                        System.out.println("Permalogin já está ativado para esse usuário.");
+                    }
+                    if(Config.addPermaLoginUsr(usuario)) {
+                        System.out.println("Permalogin habilitado para o usuário "+usuario);
+                    } else {
+                        System.out.println("ERRO: Permalogin não habilitado.");
+                        System.out.println("Uso: permalogin [0 ou 1]");
+                    }
+                } else if(cmdSec.matches("0")) {
+                    if(Config.getPermaLoginUsr().equals(usuario)) {
+                        if(Config.addPermaLoginUsr("")) {
+                            System.out.println("Permalogin desativado para o usuário "+usuario);
+                        } else {
+                            System.out.println("Permalogin não desativado por algum motivo.");
+                        }
+                    } else {
+                        System.out.println("Permalogin não está habilitado para esse usuário.");
+                    }
+
+                } else {
+                    System.out.println("Argumentos inválidos.");
+                    System.out.println("Uso: permalogin [0 ou 1]");
+
+                }
+                entradaAlimentos(usuario);
+
             }
+            
+            
+            
+            else {
+                System.out.println("Comando inválido. [primário]"); entradaAlimentos(usuario);
+            }
+            entradaAlimentos(usuario);
         }
     }
 }
