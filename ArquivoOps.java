@@ -1,7 +1,10 @@
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -10,6 +13,8 @@ import com.opencsv.exceptions.CsvException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 // Essa classe contém todos os métodos que fazem operações com arquivos
@@ -220,6 +225,7 @@ public class ArquivoOps {
 
     }
 
+    // cria um arquivo se não existe.
     boolean criarArquivo(String arquivo) {
         try {
             File arq = new File(arquivo);
@@ -238,5 +244,94 @@ public class ArquivoOps {
           }
 
     }
+
+    // lê todas as linhas do arquivo para uma Lista<String> e retorna ela
+    List<String> lerArquivo(String arq) {
+        List<String> result = new ArrayList<>();
+	    try (Stream<String> lines = Files.lines(Paths.get(arq))) {
+		result = lines.collect(Collectors.toList());
+        return result;
+	    } catch (IOException e) {
+            System.out.println("oops");
+            e.printStackTrace();
+            System.exit(0);
+        }
+
+        return result;
+
+    }
+
+    // substituir uma linha $match no arquivo $arq, pela linha $subs
+    // TODO: O que acontece se tiver mais de um permalogin no arquivo config?
+    boolean substituirNoArquivo(String arq, String match, String subs) {
+        List<String> lista = new ArrayList<String>();
+        lista.addAll(lerArquivo(Config.ARQCONFIG));
+        int cont = 0;
+        for(int i=0;i<lista.size();i++) {
+            System.out.println(lista.get(i));
+            if(lista.get(i).contains(match)) {
+                lista.remove(i);
+                lista.add(i, subs);
+                cont++;
+            }
+        }
+        // só continua se só achou uma instância de permalogin=
+        if(cont == 1) {
+            if(escreverAoArquivo(arq)) {
+                for(int i=0;i<lista.size();i++) {
+                    if(acrescentarAoArquivo(arq, lista.get(i).toString())) {
+                        System.out.println("DEBUG: adicionado.");
+                    } else {
+                        System.out.println("DEBUG: ERRO: Não adicionado por algum motivo.");
+                        return false;
+                    }
+                }
+            } else {
+                return false;
+            }
+            return true;
+        } else {
+            System.out.println("ERRO: Mais de um 'permalogin' no arquivo ctcli.config?");
+        }
+        return false;
+        
+    }
+
+    // acrescenta $asc ao final do arquivo, não sobrescreve nada
+    boolean acrescentarAoArquivo(String arq, String asc) {
+        try {
+            String str = asc;
+            String fileName = arq;
+            // cria BW com objeto FileWriter em modo append (acrescentar)
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true));
+            writer.append(str+"\n");
+            writer.close();
+            return true;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    // escreve ao arquivo, deletando tudo
+    // TODO: Esse é suposto a ser um método sobrecarregado mas eu to com mt sono pra codar o resto
+    boolean escreverAoArquivo(String arq) {
+        try {
+            String str = "";
+            BufferedWriter writer = new BufferedWriter(new FileWriter(arq));
+            writer.write(str);
+            
+            writer.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+
 
 }
