@@ -69,7 +69,7 @@ public class ArquivoOps {
                     System.out.println("header criado");
 
                 } else {
-                    String[] header = { "Nome", "Peso", "Altura", "Idade", "Nível de Atividade", "Última Atualização" };
+                    String[] header = { "Nome", "Peso", "Altura", "Idade", "Sexo", "Nível de Atividade", "TDEE", "Última Atualização" };
                     writer.writeNext(header);
                     // TODO: DEBUG print, remover antes de enviar o código
                     System.out.println("header criado");
@@ -280,9 +280,9 @@ public class ArquivoOps {
             if(escreverAoArquivo(arq)) {
                 for(int i=0;i<lista.size();i++) {
                     if(acrescentarAoArquivo(arq, lista.get(i).toString())) {
-                        System.out.println("DEBUG: adicionado.");
+                        // System.out.println("DEBUG: adicionado.");
                     } else {
-                        System.out.println("DEBUG: ERRO: Não adicionado por algum motivo.");
+                        System.out.println("DEBUG: Não adicionado por algum motivo.");
                         return false;
                     }
                 }
@@ -329,6 +329,18 @@ public class ArquivoOps {
             e.printStackTrace();
             return false;
         }
+
+    }
+
+    boolean deletarArquivo(String arq) {
+        File f = new File(arq); 
+        if (f.delete()) { 
+          System.out.println("DEBUG: Arquivo deletado: " + f.getName());
+          return true;
+        } else {
+          System.out.println("DEBUG: Arquivo não deletado.");
+          return false;
+        } 
 
     }
 
