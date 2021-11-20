@@ -14,7 +14,7 @@ public class Main {
 
     public static final String ARQUIVOCONFIG = "dados/ctcli.config";
 
-
+    public static int FIRSTL = 0;
     
     public static void main(String[] args) throws FileNotFoundException, IOException {
 
@@ -26,7 +26,12 @@ public class Main {
         // aq.criarCSVeMontarCabecalho(Main.CSVLOGDIR, "daniel.csv");
         if(init()) {
             InterfaceCLI intf = new InterfaceCLI();
-            intf.mostrar();
+            System.out.println(FIRSTL);
+            if(FIRSTL != 4) {
+                intf.mostrar(false);
+            } else {
+                intf.mostrar(true);
+            }
 
         } else {
             System.out.println("R.I.P");
@@ -46,6 +51,7 @@ public class Main {
             // mkdirs() só retorna verdadeiro se todos os diretórios e subdiretórios foram criados
             if(logdir.mkdirs()) {
                 System.out.println("DIR: Diretório 'dados' + subdiretórios criados.");
+                FIRSTL++;
             } else {
                 System.out.println("ERRO: Diretórios não foram criados!");
                 return false;
@@ -56,6 +62,7 @@ public class Main {
         if(!(aqv.csvExiste(Main.CSVALIMENTOS))) {
             if(aqv.criarCSVeMontarCabecalho(Main.CSVALIMENTOS)) {
                 System.out.println("CSV: DadosAlimentos.csv não existia e foi criado.");
+                FIRSTL++;
 
             } else {
                 System.out.println("CSV: DadosAlimentos.csv não foi criado.");
@@ -67,6 +74,7 @@ public class Main {
         if(!(aqv.csvExiste(Main.CSVUSUARIO))) {
             if(aqv.criarCSVeMontarCabecalho(Main.CSVUSUARIO)) {
                 System.out.println("CSV: DadosUsuario.csv não existia e foi criado.");
+                FIRSTL++;
 
             } else {
                 System.out.println("CSV: DadosUsuario.csv não foi criado.");
@@ -78,13 +86,14 @@ public class Main {
         if(!(Config.configExiste())) {
             if(Config.criarConfig()) {
                 System.out.println("CONFIG: Arquivo criado. "+"("+Config.ARQCONFIG+")");
+                FIRSTL++;
             } else {
                 System.out.println("CONFIG: Arquivo não foi criado.");
                 return false;
             }
         }
-
         // só retorna verdadeiro se tudo foi executado sem erro
         return true;
     }
+
 }
