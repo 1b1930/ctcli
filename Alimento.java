@@ -28,7 +28,7 @@ public class Alimento {
      Alimento() {}
 
      // adiciona um alimento usando acrescentaraocsv
-     // TODO: Adicionar checks pra saber se o alimento já existe no banco de dados
+
      boolean adicionarAlimento() {
 
         if(alimentoExiste(this.nome)) {
@@ -38,7 +38,7 @@ public class Alimento {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");  
         LocalDateTime now = LocalDateTime.now();  
         data = dtf.format(now).toString();
-        System.out.println(data);  
+        // System.out.println(data);  
         String[] fileira = { nome, kcal, data };
         arquivoOps.acrescentarAoCSV(Main.CSVALIMENTOS, fileira);
         return true;
@@ -105,14 +105,14 @@ public class Alimento {
                 // o +1 é porque o substituirFila() lê todo o arquivo, incluindo o cabeçalho
                 // então é necessário pular o cabeçalho, por isso o +1
                 arquivoOps.substituirFila(Main.CSVALIMENTOS, i+1);
-                System.out.println("werks?");
+                // System.out.println("werks?");
                 return true;
             }
         }
     return false;
     }
 
-    // TODO: Adicionar suporte aos CSVs pessoais
+    // TODO: Adicionar suporte aos diários
     boolean alterarDados(String nome, String prop, String valAlt, boolean bdPessoal) {
         // Pegando a lista de usuários
         List<String> lista = new ArrayList<String>(arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVALIMENTOS)));
@@ -126,18 +126,18 @@ public class Alimento {
                         String[] alt = getDadosAlimento(nome);
                         alt[1] = valAlt;
                         arquivoOps.substituirFila(Main.CSVALIMENTOS, i+1, alt);
-                        System.out.println("bleh");
+                        //System.out.println("bleh");
                         return true;
                     case "nome":
                         String[] alt2 = getDadosAlimento(nome);
                         alt2[0] = valAlt;
                         arquivoOps.substituirFila(Main.CSVALIMENTOS, i+1, alt2);
-                        System.out.println("bleh2");
+                        // System.out.println("bleh2");
                         return true;
 
-
                     case default:
-                        System.out.println("lol");
+                        return false;
+                        //System.out.println("lol");
 
                 }
 
