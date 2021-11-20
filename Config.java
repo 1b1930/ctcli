@@ -44,13 +44,15 @@ public class Config {
 
     }
 
-    // retorna o que vem depois do = em permalogin= em ctcli.config
+    // retorna o que vem depois do = em permalogin= em ctcli.config como String, pode ser "" ou null
     static String getPermaLoginUsr() {
         List<String> lista = new ArrayList<>();
         ArquivoOps arquivoOps = new ArquivoOps();
         lista.addAll(arquivoOps.lerArquivo(Config.ARQCONFIG));
         for (int i=0;i<lista.size();i++) {
             if(lista.get(i).contains("permalogin")) {
+                // retorna uma substring com tudo o que vem depois de =
+                // remove espaços em branco
                 return(lista.get(i)
                 .substring(lista.get(i)
                 .lastIndexOf("=") + 1)
