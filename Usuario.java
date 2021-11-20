@@ -32,7 +32,12 @@ public class Usuario {
     boolean criarUsuario() {
         if(!(usuarioExiste(nome) && csvPessoalExiste(nome))) {
             String data = CLIUtil.getDataHora();
-            String[] fileira = { nome, peso, altura, idade, sexo.toUpperCase(), nivelatv, data };
+            Double tdee = calcularTDEE();
+            if(tdee == -1.0) {
+                return false;
+            }
+            String strtdee = Double.toString(tdee).substring(0,Double.toString(tdee).indexOf("."));
+            String[] fileira = { nome, peso, altura, idade, sexo.toUpperCase(), nivelatv, strtdee, data };
             // ArquivoOps arquivoOps = new ArquivoOps();
             arquivoOps.acrescentarAoCSV(Main.CSVUSUARIO, fileira);
             // Depois de acrescentar ao CSV, checa se o usuário agora está presente
@@ -40,7 +45,7 @@ public class Usuario {
                 System.out.println("Usuário criado");
                 // Se está presente, tenta criar o diário do usuário (CSV Pessoal)
                 if(criarCSVPessoal(nome)) {
-                    System.out.println("CSV Pessoal criado");
+                    System.out.println("Diário criado");
                     return true;
                 } else {
                     return false;
@@ -84,8 +89,6 @@ public class Usuario {
         return false;
     }
 
-
-
     // Remove um usuário, se achou o usuário dado como parâmetro no arquivo e removeu, retorna true, se não, false
     boolean removerUsuario(String uNome) {
         List<String> b = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO));
@@ -94,7 +97,13 @@ public class Usuario {
                 // o +1 é porque o removerFila() lê todo o arquivo, incluindo o cabeçalho
                 // então é necessário pular o cabeçalho, por isso o +1
                 arquivoOps.substituirFila(Main.CSVUSUARIO, i+1);
-                return true;
+                Diario c = new Diario(uNome);
+                if(c.deletarDiario()) {
+                    return true;
+                } else {
+                    return false;
+                }
+                // return true;
             }
         }
         return false;
@@ -105,6 +114,7 @@ public class Usuario {
     boolean alterarDados(String nome, String prop, String valAlt) {
         // Pegando a lista de usuários
         List<String> lista = new ArrayList<String>(arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO)));
+        Usuario u = new Usuario();
         // Iterando a lista
         for(int i=0;i<lista.size();i++) {
             // tenta acha o nome do usuário
@@ -115,7 +125,7 @@ public class Usuario {
                     case "nome":
                         String[] alt = getDadosUsuario(nome);
                         alt[0] = valAlt;
-                        alt[6] = CLIUtil.getDataHora();
+                        alt[7] = CLIUtil.getDataHora();
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt);
                         System.out.println("bleh2");
                         return true;
@@ -123,7 +133,9 @@ public class Usuario {
                     case "peso":
                         String[] alt2 = getDadosUsuario(nome);
                         alt2[1] = valAlt;
-                        alt2[6] = CLIUtil.getDataHora();
+                        alt2[7] = CLIUtil.getDataHora();
+                        u = new Usuario(alt2[0],alt2[1],alt2[2],alt2[3],alt2[4],alt2[5]);
+                        alt2[6] = Double.toString(u.calcularTDEE());
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt2);
                         System.out.println("bleh");
                         return true;
@@ -132,7 +144,7 @@ public class Usuario {
                     case "altura":
                         String[] alt3 = getDadosUsuario(nome);
                         alt3[2] = valAlt;
-                        alt3[6] = CLIUtil.getDataHora();
+                        alt3[7] = CLIUtil.getDataHora();
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt3);
                         System.out.println("bleh3");
                         return true;
@@ -141,7 +153,7 @@ public class Usuario {
                     case "idade":
                         String[] alt4 = getDadosUsuario(nome);
                         alt4[3] = valAlt;
-                        alt4[6] = CLIUtil.getDataHora();
+                        alt4[7] = CLIUtil.getDataHora();
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt4);
                         System.out.println("bleh5");
                         return true;
@@ -150,7 +162,7 @@ public class Usuario {
                     case "sexo":
                         String[] alt5 = getDadosUsuario(nome);
                         alt5[4] = valAlt.toUpperCase();
-                        alt5[6] = CLIUtil.getDataHora();
+                        alt5[7] = CLIUtil.getDataHora();
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt5);
                         System.out.println("bleh6");
                         return true;
@@ -158,7 +170,7 @@ public class Usuario {
                     case "nivelatv":
                         String[] alt6 = getDadosUsuario(nome);
                         alt6[5] = valAlt;
-                        alt6[6] = CLIUtil.getDataHora();
+                        alt6[7] = CLIUtil.getDataHora();
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt6);
                         System.out.println("bleh4");
                         return true;
@@ -281,22 +293,77 @@ public class Usuario {
                     System.out.println("printDadosUsuario: nivelatv inválido.");
                     break;
             }
-            System.out.println("Última atualização: "+dados[6].replace("-"," "));
+
+            System.out.println("TDEE: "+dados[6]);
+            System.out.println("Última atualização: "+dados[7].replace("-"," "));
                 
         }
     }
 
     // Calcula BMI do usuário usando a fórmula de Harris-Benedict
+    // BMI = Índice Metabólico Basal, quantas calorias o corpo gasta em repouso durante 24h
     // Necessário pra calcular o TDEE
     // Fórmula:
     // Mulheres: 655 + (9,6 x peso em kg) + (1,8 x altura em cm) – (4,7 x idade em anos)
     // Homens: 66 + (13,7 x peso em kg) + (5 x altura em cm) – (6,5 x idade em anos)
-    String calcularBMI() {
-        return null;
-        
+    Double calcularBMI() {
 
+        if(sexo.equalsIgnoreCase("f")) {
+            double bmi = 655
+             + (9.6 * Double.parseDouble(peso))
+              + (1.8 * Double.parseDouble(altura))
+               - (4.7 * Double.parseDouble(idade));
 
+            return bmi;
 
+            
+        } else if(sexo.equalsIgnoreCase("m")) {
+            double bmi = 66
+            + (13.7 * Double.parseDouble(peso))
+             + (5 * Double.parseDouble(altura))
+              - (6.5 * Double.parseDouble(idade));
+
+            // System.out.println(bmi);
+            return bmi;
+        }
+        return 0.0;
+    }
+
+    Double calcularTDEE() {
+        Double tdee;
+        Double bmi = calcularBMI();
+        if(bmi == 0.0) {
+            return -1.0;
+        }
+        switch(nivelatv) {
+            case "1":
+                tdee = bmi * 1.2;
+                return tdee;
+            case "2":
+                tdee = bmi * 1.375;
+                return tdee;
+            case "3":
+                tdee = bmi * 1.55;
+                return tdee;
+            case "4":
+                tdee = bmi * 1.725;
+                return tdee;
+            case "5":
+                tdee = bmi * 1.9;
+                return tdee;
+            case default:
+                return -1.0;
+
+        }
+
+    }
+
+    static String getTDEE(String usr) {
+        String[] dados = getDadosUsuario(usr);
+        if(dados.length < 8) {
+            return null;
+        }
+        return dados[6];
 
     }
 
@@ -345,13 +412,10 @@ public class Usuario {
     // método sobrecarregado, ao invés de validar todos os dados, valida só um $dado conforme $prop
     // TODO: Migrar mensagens de erro pra interfaceCLI
     static boolean validarDadosUsuario(String prop, String dado) {
-
         switch(prop) {
             case "peso":
                 if(!dado.matches("[0-9]+") || dado.length() < 2 || Integer.parseInt(dado) > 500) {
                     System.out.println("Parâmetro [peso] inválido. Tente novamente.");
-                    System.out.println("Valor tem que ser número, ter pelo menos dois dígitos, e ser menor que 500.");
-                    System.out.println("Uso: usuario adicionar [nome] [peso (kg)] [altura (cm)] [idade] [sexo]");
                     return false;
                 }
                 return true;
@@ -359,17 +423,14 @@ public class Usuario {
             case "altura":
                 if(!dado.matches("[0-9]+") || dado.length() < 2 || Integer.parseInt(dado) > 300) {
                     System.out.println("Parâmetro [altura] inválido. Tente novamente.");
-                    System.out.println("Valor tem que ser número, ter pelo menos dois dígitos, e ser menor que 300.");
-                    System.out.println("Uso: usuario adicionar [nome] [peso (kg)] [altura (cm)] [idade] [sexo]");
                     return false;
                 }
                 return true;
 
             case "idade":
-                if(!dado.matches("[0-9]+") || Integer.parseInt(dado) > 110 || Integer.parseInt(dado) < 10) {
+                int d5 = Integer.parseInt(dado);
+                if(!dado.matches("[0-9]+") || d5 > 110 || d5 < 10) {
                     System.out.println("Parâmetro [idade] inválido. Tente novamente.");
-                    System.out.println("Valor tem que ser número, ser maior que 10, e ser menor que 110.");
-                    System.out.println("Uso: usuario adicionar [nome] [peso (kg)] [altura (cm)] [idade] [sexo]");
                     return false;
                 }
                 return true;
@@ -378,21 +439,23 @@ public class Usuario {
 
                 if(!(dado.equalsIgnoreCase("f") || dado.equalsIgnoreCase("m"))) {
                     System.out.println("Parâmetro [sexo] inválido. Tente novamente.");
-                    System.out.println("Uso: usuario adicionar [nome] [peso (kg)] [altura (cm)] [idade] [sexo]");
                     return false;
                 }
                 return true;
 
+            case "nivelatv":
+
+                int d6 = Integer.parseInt(dado);
+                if(!dado.matches("[0-9]+") || d6 > 5 || d6 < 1) {
+                    System.out.println("Parâmetro [nivelatv] inválido. Tente novamente.");
+                    return false;
+                }
+                return true;
+    
             case "default":
                 return false;
-
-            
-                
-
         }
-
         return false;
-
     }
 
 
