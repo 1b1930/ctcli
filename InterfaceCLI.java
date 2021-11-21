@@ -457,10 +457,13 @@ public class InterfaceCLI {
 
             String cmdPrinc = cmd[0];
             String cmdSec;
+            String cmdTer;
             try {
                 cmdSec = cmd[1];
+                cmdTer = cmd[2];
             } catch (ArrayIndexOutOfBoundsException e) {
                 cmdSec = "";
+                cmdTer = cmd[2];
             }
 
             // TODO: comandos de logar no CSV pessoal
@@ -539,7 +542,8 @@ public class InterfaceCLI {
                     for(int i=0;i<cmd.length;i++) {
                         // verdadeiro se cmd[i] conter SOMENTE letras
                         // Fix: só adicionar a c se ainda não foi achado nenhum número
-                        if(cmd[i].matches("[a-zA-Z]+") && temNum == 0) {
+                        // cmd[i].matches("[a-zA-Z().,!@#$%¨&*=-\\<>^´`{}'+-\"[]]+")
+                        if(!cmd[i].matches("[0-9]+") && !cmd[i].contains(",") && temNum == 0) {
                             c++;
                         }
                         
@@ -592,7 +596,7 @@ public class InterfaceCLI {
                     // StringBuilder sb = new StringBuilder(50);
                     for(int i=2;i<c;i++) {
                         // Se o nome do alimento for muito grande, printar erro.
-                        if(cmd[i].length() > 10) {
+                        if(cmd[i].length() > 14) {
                             System.out.println("\nNome do alimento muito grande!");
                             System.out.println("Uso: alimento adicionar [nome] [calorias consumidas] [notas (opcional)]");
                             entradaAlimentos(usuario);
@@ -665,6 +669,12 @@ public class InterfaceCLI {
                     entradaAlimentos(usuario);
 
                 } else if(cmdSec.matches("print") || cmdSec.matches("p")) {
+
+                    if(cmdTer.matches("hoje") || cmdTer.matches("h")) {
+
+                    }
+
+
                     // printa o cabeçalho da lista
                     // usa um mínimo de 22 caracteres para cada string e é alinhado à esquerda por causa do - antes do 22.
                     System.out.printf("%-22s%-22s%-22s%-22s","NOME","KCAL","DATA","NOTAS");
@@ -679,7 +689,7 @@ public class InterfaceCLI {
                     String[] indiv;
                     // armazena todos os dados de um registro, irá ser quebrado
                     // e os dados serão adicionados individualmente em indiv[]
-                    String el;
+                    String alimento;
                     // calorias consumidas no dia (hoje)
                     double kDia = 0.0;
                     // armazena a data de hoje, necessita de data correta no SO
@@ -693,8 +703,8 @@ public class InterfaceCLI {
 
 
                     for(int i=0;i<lista.size();i++) {
-                        el = lista.get(i).replaceAll("[\\[\\]]", "");
-                        indiv = el.split(",");
+                        alimento = lista.get(i).replaceAll("[\\[\\]]", "");
+                        indiv = alimento.split(",");
                         for(int j=0;j<indiv.length;j++) {
                             System.out.print(String.format("%-22s",indiv[j].replace("_"," ").trim()));
                             if(j==1) {
@@ -706,17 +716,33 @@ public class InterfaceCLI {
                                     kDia += Double.parseDouble(indiv[j]);
                                 }
                             }
-                            // System.out.println("booooooooooo");
                         }
                         System.out.println();
                     }
 
-                    System.out.printf("\nTOTAL DE CALORIAS CONSUMIDAS HOJE: %.0f\n",kDia);
-                    
+                    System.out.printf(NEGRITO+"\nTOTAL DE CALORIAS CONSUMIDAS HOJE: "+ANSI_GREEN+"%.0f\n"+ANSI_RESET,kDia);
 
+                    Usuario u = new Usuario(usuario);
+                    String uTDEE = u.getTDEE();
+                    double uTDEEconv = Double.parseDouble(uTDEE);
+                    double porcentagem;
+                    if(uTDEE.isBlank()) {
+                        System.out.println(ANSI_RESET);
+
+                    } else {
+                        porcentagem = (kDia/uTDEEconv)*100;
+                        System.out.printf(NEGRITO+"\nVOCÊ CONSUMIU ");
+                        System.out.printf(ANSI_GREEN+"%.0f%%"+ANSI_RESET+NEGRITO,((kDia/uTDEEconv)*100));
+                        System.out.printf(" DO SEU TDEE (%s)\n"+ANSI_RESET,uTDEE);
+                    }
+                    
                 }
+
+
+
                 else {
                     System.out.println("Comando inválido. [Diário]");
+
                 }
 
             } // else ifs de cmdPrinc são aqui
@@ -729,7 +755,3 @@ public class InterfaceCLI {
         }
     }
 }
-
-
-    
-
