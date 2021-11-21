@@ -1,5 +1,7 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Diario {
@@ -65,6 +67,39 @@ public class Diario {
     List<String> getDadosAlimentosDiario() {
         List<String> lista = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(nomeCsv));
         return lista;
+
+    }
+
+    List<String> getDadosAlimentosDiario(LocalDate data) {
+        List<String> lista = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(nomeCsv));
+        List<String> listaFiltrada = new ArrayList<String>();
+        String alimento;
+        String[] alimentoSplit;
+        LocalDate dataAlimento;
+        LocalDateTime dataHoraAlimento;
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");  
+
+
+        for(int i=0;i<lista.size();i++) {
+            alimento = lista.get(i).replaceAll("[\\[\\]]", "").trim();
+            alimentoSplit = alimento.split(",");
+            for(int j=0;j<alimentoSplit.length;j++) {
+                if(j==2) {
+                    dataHoraAlimento = LocalDateTime.parse(alimentoSplit[j], dtf);
+                    dataAlimento = dataHoraAlimento.toLocalDate();
+                    if(dataAlimento.isEqual(data)) {
+                        listaFiltrada.add(lista.get(i));
+                    }
+
+                }
+
+            }
+
+        }
+
+        return listaFiltrada;
+
+
 
     }
 
