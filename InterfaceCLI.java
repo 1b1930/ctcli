@@ -383,11 +383,6 @@ public class InterfaceCLI {
                 else {System.out.println("Comando inválido."); entradaUsuario();}
 
             /* COMANDOS PRINCIPAIS */
-            } else if(cmdPrinc.matches("alimento") || cmdPrinc.matches("a")) {
-                System.out.print("\nPara obter acesso aos comandos de alimento, você precisa logar como um usuário salvo usando ");
-                System.out.print("\"usuario logar [nome do usuário]\n\"");
-                System.out.println("Caso não tenha salvo seus dados, use \"usuario adicionar [nome] [peso] [altura]\"");
-                entradaUsuario();
             } else if(cmdPrinc.matches("sair") || cmdPrinc.matches("s")) {
                 CLIUtil.clear();
                 System.exit(0);
@@ -786,13 +781,13 @@ public class InterfaceCLI {
                     if(cmd.length < 4) {
 
                         System.out.println("Número de argumentos inválido. Tente novamente.");
-                        System.out.println("Uso: alimento adicionar [nome] [quantidade consumida (g)] [notas (opcional)]");
+                        System.out.println("Uso: alimento adicionar [nome] [calorias consumidas] [notas (opcional)]");
                         entradaAlimentos(usuario);
 
                     // detecta se o usuário errou a ordem dos parâmetros
                    } else if(cmd[2].matches("[0-9]+")) {
-                       System.out.println("O nome do alimento vem antes das gramas.");
-                       System.out.println("Uso: alimento adicionar [nome] [quantidade consumida (g)] [notas (opcional)]");
+                       System.out.println("O nome do alimento vem antes das calorias.");
+                       System.out.println("Uso: alimento adicionar [nome] [calorias consumidas] [notas (opcional)]");
                        entradaAlimentos(usuario);
                    }
 
@@ -825,29 +820,29 @@ public class InterfaceCLI {
                     
                     // checa se o usuário realmente adicionou as calorias antes de continuar
                     if(temNum == 0) {
-                        System.out.println("\nERRO: valor [quantidade consumida(g)] não encontrado.");
-                        System.out.println("Uso: alimento adicionar [nome] [quantidade consumida (g)]");
+                        System.out.println("\nERRO: valor [calorias consumidas] não encontrado.");
+                        System.out.println("Uso: alimento adicionar [nome] [calorias consumidas] [notas (opcional)]");
                         entradaAlimentos(usuario);
 
                     }
                     // checa se o nome do alimento tem muitos espaços
                     if(c > 5) {
                         System.out.println("\nNome do alimento muito grande. (Muitos espaços)");
-                        System.out.println("Uso: alimento adicionar [nome] [quantidade consumida (g)]");
+                        System.out.println("Uso: alimento adicionar [nome] [calorias consumidas] [notas (opcional)]");
                         entradaAlimentos(usuario);
 
                     }
 
                     if(c == 2) {
                         System.out.println("\nNome só pode conter letras e espaços. Tente novamente.");
-                        System.out.println("Uso: alimento adicionar [nome] [quantidade consumida (g)]");
+                        System.out.println("Uso: alimento adicionar [nome] [calorias consumidas] [notas (opcional)]");
                         entradaAlimentos(usuario);
 
                     }
 
                     if(cmd[temNum].length() > 4 || Integer.parseInt(cmd[temNum]) == 0) {
                         System.out.println("\nERRO: valor [quantidade consumida (g)] inválido.");
-                        System.out.println("Uso: alimento adicionar [nome] [quantidade consumida (g)]");
+                        System.out.println("Uso: alimento adicionar [nome] [calorias consumidas] [notas (opcional)]");
                         entradaAlimentos(usuario);
                         
                     }
@@ -861,7 +856,7 @@ public class InterfaceCLI {
                         // Se o nome do alimento for muito grande, printar erro.
                         if(cmd[i].length() > 10) {
                             System.out.println("\nNome do alimento muito grande!");
-                            System.out.println("Uso: alimento adicionar [nome] [quantidade consumida (g)]");
+                            System.out.println("Uso: alimento adicionar [nome] [calorias consumidas] [notas (opcional)]");
                             entradaAlimentos(usuario);
                         }
                         sb.append(" "+cmd[i]);
@@ -871,37 +866,37 @@ public class InterfaceCLI {
                     // System.out.println(sb.toString().trim().replace(" ","_"));
                     String validA = sb.toString().trim().replace(" ","_");
 
-                    if(!(ali.alimentoExiste(validA))) {
-                        System.out.println("\nAlimento não existe no banco de dados principal. Deseja adicioná-lo? Y ou N");
+                    // if(!(ali.alimentoExiste(validA))) {
+                    //     System.out.println("\nAlimento não existe no banco de dados principal. Deseja adicioná-lo? Y ou N");
 
-                        String u = CLIUtil.getUserInput();
-                        while(!(u.equalsIgnoreCase("y") || u.equalsIgnoreCase("n"))) {
-                            System.out.println("Digite Y para sim ou N para não.");
-                            u = CLIUtil.getUserInput();
-                        }
+                    //     String u = CLIUtil.getUserInput();
+                    //     while(!(u.equalsIgnoreCase("y") || u.equalsIgnoreCase("n"))) {
+                    //         System.out.println("Digite Y para sim ou N para não.");
+                    //         u = CLIUtil.getUserInput();
+                    //     }
 
-                        if(u.equalsIgnoreCase("y")) {
-                            System.out.println("\nDigite a quantidade de calorias em 100g desse alimento: ");
-                            String al = CLIUtil.getUserInput();    
-                            while(!(al.matches("[0-9]+")) || Integer.parseInt(al) > 10000) {
-                                System.out.println("\nValor inválido. (Tem que ser número)");
-                                al = CLIUtil.getUserInput();
-                            }
+                    //     if(u.equalsIgnoreCase("y")) {
+                    //         System.out.println("\nDigite a quantidade de calorias em 100g desse alimento: ");
+                    //         String al = CLIUtil.getUserInput();    
+                    //         while(!(al.matches("[0-9]+")) || Integer.parseInt(al) > 10000) {
+                    //             System.out.println("\nValor inválido. (Tem que ser número)");
+                    //             al = CLIUtil.getUserInput();
+                    //         }
 
-                            Alimento ali2 = new Alimento(validA,al.trim());
-                            if(ali2.adicionarAlimento()) {
-                                System.out.println("\nAlimento adicionado com sucesso! (Banco de dados)");
-                            } else {
-                                System.out.println("ERRO: Alimento não foi adicionado.");
-                            }
+                    //         Alimento ali2 = new Alimento(validA,al.trim());
+                    //         if(ali2.adicionarAlimento()) {
+                    //             System.out.println("\nAlimento adicionado com sucesso! (Banco de dados)");
+                    //         } else {
+                    //             System.out.println("ERRO: Alimento não foi adicionado.");
+                    //         }
 
-                        } else if(u.equalsIgnoreCase("n")) {
-                            System.out.println("\nAlimento não será adicionado tanto ao banco de dados quanto ao seu diário.");
-                            System.out.println("Voltando para o submenu...");
-                            entradaAlimentos(usuario);
-                        }
+                    //     } else if(u.equalsIgnoreCase("n")) {
+                    //         System.out.println("\nAlimento não será adicionado tanto ao banco de dados quanto ao seu diário.");
+                    //         System.out.println("Voltando para o submenu...");
+                    //         entradaAlimentos(usuario);
+                    //     }
 
-                    }
+                    // }
 
                     // stringbuilder que vai armazenar a nota
                     StringBuilder nom = new StringBuilder(50);
@@ -984,7 +979,7 @@ public class InterfaceCLI {
                         indiv = el.split(",");
                         for(int j=0;j<indiv.length;j++) {
                             System.out.print(String.format("%-22s",indiv[j].replace("_"," ").trim()));
-                            if(j==2) {
+                            if(j==1) {
                                 dataHoraNoDiario = LocalDateTime.parse(indiv[j+1].trim(), dtf);
                                 dataNoDiario = dataHoraNoDiario.toLocalDate();
                                 // System.out.println(dataNoDiario);
