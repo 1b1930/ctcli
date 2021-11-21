@@ -1,4 +1,4 @@
-package com.anhanguera.ctcli;
+package com.anhanguera.ctcli.arquivo;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import com.anhanguera.ctcli.Main;
+import com.anhanguera.ctcli.Usuario;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
@@ -19,10 +21,10 @@ import java.util.stream.Stream;
 
 
 // Essa classe contém todos os métodos que fazem operações com arquivos
-public class ArquivoOps {
+public class OperadorArquivos {
 
     // Lê os dados do arquivo csv especificado como parâmetro
-    List<List<String>> lerDadosCSV(String arq) {
+    public List<List<String>> lerDadosCSV(String arq) {
         
         // Cria uma lista vazia que irá armazenar todos os dados do arquivo csv
         List<List<String>> records = new ArrayList<List<String>>();
@@ -49,7 +51,7 @@ public class ArquivoOps {
     // Qual CSV irá criar e qual cabeçalho irá usar depende no parâmetro passado
     // Existem duas possibilidades: CSV c/ dados do usuário e CSV c/ os alimentos
     // TODO: usar método escreverAoCSV() ao invés de fazer toda essa porra ai em baixo
-    boolean criarCSVeMontarCabecalho(String caminhoArq) {
+    public boolean criarCSVeMontarCabecalho(String caminhoArq) {
 
         // Cria objeto da classe File usando como parâmetro o caminho do arquivo csv
         File file = new File(caminhoArq);
@@ -91,7 +93,7 @@ public class ArquivoOps {
     // Mesma coisa do de cima, mas pro diário contendo os alimentos consumidos pelo usuário.
     // Ao invés de ter como parâmetro o caminho relativo do arquivo DadosUsuario, ele usa o caminho do diretório
     // do diário.
-    boolean criarCSVeMontarCabecalho(String caminhoDir, String uNome) {
+    public boolean criarCSVeMontarCabecalho(String caminhoDir, String uNome) {
         Usuario u = new Usuario(uNome);
         u.csvPessoalExiste(uNome);
         if(u.csvPessoalExiste(uNome)) {
@@ -111,7 +113,7 @@ public class ArquivoOps {
 
     }
 
-    boolean csvExiste(String caminhoArq) {
+    public boolean csvExiste(String caminhoArq) {
         if(new File(caminhoArq).exists()) {
             return true;
         } else {return false;}
@@ -119,7 +121,7 @@ public class ArquivoOps {
     }
 
     // Acrescenta dados ao final do arquivo csv
-    void acrescentarAoCSV(String arq, String[] fileira) {
+    public void acrescentarAoCSV(String arq, String[] fileira) {
         try {
             CSVWriter writer = new CSVWriter(new FileWriter(arq, true));
             writer.writeNext(fileira);
@@ -130,7 +132,7 @@ public class ArquivoOps {
 
     // Deleta tudo, e escreve um String[] array ao CSV
     // array pode ser nulo pra limpar o arquivo completamente
-    boolean escreverAoCSV(String arq, String[] fileira) {
+    public boolean escreverAoCSV(String arq, String[] fileira) {
         try {
             CSVWriter writer = new CSVWriter (new FileWriter(arq, false));
             writer.writeNext(fileira);
@@ -140,7 +142,7 @@ public class ArquivoOps {
     }
 
     // Remove o cabeçalho da lista CSV lida por lerDadosCSV();
-    List<String> listaCSVRemoverHeader(List<List<String>> listaHeader) {
+    public List<String> listaCSVRemoverHeader(List<List<String>> listaHeader) {
         List<String> listaNoHeader = new ArrayList<String>();
 
         for (int i=1; i<listaHeader.size(); i++) {
@@ -151,7 +153,7 @@ public class ArquivoOps {
     }
 
     // Substitui uma linha (fila) no arquivo CSV por outra.
-    void substituirFila(String arq, int numFila, String[] novaFila) {
+    public void substituirFila(String arq, int numFila, String[] novaFila) {
         
         String arqRem = arq;
         // Index de numFila começa com 0, não 1.
@@ -179,7 +181,7 @@ public class ArquivoOps {
 
     // Método sobrecarregado que faz a mesma coisa desse de cima, porém não adiciona nenhum elemento
     // Só remove.
-    void substituirFila(String arq, int numFila) {
+    public void substituirFila(String arq, int numFila) {
         // Caminho do arquivo
         String arqRem = arq;
         // Index de numFila começa com 0, não 1.
@@ -203,7 +205,7 @@ public class ArquivoOps {
     }
 
     // cria um arquivo se não existe.
-    boolean criarArquivo(String arquivo) {
+    public boolean criarArquivo(String arquivo) {
         try {
             File arq = new File(arquivo);
             if (arq.createNewFile()) {
@@ -222,7 +224,7 @@ public class ArquivoOps {
     }
 
     // lê todas as linhas do arquivo para uma Lista<String> e retorna ela
-    List<String> lerArquivo(String arq) {
+    public List<String> lerArquivo(String arq) {
         List<String> result = new ArrayList<>();
 	    try (Stream<String> lines = Files.lines(Paths.get(arq))) {
 		result = lines.collect(Collectors.toList());
@@ -238,9 +240,9 @@ public class ArquivoOps {
 
     // substituir uma linha $match no arquivo $arq, pela linha $subs
     // TODO: O que acontece se tiver mais de um permalogin no arquivo config?
-    boolean substituirNoArquivo(String arq, String match, String subs) {
+    public boolean substituirNoArquivo(String arq, String match, String subs) {
         List<String> lista = new ArrayList<String>();
-        Config ctcliConf = new Config(Main.CTCLICONFIG);
+        ArquivoConfig ctcliConf = new ArquivoConfig(Main.CTCLICONFIG);
         lista.addAll(lerArquivo(ctcliConf.configArq));
         int cont = 0;
         for(int i=0;i<lista.size();i++) {
@@ -270,7 +272,7 @@ public class ArquivoOps {
     }
 
     // acrescenta $asc ao final do arquivo, não sobrescreve nada
-    boolean acrescentarAoArquivo(String arq, String asc) {
+    public boolean acrescentarAoArquivo(String arq, String asc) {
         try {
             String str = asc;
             String fileName = arq;
@@ -289,7 +291,7 @@ public class ArquivoOps {
 
     // escreve ao arquivo, deletando tudo
     // TODO: Esse é suposto a ser um método sobrecarregado mas eu to com mt sono pra codar o resto
-    boolean escreverAoArquivo(String arq) {
+    public boolean escreverAoArquivo(String arq) {
         try {
             String str = "";
             BufferedWriter writer = new BufferedWriter(new FileWriter(arq));
@@ -304,7 +306,7 @@ public class ArquivoOps {
 
     }
 
-    boolean deletarArquivo(String arq) {
+    public boolean deletarArquivo(String arq) {
         File f = new File(arq); 
         if (f.delete()) { 
           System.out.println("DEBUG: Arquivo deletado: " + f.getName());
@@ -316,7 +318,7 @@ public class ArquivoOps {
 
     }
 
-    boolean arquivoExiste(String arq) {
+    public boolean arquivoExiste(String arq) {
         if(new File(arq).exists()) {
             return true;
         }

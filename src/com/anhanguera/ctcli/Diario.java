@@ -5,21 +5,23 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.anhanguera.ctcli.arquivo.OperadorArquivos;
+
 public class Diario {
 
-    public static final ArquivoOps arquivoOps = new ArquivoOps();
+    public static final OperadorArquivos arquivoOps = new OperadorArquivos();
 
     String usr;
     String nomeCsv;
 
-    Diario(String usr) {
+    public Diario(String usr) {
         this.usr = usr;
         nomeCsv = Main.CSVLOGDIR+usr+".csv";
 
 
     }
     
-    boolean adicionarAlimentoAoDiario(String[] dadosAlimento) {
+    public boolean adicionarAlimentoAoDiario(String[] dadosAlimento) {
 
         // if(!(alimentoExiste(dadosAlimento[0]))) {
         //     // System.out.println("Alimento existe. Abortando...");
@@ -51,7 +53,7 @@ public class Diario {
 
     }
 
-    boolean removerAlimento(String nome) {
+    public boolean removerAlimento(String nome) {
         List<String> b = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(nomeCsv));
         for(int i=0;i<b.size();i++) {
             if(b.get(i).contains(nome)) {
@@ -65,13 +67,13 @@ public class Diario {
     return false;
     }
 
-    List<String> getDadosAlimentosDiario() {
+    public List<String> getDadosAlimentosDiario() {
         List<String> lista = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(nomeCsv));
         return lista;
 
     }
 
-    List<String> getDadosAlimentosDiario(LocalDate data) {
+    public List<String> getDadosAlimentosDiario(LocalDate data) {
         List<String> lista = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(nomeCsv));
         List<String> listaFiltrada = new ArrayList<String>();
         String alimento;
@@ -104,7 +106,7 @@ public class Diario {
 
     }
 
-    boolean deletarDiario() {
+    public boolean deletarDiario() {
         if(arquivoOps.deletarArquivo(nomeCsv)) {
             return true;
         } else {

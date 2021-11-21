@@ -1,31 +1,31 @@
-package com.anhanguera.ctcli;
+package com.anhanguera.ctcli.arquivo;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Config {
+public class ArquivoConfig {
 
-    public static final ArquivoOps aq = new ArquivoOps();
+    public static final OperadorArquivos aq = new OperadorArquivos();
 
-    String configArq;
+    public String configArq;
 
-    Config(String configArq) {
+    public ArquivoConfig(String configArq) {
         this.configArq = configArq;
     }
 
     // tenta criar config
 
     // verifica se config existe
-    boolean configExiste() {
+    public boolean configExiste() {
         if(aq.arquivoExiste(configArq)) {
             return true;
 
         } else {return false;}
     }
 
-    boolean criarConfig() {
+    public boolean criarConfig() {
         if(aq.criarArquivo(configArq)) {
             if(popularConfig()) {
                 return true;
@@ -37,7 +37,7 @@ public class Config {
     }
 
         // popular ctcli.config com os parâmetros que serão usados pelo código
-    boolean popularConfig() {
+    public boolean popularConfig() {
         try {
             PrintWriter writer = new PrintWriter(configArq, "UTF-8");
             writer.println("permalogin=");
@@ -54,9 +54,9 @@ public class Config {
     }
 
     // adiciona $usr depois de permalogin em ctcli.config
-    boolean addPermaLoginUsr(String usr) {
+    public boolean addPermaLoginUsr(String usr) {
         if(configExiste()) {
-            ArquivoOps arquivoOps = new ArquivoOps();
+            OperadorArquivos arquivoOps = new OperadorArquivos();
             String subs = "permalogin="+usr;
             if(arquivoOps.substituirNoArquivo(configArq, "permalogin", subs)) {
                 return true;
@@ -69,9 +69,9 @@ public class Config {
     }
 
     // retorna o que vem depois do = em permalogin= em ctcli.config como String, pode ser "" ou null
-    String getPermaLoginUsr() {
+    public String getPermaLoginUsr() {
         List<String> lista = new ArrayList<>();
-        ArquivoOps arquivoOps = new ArquivoOps();
+        OperadorArquivos arquivoOps = new OperadorArquivos();
         lista.addAll(arquivoOps.lerArquivo(configArq));
         for (int i=0;i<lista.size();i++) {
             if(lista.get(i).contains("permalogin")) {

@@ -3,6 +3,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import com.anhanguera.ctcli.arquivo.OperadorArquivos;
+import com.anhanguera.ctcli.arquivo.ArquivoConfig;
+import com.anhanguera.ctcli.terminal.menu.Menu;
+
 public class Main {
     public static final String VERSAO = "0.3";
 
@@ -14,7 +18,7 @@ public class Main {
 
     public static int PRIMEIRAEXEC = 0;
 
-    public static final Config ctcliConfig = new Config(CTCLICONFIG);
+    public static final ArquivoConfig ctcliConfig = new ArquivoConfig(CTCLICONFIG);
     
     public static void main(String[] args) throws FileNotFoundException, IOException {
 
@@ -25,7 +29,7 @@ public class Main {
 
         // aq.criarCSVeMontarCabecalho(Main.CSVLOGDIR, "daniel.csv");
         if(init()) {
-            InterfaceCLI intf = new InterfaceCLI();
+            Menu intf = new Menu();
             // System.out.println(PRIMEIRAEXEC);
             intf.mostrar();
 
@@ -38,7 +42,7 @@ public class Main {
     }
 
     public static boolean init() {
-        ArquivoOps aqv = new ArquivoOps();
+        OperadorArquivos aqv = new OperadorArquivos();
 
         File logdir = new File(Main.CSVLOGDIR);
 

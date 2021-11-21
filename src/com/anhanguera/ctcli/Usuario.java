@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import java.util.List;
 
+import com.anhanguera.ctcli.arquivo.OperadorArquivos;
+import com.anhanguera.ctcli.terminal.Utilidades;
+
 
 public class Usuario {
     
@@ -14,9 +17,9 @@ public class Usuario {
     String idade;
     String sexo;
 
-    public static final ArquivoOps arquivoOps = new ArquivoOps();
+    public static final OperadorArquivos arquivoOps = new OperadorArquivos();
 
-    Usuario(String nome, String peso, String altura, String idade, String sexo, String nivelatv) {
+    public Usuario(String nome, String peso, String altura, String idade, String sexo, String nivelatv) {
 
         this.nome = nome;
         this.peso = peso;
@@ -27,14 +30,14 @@ public class Usuario {
 
     }
 
-    Usuario(String nome) {
+    public Usuario(String nome) {
         this.nome = nome;
     }
 
     // retorna verdadeiro somente se conseguiu criar o usuário + csv pessoal dele
-    boolean criarUsuario() {
+    public boolean criarUsuario() {
         if(!(usuarioExiste(nome) && csvPessoalExiste(nome))) {
-            String data = CLIUtil.getDataHora();
+            String data = Utilidades.getDataHora();
             Double tdee = calcularTDEE();
             if(tdee == -1.0) {
                 return false;
@@ -62,9 +65,9 @@ public class Usuario {
     }
 
     // retorna verdadeiro se e somente se o CSV pessoal de nome existe.
-    boolean csvPessoalExiste(String nome) {
+    public boolean csvPessoalExiste(String nome) {
         List<String> arqs = new ArrayList<String>();
-        arqs.addAll(CLIUtil.getListaArq(Main.CSVLOGDIR));
+        arqs.addAll(Utilidades.getListaArq(Main.CSVLOGDIR));
 
         for(int i=0;i<arqs.size();i++) {
             // System.out.println("match: "+arqs.get(i));
@@ -78,7 +81,7 @@ public class Usuario {
     }
 
     // retorna verdadeiro só se conseguiu criar o CSV pessoal.
-    boolean criarCSVPessoal() {
+    public boolean criarCSVPessoal() {
         if(usuarioExiste(nome)) {
             if(!(csvPessoalExiste(nome))) {
                 if(arquivoOps.criarCSVeMontarCabecalho(Main.CSVLOGDIR, nome)) {
@@ -93,7 +96,7 @@ public class Usuario {
     }
 
     // Remove um usuário, se achou o usuário no arquivo e removeu, retorna true, se não, false
-    boolean removerUsuario() {
+    public boolean removerUsuario() {
         List<String> b = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO));
         for(int i=0;i<b.size();i++) {
             if(b.get(i).contains(nome)) {
@@ -114,7 +117,7 @@ public class Usuario {
 
     // altera um dado de um usuário específico dentro do CSV
     // Parâmetros: propriedade a ser alterada, novo valor da propriedade
-    boolean alterarDados(String prop, String novoValor) {
+    public boolean alterarDados(String prop, String novoValor) {
         // Pegando a lista de usuários
         List<String> lista = new ArrayList<String>(arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO)));
         Usuario u = new Usuario(nome);
@@ -128,7 +131,7 @@ public class Usuario {
                     case "nome":
                         String[] alt = getDadosUsuario(nome);
                         alt[0] = novoValor;
-                        alt[7] = CLIUtil.getDataHora();
+                        alt[7] = Utilidades.getDataHora();
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt);
                         System.out.println("bleh2");
                         return true;
@@ -136,7 +139,7 @@ public class Usuario {
                     case "peso":
                         String[] alt2 = getDadosUsuario(nome);
                         alt2[1] = novoValor;
-                        alt2[7] = CLIUtil.getDataHora();
+                        alt2[7] = Utilidades.getDataHora();
                         u = new Usuario(alt2[0],alt2[1],alt2[2],alt2[3],alt2[4],alt2[5]);
                         alt2[6] = String.format("%.0f",u.calcularTDEE());
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt2);
@@ -147,7 +150,7 @@ public class Usuario {
                     case "altura":
                         String[] alt3 = getDadosUsuario(nome);
                         alt3[2] = novoValor;
-                        alt3[7] = CLIUtil.getDataHora();
+                        alt3[7] = Utilidades.getDataHora();
                         u = new Usuario(alt3[0],alt3[1],alt3[2],alt3[3],alt3[4],alt3[5]);
                         alt3[6] = String.format("%.0f",u.calcularTDEE());
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt3);
@@ -158,7 +161,7 @@ public class Usuario {
                     case "idade":
                         String[] alt4 = getDadosUsuario(nome);
                         alt4[3] = novoValor;
-                        alt4[7] = CLIUtil.getDataHora();
+                        alt4[7] = Utilidades.getDataHora();
                         u = new Usuario(alt4[0],alt4[1],alt4[2],alt4[3],alt4[4],alt4[5]);
                         alt4[6] = String.format("%.0f",u.calcularTDEE());
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt4);
@@ -169,7 +172,7 @@ public class Usuario {
                     case "sexo":
                         String[] alt5 = getDadosUsuario(nome);
                         alt5[4] = novoValor.toUpperCase();
-                        alt5[7] = CLIUtil.getDataHora();
+                        alt5[7] = Utilidades.getDataHora();
                         u = new Usuario(alt5[0],alt5[1],alt5[2],alt5[3],alt5[4],alt5[5]);
                         alt5[6] = String.format("%.0f",u.calcularTDEE());
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt5);
@@ -179,7 +182,7 @@ public class Usuario {
                     case "nivelatv":
                         String[] alt6 = getDadosUsuario(nome);
                         alt6[5] = novoValor;
-                        alt6[7] = CLIUtil.getDataHora();
+                        alt6[7] = Utilidades.getDataHora();
                         u = new Usuario(alt6[0],alt6[1],alt6[2],alt6[3],alt6[4],alt6[5]);
                         alt6[6] = String.format("%.0f",u.calcularTDEE());
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt6);
@@ -201,7 +204,7 @@ public class Usuario {
 
     // Retorna true se o usuário existe, se não, false
     // Novo método! não aceita mais nomes incompletos, agora o nome do usuário tem que ser exato.
-    static boolean usuarioExiste(String nome) {
+    public static boolean usuarioExiste(String nome) {
         String[] arrt;
         String element; 
         // ArquivoOps arquivoOps = new ArquivoOps();
@@ -225,7 +228,7 @@ public class Usuario {
     }
 
     // Printa todos os usuários
-    static void printUsuarios() {
+    public static void printUsuarios() {
         // ArquivoOps arquivoOps = new ArquivoOps();
         List<String> lista = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO));
             // Método bonito pra printar todos os elementos de uma lista
@@ -238,7 +241,7 @@ public class Usuario {
     }
 
     // Retorna os dados do usuário em um array[]
-    static String[] getDadosUsuario(String nome) {
+    public static String[] getDadosUsuario(String nome) {
         // inicializações tão dentro do if porque se estivessem fora,
         // e o usuário não existisse, seria perda de tempo iniciar e instanciar tudo isso
         if(usuarioExiste(nome)) {
@@ -276,7 +279,7 @@ public class Usuario {
     }
 
     // printa os dados do usuário para o stdout
-    static void printDadosUsuario(String nome) {
+    public static void printDadosUsuario(String nome) {
             String[] dados = Usuario.getDadosUsuario(nome);
             if(dados != null) {
                 System.out.println("Nome: "+dados[0]);
@@ -317,7 +320,7 @@ public class Usuario {
     // Fórmula:
     // Mulheres: 655 + (9,6 x peso em kg) + (1,8 x altura em cm) – (4,7 x idade em anos)
     // Homens: 66 + (13,7 x peso em kg) + (5 x altura em cm) – (6,5 x idade em anos)
-    Double calcularBMI() {
+    public double calcularBMI() {
 
         if(sexo.equalsIgnoreCase("f")) {
             double bmi = 655
@@ -340,7 +343,7 @@ public class Usuario {
         return 0.0;
     }
 
-    Double calcularTDEE() {
+    public double calcularTDEE() {
         Double tdee;
         Double bmi = calcularBMI();
         if(bmi == 0.0) {
@@ -369,7 +372,7 @@ public class Usuario {
 
     }
 
-    String getTDEE() {
+    public String getTDEE() {
         String[] dados = getDadosUsuario(nome);
         if(dados.length < 8) {
             return "";
@@ -389,7 +392,7 @@ public class Usuario {
     // 3 - Falha - Valor do parâmetro altura inválido
     // 4 - Falha - Valor do parâmetro idade inválido
     // 5 - Falha - Valor do parâmetro sexo inválido
-    static int validarDadosUsuario(String[] dados) {
+    public static int validarDadosUsuario(String[] dados) {
         if(Usuario.usuarioExiste(dados[0])) {
             return 1;
         }
@@ -416,7 +419,7 @@ public class Usuario {
 
     // método sobrecarregado, ao invés de validar todos os dados, valida só um $dado conforme $prop
     // TODO: Migrar mensagens de erro pra interfaceCLI, usar códigos de retorno igual o de cima
-    static boolean validarDadosUsuario(String prop, String dado) {
+    public static boolean validarDadosUsuario(String prop, String dado) {
         switch(prop) {
             case "peso":
                 if(!dado.matches("[0-9]+") || dado.length() < 2 || Integer.parseInt(dado) > 500) {
