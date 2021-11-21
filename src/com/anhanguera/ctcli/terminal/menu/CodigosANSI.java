@@ -4,7 +4,7 @@ package com.anhanguera.ctcli.terminal.menu;
 // ATENÇÃO: usar "final" ao criar classe e usar "import static "Constantes.*"" 
 // no arquivo onde deseja essas constantes
 
-public final class Constantes {
+public final class CodigosANSI {
 
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";
@@ -16,12 +16,7 @@ public final class Constantes {
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_WHITE = "\u001B[37m";
 
-    public static final String NEGRITO = "\033[0;1m";
-    public static final String ESTL = "\t\033[0;1m*\033[0;0m ";
-    public static final String NORMAL = "\033[0;0m";
-    public static final String SUBL = "\033[0;4m";
-    public static final String BIGL = "⊢ ";
-    public static final String SETA = "❯ ";
+
 
 
     
