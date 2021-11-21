@@ -62,17 +62,20 @@ public class ArquivoOps {
                 CSVWriter writer = new CSVWriter(outputfile);
                 
                 // Decide se tem que escrever o cabeçalho de alimentos ou do usuário
-                if (caminhoArq.contains("Alimentos")) {
-                    String[] header = {"Nome", "KCAL/100g", "Data da Adição"};
+                if (caminhoArq.contains("Usuario")) {
+                    // String[] header = {"Nome", "KCAL/100g", "Data da Adição"};
+                    // writer.writeNext(header);
+                    // // TODO: DEBUG print, remover antes de enviar o código
+                    // System.out.println("header criado");
+                    String[] header = { "Nome", "Peso", "Altura", "Idade", "Sexo", "Nível de Atividade", "TDEE", "Última Atualização" };
                     writer.writeNext(header);
                     // TODO: DEBUG print, remover antes de enviar o código
                     System.out.println("header criado");
 
                 } else {
-                    String[] header = { "Nome", "Peso", "Altura", "Idade", "Sexo", "Nível de Atividade", "TDEE", "Última Atualização" };
-                    writer.writeNext(header);
-                    // TODO: DEBUG print, remover antes de enviar o código
-                    System.out.println("header criado");
+                    writer.close();
+                    return false;
+
                 }
                 // fechando o writer
                 writer.close();
