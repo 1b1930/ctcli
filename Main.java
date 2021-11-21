@@ -10,11 +10,11 @@ public class Main {
     public static final String CSVLOGDIR = "dados/alimento_log/";
 
     public static final String CSVUSUARIO = "dados/DadosUsuario.csv";
-    public static final String CSVALIMENTOS = "dados/DadosAlimentos.csv";
+    public static final String CTCLICONFIG = "dados/ctcli.config";
 
     public static final String ARQUIVOCONFIG = "dados/ctcli.config";
 
-    public static int FIRSTL = 0;
+    public static final Config ctcliConfig = new Config(CTCLICONFIG);
     
     public static void main(String[] args) throws FileNotFoundException, IOException {
 
@@ -83,10 +83,9 @@ public class Main {
     
         }
 
-        if(!(Config.configExiste())) {
-            if(Config.criarConfig()) {
-                System.out.println("CONFIG: Arquivo criado. "+"("+Config.ARQCONFIG+")");
-                FIRSTL++;
+        if(!(ctcliConfig.configExiste())) {
+            if(ctcliConfig.criarConfig()) {
+                System.out.println("CONFIG: Arquivo criado. "+"("+ctcliConfig.configArq+")");
             } else {
                 System.out.println("CONFIG: Arquivo não foi criado.");
                 return false;
