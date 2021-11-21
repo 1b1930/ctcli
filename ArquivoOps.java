@@ -87,7 +87,9 @@ public class ArquivoOps {
         }
     }
 
-    // Mesma coisa do de cima, mas pro diário contendo os alimentos consumidos pelo usuário
+    // Mesma coisa do de cima, mas pro diário contendo os alimentos consumidos pelo usuário.
+    // Ao invés de ter como parâmetro o caminho relativo do arquivo DadosUsuario, ele usa o caminho do diretório
+    // do diário.
     boolean criarCSVeMontarCabecalho(String caminhoDir, String uNome) {
         Usuario u = new Usuario(uNome);
         u.csvPessoalExiste(uNome);
@@ -104,33 +106,7 @@ public class ArquivoOps {
                 return false;
             }
 
-            // String arq = caminhoDir+uNome;
-            // File file = new File(arq);
-            // if (file.length() != 0) {System.out.println("Arquivo não está vazio, abortando..."); System.exit(0);}
-            // else {
-            //     try {
-            //         // Cria objeto da classe FileWriter com file como parâmetro
-            //         FileWriter outputfile = new FileWriter(file);
-            
-            //         // Cria objeto da classe CSVWriter com objeto da classe FileWriter como parâmetro
-            //         CSVWriter writer = new CSVWriter(outputfile);
-                    
-            //         // Decide se tem que escrever o cabeçalho de alimentos ou do usuári
-            //         String[] header = {"Nome", "KCAL", "Data da Adição", "Notas", "Usuário que Consumiu"};
-            //         writer.writeNext(header);
-            //         System.out.println("header criado");
-            //         // closing writer connection
-            //         writer.close();
-            //         return true;
-            //     } catch (IOException e) {
-            //         e.printStackTrace();
-            //         return false;
-            //     }
-            // }
-
         }
-
-        // Cria objeto da classe File usando como parâmetro o caminho do arquivo csv
 
     }
 
@@ -140,9 +116,6 @@ public class ArquivoOps {
         } else {return false;}
 
     }
-
-    // verifica várias coisas antes de iniciar o programa
-
 
     // Acrescenta dados ao final do arquivo csv
     void acrescentarAoCSV(String arq, String[] fileira) {
@@ -241,7 +214,6 @@ public class ArquivoOps {
               
             }
           } catch (IOException e) {
-            System.out.println("ERRO: IOException.");
             e.printStackTrace();
             return false;
           }
@@ -255,7 +227,6 @@ public class ArquivoOps {
 		result = lines.collect(Collectors.toList());
         return result;
 	    } catch (IOException e) {
-            System.out.println("oops");
             e.printStackTrace();
             System.exit(0);
         }
@@ -272,7 +243,6 @@ public class ArquivoOps {
         lista.addAll(lerArquivo(ctcliConf.configArq));
         int cont = 0;
         for(int i=0;i<lista.size();i++) {
-            System.out.println(lista.get(i));
             if(lista.get(i).contains(match)) {
                 lista.remove(i);
                 lista.add(i, subs);
@@ -283,10 +253,7 @@ public class ArquivoOps {
         if(cont == 1) {
             if(escreverAoArquivo(arq)) {
                 for(int i=0;i<lista.size();i++) {
-                    if(acrescentarAoArquivo(arq, lista.get(i).toString())) {
-                        // System.out.println("DEBUG: adicionado.");
-                    } else {
-                        System.out.println("DEBUG: Não adicionado por algum motivo.");
+                    if(!(acrescentarAoArquivo(arq, lista.get(i).toString()))) {
                         return false;
                     }
                 }
