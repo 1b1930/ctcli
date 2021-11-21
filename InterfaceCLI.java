@@ -249,8 +249,34 @@ public class InterfaceCLI {
                     String[] dados = Arrays.copyOfRange(cmd, 2, cmd.length);
                     System.out.println(Arrays.toString(dados));
 
-                    if(!(Usuario.validarDadosUsuario(dados))) {
-                        System.out.println("ERRO: Dados inválidos. Tente novamente.");
+                    int validar = Usuario.validarDadosUsuario(dados);
+
+                    switch(validar) {
+                        case 1:
+                            System.out.println("O usuário já existe no banco de dados. Tente novamente.");
+                            System.out.println("Uso: usuario adicionar [nome] [peso (kg)] [altura (cm)] [idade] [sexo]");
+                            entradaUsuario();
+
+                        case 2:
+                            System.out.println("Valor do argumento [peso] inválido. Tente novamente.");
+                            System.out.println("Valor tem que ser número, ter pelo menos dois dígitos, e ser menor que 500.");
+                            System.out.println("Uso: usuario adicionar [nome] [peso (kg)] [altura (cm)] [idade] [sexo]");
+                            entradaUsuario();
+
+                        case 3:
+                            System.out.println("Valor do argumento [altura] inválido. Tente novamente.");
+                            System.out.println("Valor tem que ser número, ter pelo menos dois dígitos, e ser menor que 300.");
+                            System.out.println("Uso: usuario adicionar [nome] [peso (kg)] [altura (cm)] [idade] [sexo]");
+                            entradaUsuario();
+
+                        case 4:
+                            System.out.println("Valor do argumento [idade] inválido. Tente novamente.");
+                            System.out.println("Valor tem que ser número, ser maior que 10, e ser menor que 110.");
+                            System.out.println("Uso: usuario adicionar [nome] [peso (kg)] [altura (cm)] [idade] [sexo]");
+                            entradaUsuario();
+
+                        case 5:
+                            System.out.println("Valor do argumento [sexo] inválido. Tente novamente.");
                         System.out.println("Uso: usuario adicionar [nome] [peso (kg)] [altura (cm)] [idade] [sexo]");
                         entradaUsuario();
                         
