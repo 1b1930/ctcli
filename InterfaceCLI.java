@@ -303,8 +303,8 @@ public class InterfaceCLI {
                         System.out.println("Uso: usuario remover [nome]");
                         entradaUsuario();
                     }
-                    Usuario u = new Usuario();
-                    if(u.removerUsuario(cmd[2])) {
+                    Usuario u = new Usuario(cmd[2]);
+                    if(u.removerUsuario()) {
                         System.out.println("Usuário removido");
                         entradaUsuario();
                     } else {
@@ -349,8 +349,8 @@ public class InterfaceCLI {
                         entradaUsuario();
                     }
                     
-                    Usuario u2 = new Usuario();
-                    u2.alterarDados(cmd[2], cmd[3], cmd[4]);
+                    Usuario u2 = new Usuario(cmd[2]);
+                    u2.alterarDados(cmd[3], cmd[4]);
                     System.out.println("Usuário editado com sucesso.");
                     
                     entradaUsuario();
@@ -483,18 +483,18 @@ public class InterfaceCLI {
                     System.out.println("Quantidade de argumentos excedida.");
                     System.out.println("Uso: permalogin [0 ou 1]");
                 } else if(cmdSec.matches("1")) {
-                    if(Config.getPermaLoginUsr().equals(usuario)) {
+                    if(ctcliConfig.getPermaLoginUsr().equals(usuario)) {
                         System.out.println("Permalogin já está ativado para esse usuário.");
                     }
-                    if(Config.addPermaLoginUsr(usuario)) {
+                    if(ctcliConfig.addPermaLoginUsr(usuario)) {
                         System.out.println("Permalogin habilitado para o usuário "+usuario);
                     } else {
                         System.out.println("ERRO: Permalogin não habilitado.");
                         System.out.println("Uso: permalogin [0 ou 1]");
                     }
                 } else if(cmdSec.matches("0")) {
-                    if(Config.getPermaLoginUsr().equals(usuario)) {
-                        if(Config.addPermaLoginUsr("")) {
+                    if(ctcliConfig.getPermaLoginUsr().equals(usuario)) {
+                        if(ctcliConfig.addPermaLoginUsr("")) {
                             System.out.println("Permalogin desativado para o usuário "+usuario);
                         } else {
                             System.out.println("Permalogin não desativado por algum motivo.");
