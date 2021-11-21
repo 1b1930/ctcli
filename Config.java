@@ -1,4 +1,3 @@
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -7,11 +6,26 @@ import java.util.List;
 
 public class Config {
 
-    public static final String ARQCONFIG = Main.ARQUIVOCONFIG;
     public static final ArquivoOps aq = new ArquivoOps();
 
-    static boolean criarConfig() {
-        if(aq.criarArquivo(ARQCONFIG)) {
+    String configArq;
+
+    Config(String configArq) {
+        this.configArq = configArq;
+    }
+
+    // tenta criar config
+
+    // verifica se config existe
+    boolean configExiste() {
+        if(aq.arquivoExiste(configArq)) {
+            return true;
+
+        } else {return false;}
+    }
+
+    boolean criarConfig() {
+        if(aq.criarArquivo(configArq)) {
             if(popularConfig()) {
                 return true;
             }
@@ -21,16 +35,10 @@ public class Config {
         }
     }
 
-    static boolean configExiste() {
-        if(new File(ARQCONFIG).exists()) {
-            return true;
-
-        } else {return false;}
-    }
-
-    static boolean popularConfig() {
+        // popular ctcli.config com os parâmetros que serão usados pelo código
+    boolean popularConfig() {
         try {
-            PrintWriter writer = new PrintWriter(ARQCONFIG, "UTF-8");
+            PrintWriter writer = new PrintWriter(configArq, "UTF-8");
             writer.println("permalogin=");
             // writer.println("The second line");
             writer.close();
@@ -44,11 +52,26 @@ public class Config {
 
     }
 
+    // adiciona $usr depois de permalogin em ctcli.config
+    boolean addPermaLoginUsr(String usr) {
+        if(configExiste()) {
+            ArquivoOps arquivoOps = new ArquivoOps();
+            String subs = "permalogin="+usr;
+            if(arquivoOps.substituirNoArquivo(configArq, "permalogin", subs)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+
+    }
+
     // retorna o que vem depois do = em permalogin= em ctcli.config como String, pode ser "" ou null
-    static String getPermaLoginUsr() {
+    String getPermaLoginUsr() {
         List<String> lista = new ArrayList<>();
         ArquivoOps arquivoOps = new ArquivoOps();
-        lista.addAll(arquivoOps.lerArquivo(Config.ARQCONFIG));
+        lista.addAll(arquivoOps.lerArquivo(configArq));
         for (int i=0;i<lista.size();i++) {
             if(lista.get(i).contains("permalogin")) {
                 // retorna uma substring com tudo o que vem depois de =
@@ -60,25 +83,7 @@ public class Config {
             }
         }
         return "";
-
         
-    }
-
-    // adiciona $usr depois de permalogin em ctcli.config
-    static boolean addPermaLoginUsr(String usr) {
-        if(configExiste()) {
-            ArquivoOps arquivoOps = new ArquivoOps();
-            String subs = "permalogin="+usr;
-            if(arquivoOps.substituirNoArquivo(ARQCONFIG, "permalogin", subs)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        return false;
-
-
     }
     
 }

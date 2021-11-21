@@ -26,7 +26,9 @@ public class Usuario {
 
     }
 
-    Usuario() {}
+    Usuario(String nome) {
+        this.nome = nome;
+    }
 
     // retorna verdadeiro somente se conseguiu criar o usuário + csv pessoal dele
     boolean criarUsuario() {
@@ -36,7 +38,7 @@ public class Usuario {
             if(tdee == -1.0) {
                 return false;
             }
-            String strtdee = Double.toString(tdee).substring(0,Double.toString(tdee).indexOf("."));
+            String strtdee = String.format("%.0f", tdee);
             String[] fileira = { nome, peso, altura, idade, sexo.toUpperCase(), nivelatv, strtdee, data };
             // ArquivoOps arquivoOps = new ArquivoOps();
             arquivoOps.acrescentarAoCSV(Main.CSVUSUARIO, fileira);
@@ -44,7 +46,7 @@ public class Usuario {
             if(Usuario.usuarioExiste(nome)) {
                 System.out.println("Usuário criado");
                 // Se está presente, tenta criar o diário do usuário (CSV Pessoal)
-                if(criarCSVPessoal(nome)) {
+                if(criarCSVPessoal()) {
                     System.out.println("Diário criado");
                     return true;
                 } else {
@@ -58,14 +60,14 @@ public class Usuario {
 
     }
 
-    // retorna verdadeiro se e somente se o CSV pessoal de uNome existe.
-    boolean csvPessoalExiste(String uNome) {
+    // retorna verdadeiro se e somente se o CSV pessoal de nome existe.
+    boolean csvPessoalExiste(String nome) {
         List<String> arqs = new ArrayList<String>();
         arqs.addAll(CLIUtil.getListaArq(Main.CSVLOGDIR));
 
         for(int i=0;i<arqs.size();i++) {
             // System.out.println("match: "+arqs.get(i));
-            if(arqs.get(i).contains(uNome)) {
+            if(arqs.get(i).contains(nome)) {
                 System.out.println("existe!");
                 return true;
 
@@ -75,10 +77,10 @@ public class Usuario {
     }
 
     // retorna verdadeiro só se conseguiu criar o CSV pessoal.
-    boolean criarCSVPessoal(String uNome) {
-        if(usuarioExiste(uNome)) {
-            if(!(csvPessoalExiste(uNome))) {
-                if(arquivoOps.criarCSVeMontarCabecalho(Main.CSVLOGDIR, uNome)) {
+    boolean criarCSVPessoal() {
+        if(usuarioExiste(nome)) {
+            if(!(csvPessoalExiste(nome))) {
+                if(arquivoOps.criarCSVeMontarCabecalho(Main.CSVLOGDIR, nome)) {
                     // System.out.println("CSV criado");
                     return true;
                 } else {
@@ -89,15 +91,15 @@ public class Usuario {
         return false;
     }
 
-    // Remove um usuário, se achou o usuário dado como parâmetro no arquivo e removeu, retorna true, se não, false
-    boolean removerUsuario(String uNome) {
+    // Remove um usuário, se achou o usuário no arquivo e removeu, retorna true, se não, false
+    boolean removerUsuario() {
         List<String> b = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO));
         for(int i=0;i<b.size();i++) {
-            if(b.get(i).contains(uNome)) {
+            if(b.get(i).contains(nome)) {
                 // o +1 é porque o removerFila() lê todo o arquivo, incluindo o cabeçalho
                 // então é necessário pular o cabeçalho, por isso o +1
                 arquivoOps.substituirFila(Main.CSVUSUARIO, i+1);
-                Diario c = new Diario(uNome);
+                Diario c = new Diario(nome);
                 if(c.deletarDiario()) {
                     return true;
                 } else {
@@ -110,11 +112,11 @@ public class Usuario {
     }
 
     // altera um dado de um usuário específico dentro do CSV
-    // Parâmetros: nome do usuário, propriedade a ser alterada, novo valor da propriedade
-    boolean alterarDados(String nome, String prop, String valAlt) {
+    // Parâmetros: propriedade a ser alterada, novo valor da propriedade
+    boolean alterarDados(String prop, String novoValor) {
         // Pegando a lista de usuários
         List<String> lista = new ArrayList<String>(arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO)));
-        Usuario u = new Usuario();
+        Usuario u = new Usuario(nome);
         // Iterando a lista
         for(int i=0;i<lista.size();i++) {
             // tenta acha o nome do usuário
@@ -124,7 +126,7 @@ public class Usuario {
 
                     case "nome":
                         String[] alt = getDadosUsuario(nome);
-                        alt[0] = valAlt;
+                        alt[0] = novoValor;
                         alt[7] = CLIUtil.getDataHora();
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt);
                         System.out.println("bleh2");
@@ -132,10 +134,10 @@ public class Usuario {
 
                     case "peso":
                         String[] alt2 = getDadosUsuario(nome);
-                        alt2[1] = valAlt;
+                        alt2[1] = novoValor;
                         alt2[7] = CLIUtil.getDataHora();
                         u = new Usuario(alt2[0],alt2[1],alt2[2],alt2[3],alt2[4],alt2[5]);
-                        alt2[6] = Double.toString(u.calcularTDEE());
+                        alt2[6] = String.format("%.0f",u.calcularTDEE());
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt2);
                         System.out.println("bleh");
                         return true;
@@ -143,8 +145,10 @@ public class Usuario {
                     
                     case "altura":
                         String[] alt3 = getDadosUsuario(nome);
-                        alt3[2] = valAlt;
+                        alt3[2] = novoValor;
                         alt3[7] = CLIUtil.getDataHora();
+                        u = new Usuario(alt3[0],alt3[1],alt3[2],alt3[3],alt3[4],alt3[5]);
+                        alt3[6] = String.format("%.0f",u.calcularTDEE());
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt3);
                         System.out.println("bleh3");
                         return true;
@@ -152,8 +156,10 @@ public class Usuario {
 
                     case "idade":
                         String[] alt4 = getDadosUsuario(nome);
-                        alt4[3] = valAlt;
+                        alt4[3] = novoValor;
                         alt4[7] = CLIUtil.getDataHora();
+                        u = new Usuario(alt4[0],alt4[1],alt4[2],alt4[3],alt4[4],alt4[5]);
+                        alt4[6] = String.format("%.0f",u.calcularTDEE());
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt4);
                         System.out.println("bleh5");
                         return true;
@@ -161,16 +167,20 @@ public class Usuario {
 
                     case "sexo":
                         String[] alt5 = getDadosUsuario(nome);
-                        alt5[4] = valAlt.toUpperCase();
+                        alt5[4] = novoValor.toUpperCase();
                         alt5[7] = CLIUtil.getDataHora();
+                        u = new Usuario(alt5[0],alt5[1],alt5[2],alt5[3],alt5[4],alt5[5]);
+                        alt5[6] = String.format("%.0f",u.calcularTDEE());
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt5);
                         System.out.println("bleh6");
                         return true;
 
                     case "nivelatv":
                         String[] alt6 = getDadosUsuario(nome);
-                        alt6[5] = valAlt;
+                        alt6[5] = novoValor;
                         alt6[7] = CLIUtil.getDataHora();
+                        u = new Usuario(alt6[0],alt6[1],alt6[2],alt6[3],alt6[4],alt6[5]);
+                        alt6[6] = String.format("%.0f",u.calcularTDEE());
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt6);
                         System.out.println("bleh4");
                         return true;
@@ -358,8 +368,8 @@ public class Usuario {
 
     }
 
-    static String getTDEE(String usr) {
-        String[] dados = getDadosUsuario(usr);
+    String getTDEE() {
+        String[] dados = getDadosUsuario(nome);
         if(dados.length < 8) {
             return null;
         }
@@ -369,48 +379,42 @@ public class Usuario {
 
     // seria melhor usar códigos de retorno ao invés de true ou false.
     // TODO: migrar esses prints pra interfaceCLI, mudar de boolean pra int pra controlar mensagens de erro
-    static boolean validarDadosUsuario(String[] dados) {
+
+
+    // Códigos de retorno:
+    // 0 - Sucesso
+    // 1 - Falha - Usuário já existe
+    // 2 - Falha - Valor do parâmetro peso inválido
+    // 3 - Falha - Valor do parâmetro altura inválido
+    // 4 - Falha - Valor do parâmetro idade inválido
+    // 5 - Falha - Valor do parâmetro sexo inválido
+    static int validarDadosUsuario(String[] dados) {
         if(Usuario.usuarioExiste(dados[0])) {
-            System.out.println("O usuário já existe no banco de dados. Tente novamente.");
-            System.out.println("Uso: usuario adicionar [nome] [peso (kg)] [altura (cm)] [idade] [sexo]");
-            return false;
+            return 1;
         }
 
         if(!dados[1].matches("[0-9]+") || dados[1].length() < 2 || Integer.parseInt(dados[1]) > 500) {
-            System.out.println("Parâmetro [peso] inválido. Tente novamente.");
-            System.out.println("Valor tem que ser número, ter pelo menos dois dígitos, e ser menor que 500.");
-            System.out.println("Uso: usuario adicionar [nome] [peso (kg)] [altura (cm)] [idade] [sexo]");
-            return false;
-
+            return 2;
         }
 
         if(!dados[2].matches("[0-9]+") || dados[2].length() < 2 || Integer.parseInt(dados[2]) > 300) {
-            System.out.println("Parâmetro [altura] inválido. Tente novamente.");
-            System.out.println("Valor tem que ser número, ter pelo menos dois dígitos, e ser menor que 300.");
-            System.out.println("Uso: usuario adicionar [nome] [peso (kg)] [altura (cm)] [idade] [sexo]");
-            return false;
-
+            return 3;
         }
 
         if(!dados[3].matches("[0-9]+") || Integer.parseInt(dados[3]) > 110 || Integer.parseInt(dados[3]) < 10) {
-            System.out.println("Parâmetro [idade] inválido. Tente novamente.");
-            System.out.println("Valor tem que ser número, ser maior que 10, e ser menor que 110.");
-            System.out.println("Uso: usuario adicionar [nome] [peso (kg)] [altura (cm)] [idade] [sexo]");
-            return false;
-
+            return 4;
         }
 
         if(!(dados[4].equalsIgnoreCase("f") || dados[4].equalsIgnoreCase("m"))) {
-            System.out.println("Parâmetro [sexo] inválido. Tente novamente.");
-            System.out.println("Uso: usuario adicionar [nome] [peso (kg)] [altura (cm)] [idade] [sexo]");
-            return false;
+            return 5;
         }
-        return true;
+
+        return 0;
 
     }
 
     // método sobrecarregado, ao invés de validar todos os dados, valida só um $dado conforme $prop
-    // TODO: Migrar mensagens de erro pra interfaceCLI
+    // TODO: Migrar mensagens de erro pra interfaceCLI, usar códigos de retorno igual o de cima
     static boolean validarDadosUsuario(String prop, String dado) {
         switch(prop) {
             case "peso":
@@ -455,6 +459,7 @@ public class Usuario {
             case "default":
                 return false;
         }
+
         return false;
     }
 
