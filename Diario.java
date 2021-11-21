@@ -25,8 +25,24 @@ public class Diario extends Alimento {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");  
         LocalDateTime now = LocalDateTime.now();  
         data = dtf.format(now).toString();
+
+        Alimento a = new Alimento();
+        String[] csvA = a.getDadosAlimento(dadosAlimento[0]);
+
+        // dadosAlimento[1] = gramas consumidas
+        // csvA[1] = kcal/100g
+
+        // System.out.println(csvA[1].trim()+dadosAlimento[1]);
+
+        // Divide a quantidade de kcal em 100g de alimento por 100, pra obter a quantidade de kcal em 1g de alimento
+        // em seguida multiplica esse novo valor por quantas gramas o usuário consumiu do alimento
+        double kcal = (Integer.parseInt(csvA[1].trim()) / 100.0) * Integer.parseInt(dadosAlimento[1]);
+        String kcald = String.format("%.1f", kcal);
+        
+        //System.out.println(String.format("%.1f", kcal));
         // System.out.println(data);  
-        String[] fileira = { dadosAlimento[0], dadosAlimento[1], data, dadosAlimento[2] };
+        // salva os valores, incluindo as calorias consumidas calculadas acima, pro diário
+        String[] fileira = { dadosAlimento[0], dadosAlimento[1], kcald, data, dadosAlimento[2] };
         arquivoOps.acrescentarAoCSV(nomeCsv, fileira);
         return true;
 
@@ -44,6 +60,12 @@ public class Diario extends Alimento {
             }
         }
     return false;
+    }
+
+    List<String> getDadosAlimentosDiario() {
+        List<String> lista = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(nomeCsv));
+        return lista;
+
     }
 
     boolean deletarDiario() {

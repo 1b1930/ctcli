@@ -84,16 +84,16 @@ public class ArquivoOps {
         }
     }
 
-    // Mesma coisa do de cima, mas pro CSV pessoal contendo os alimentos consumidos pelo usuário
+    // Mesma coisa do de cima, mas pro diário contendo os alimentos consumidos pelo usuário
     boolean criarCSVeMontarCabecalho(String caminhoDir, String uNome) {
         Usuario u = new Usuario();
         u.csvPessoalExiste(uNome);
         if(u.csvPessoalExiste(uNome)) {
-           System.out.println("Arquivo CSV pessoal do usuário já existe. Abortando...");
+           System.out.println("Arquivo diário já existe. Abortando...");
            return false;
         } else {
             String arq = caminhoDir+uNome+".csv";
-            String[] header = {"Nome", "KCAL", "Data da Adição", "Notas"};
+            String[] header = {"Nome", "Kcal", "Data da Adição", "Notas"};
             if(escreverAoCSV(arq, header)) {
                 return true;
 

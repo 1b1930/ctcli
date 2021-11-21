@@ -1,5 +1,10 @@
 // import java.lang.reflect.Array;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 // Ex: usuario logar daniel; alimento adicionar arroz 40; usuario remover daniel
 
@@ -815,6 +820,8 @@ public class InterfaceCLI {
                         }
 
                     }
+
+                    // System.out.println(cmd[temNum-1]);
                     
                     // checa se o usuário realmente adicionou as calorias antes de continuar
                     if(temNum == 0) {
@@ -826,6 +833,13 @@ public class InterfaceCLI {
                     // checa se o nome do alimento tem muitos espaços
                     if(c > 5) {
                         System.out.println("\nNome do alimento muito grande. (Muitos espaços)");
+                        System.out.println("Uso: alimento adicionar [nome] [quantidade consumida (g)]");
+                        entradaAlimentos(usuario);
+
+                    }
+
+                    if(c == 2) {
+                        System.out.println("\nNome só pode conter letras e espaços. Tente novamente.");
                         System.out.println("Uso: alimento adicionar [nome] [quantidade consumida (g)]");
                         entradaAlimentos(usuario);
 
@@ -856,7 +870,6 @@ public class InterfaceCLI {
                     // no CSV, os espaços serão substituidos por underlines
                     // System.out.println(sb.toString().trim().replace(" ","_"));
                     String validA = sb.toString().trim().replace(" ","_");
-                    // System.out.println("validA: "+validA);
 
                     if(!(ali.alimentoExiste(validA))) {
                         System.out.println("\nAlimento não existe no banco de dados principal. Deseja adicioná-lo? Y ou N");
@@ -877,13 +890,13 @@ public class InterfaceCLI {
 
                             Alimento ali2 = new Alimento(validA,al.trim());
                             if(ali2.adicionarAlimento()) {
-                                System.out.println("Alimento adicionado com sucesso! (Banco de dados)");
+                                System.out.println("\nAlimento adicionado com sucesso! (Banco de dados)");
                             } else {
                                 System.out.println("ERRO: Alimento não foi adicionado.");
                             }
 
                         } else if(u.equalsIgnoreCase("n")) {
-                            System.out.println("Alimento não será adicionado tanto ao banco de dados quanto ao seu diário.");
+                            System.out.println("\nAlimento não será adicionado tanto ao banco de dados quanto ao seu diário.");
                             System.out.println("Voltando para o submenu...");
                             entradaAlimentos(usuario);
                         }
@@ -902,7 +915,10 @@ public class InterfaceCLI {
                         nom.append(" "+cmd[temNum+i]);
                     }
                     String no = nom.toString().trim().replace(" ","_");
-                    if(no.length() > 10) {
+                    System.out.println("length of no: "+no.length());
+
+                    // quantidade de caracteres da nota não pode ter maior que 18 (inclui espaços)
+                    if(no.length() > 18) {
                         System.out.println("erro nota mt grande 2");
                         entradaAlimentos(usuario);
                     }
@@ -946,6 +962,54 @@ public class InterfaceCLI {
                     }
                     System.out.println("Alimento removido.");
                     entradaAlimentos(usuario);
+
+                } else if(cmdSec.matches("print") || cmdSec.matches("p")) {
+                    //System.out.println("NOME\t\tGRAMAS\t\tKCAL\t\tDATA\t\tNOTA");
+                    System.out.printf("%-22s%-22s%-22s%-22s","NOME","KCAL","DATA","NOTAS");
+                    System.out.println();
+                    Diario d = new Diario(usuario);
+                    List<String> lista = new ArrayList<>();
+                    lista.addAll(d.getDadosAlimentosDiario());
+                    String[] indiv;
+                    String el;
+                    double kDia = 0.0;
+                    LocalDate dataHoje = LocalDate.now();
+                    LocalDate dataNoDiario;
+                    LocalDateTime dataHoraNoDiario;
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");  
+
+
+                    for(int i=0;i<lista.size();i++) {
+                        el = lista.get(i).replaceAll("[\\[\\]]", "");
+                        indiv = el.split(",");
+                        for(int j=0;j<indiv.length;j++) {
+                            System.out.print(String.format("%-22s",indiv[j].replace("_"," ").trim()));
+                            if(j==2) {
+                                dataHoraNoDiario = LocalDateTime.parse(indiv[j+1].trim(), dtf);
+                                dataNoDiario = dataHoraNoDiario.toLocalDate();
+                                // System.out.println(dataNoDiario);
+                                // System.out.println(dataHoje);
+                                if(dataNoDiario.isEqual(dataHoje)) {
+                                    kDia += Double.parseDouble(indiv[j]);
+                                }
+                            }
+                            if(j==3) {
+
+
+
+                                // LocalDateTime.parse() precisa de um DateTimeFormatter pra formatar a data corretamente
+
+
+                            }
+                            // System.out.println("\t");
+                        }
+                        System.out.println();
+                    }
+
+                    System.out.printf("\nTOTAL DE CALORIAS CONSUMIDAS HOJE: %.0f\n",kDia);
+
+                    LocalDate date = LocalDate.parse("2018-05-05");
+                    
 
                 }
 
