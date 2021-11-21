@@ -348,6 +348,14 @@ public class ArquivoOps {
 
     }
 
+    boolean arquivoExiste(String arq) {
+        if(new File(arq).exists()) {
+            return true;
+        }
+        return false;
+
+    }
+
 
 
 }
