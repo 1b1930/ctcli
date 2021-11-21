@@ -277,9 +277,9 @@ public class InterfaceCLI {
 
                         case 5:
                             System.out.println("Valor do argumento [sexo] inválido. Tente novamente.");
-                        System.out.println("Uso: usuario adicionar [nome] [peso (kg)] [altura (cm)] [idade] [sexo]");
-                        entradaUsuario();
-                        
+                            System.out.println("Uso: usuario adicionar [nome] [peso (kg)] [altura (cm)] [idade] [sexo]");
+                            entradaUsuario();
+
                     }
 
                     expNivelAtv();
@@ -706,15 +706,7 @@ public class InterfaceCLI {
                                     kDia += Double.parseDouble(indiv[j]);
                                 }
                             }
-                            if(j==3) {
-
-
-
-                                // LocalDateTime.parse() precisa de um DateTimeFormatter pra formatar a data corretamente
-
-
-                            }
-                            // System.out.println("\t");
+                            // System.out.println("booooooooooo");
                         }
                         System.out.println();
                     }
