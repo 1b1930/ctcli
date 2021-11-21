@@ -33,19 +33,19 @@ public class InterfaceCLI {
 
     public static final ArquivoOps aq = new ArquivoOps();
     public static final StringBuilder sb = new StringBuilder(50);
+
+    public static final Config ctcliConfig = new Config(Main.CTCLICONFIG);
+    
+
     // public static final Alimento ali = new Alimento();
 
-    void mostrar(boolean primeiraExec) {
+    void mostrar() {
         // Caracteres especiais ANSI para fazer o texto ficar em negrito
         System.out.println("\033[0;1m");
         // mensagem de boas vindas + explicação do app
-        System.out.println("ctcli"+" v"+Main.VERSION);
-        // System.out.println("Esse programa irá ajudar você a contar suas calorias.");
-        // System.out.println("Ele também informa o seu valor total de energia gasta por dia" +
-        // " " + "(sigla em inglês: TDEE)");
-        // System.out.println("Isso ajuda você a controlar seu peso, já que se as calorias consumidas por dia" +
-        // " excederem o valor do TDEE, você irá ganhar peso.");
-        String usr = Config.getPermaLoginUsr();
+        System.out.println("ctcli"+" v"+Main.VERSAO);
+
+        String usr = ctcliConfig.getPermaLoginUsr();
         if(!(usr.equals("") || usr.equals(null))) {
             if(Usuario.usuarioExiste(usr)) {
                 MenuPrincipal mp = new MenuPrincipal();
