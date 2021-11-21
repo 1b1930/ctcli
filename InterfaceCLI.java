@@ -665,17 +665,29 @@ public class InterfaceCLI {
                     entradaAlimentos(usuario);
 
                 } else if(cmdSec.matches("print") || cmdSec.matches("p")) {
-                    //System.out.println("NOME\t\tGRAMAS\t\tKCAL\t\tDATA\t\tNOTA");
+                    // printa o cabeçalho da lista
+                    // usa um mínimo de 22 caracteres para cada string e é alinhado à esquerda por causa do - antes do 22.
                     System.out.printf("%-22s%-22s%-22s%-22s","NOME","KCAL","DATA","NOTAS");
                     System.out.println();
+                    // Cria um objeto diário que vamos usar pra ler o conteúdo do diário do usuário
                     Diario d = new Diario(usuario);
+                    // lista que vai armazenar os dados lidos
                     List<String> lista = new ArrayList<>();
+                    // pega os dados e adiciona eles na lista
                     lista.addAll(d.getDadosAlimentosDiario());
+                    // irá armazenar os dados de um registro individualmente
                     String[] indiv;
+                    // armazena todos os dados de um registro, irá ser quebrado
+                    // e os dados serão adicionados individualmente em indiv[]
                     String el;
+                    // calorias consumidas no dia (hoje)
                     double kDia = 0.0;
+                    // armazena a data de hoje, necessita de data correta no SO
                     LocalDate dataHoje = LocalDate.now();
+                    // armazena a data de um registro do diário
                     LocalDate dataNoDiario;
+                    // armazena a data e hora de um registro do diário, irá ser convertido pra
+                    // LocalDate.
                     LocalDateTime dataHoraNoDiario;
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");  
 
