@@ -89,7 +89,7 @@ public class ArquivoOps {
 
     // Mesma coisa do de cima, mas pro diário contendo os alimentos consumidos pelo usuário
     boolean criarCSVeMontarCabecalho(String caminhoDir, String uNome) {
-        Usuario u = new Usuario();
+        Usuario u = new Usuario(uNome);
         u.csvPessoalExiste(uNome);
         if(u.csvPessoalExiste(uNome)) {
            System.out.println("Arquivo diário já existe. Abortando...");
@@ -268,7 +268,8 @@ public class ArquivoOps {
     // TODO: O que acontece se tiver mais de um permalogin no arquivo config?
     boolean substituirNoArquivo(String arq, String match, String subs) {
         List<String> lista = new ArrayList<String>();
-        lista.addAll(lerArquivo(Config.ARQCONFIG));
+        Config ctcliConf = new Config(Main.CTCLICONFIG);
+        lista.addAll(lerArquivo(ctcliConf.configArq));
         int cont = 0;
         for(int i=0;i<lista.size();i++) {
             System.out.println(lista.get(i));
