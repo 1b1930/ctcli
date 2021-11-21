@@ -3,12 +3,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class Main {
-    public static final String VERSION = "0.02";
-    // constantes com os caminhos para os arquivos csv
+    public static final String VERSAO = "0.3";
 
+    // constantes com os caminhos para os arquivos csv
     public static final String CSVBASEDIR = "dados";
     public static final String CSVLOGDIR = "dados/alimento_log/";
-
     public static final String CSVUSUARIO = "dados/DadosUsuario.csv";
     public static final String CTCLICONFIG = "dados/ctcli.config";
 
