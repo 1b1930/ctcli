@@ -117,19 +117,19 @@ public class InterfaceCLI {
 
         System.out.println("\t\"editar\" [nome] [propriedade a ser alterada] [novo valor]\tAtalho: \"e\"");
         System.out.println("\tPropriedades válidas: nome, peso, altura, idade, nivelatv");
-        System.out.println("\tDescrição: edita uma propriedade do usuário dado como parâmetro.\n");
+        System.out.println("\tDescrição: edita uma propriedade do usuário dado como argumento.\n");
 
         System.out.println("\t\"remover\" [nome]\t\t\t\t\t\tAtalho: \"r\"");
-        System.out.println("\tDescrição: remove o usuário dado como parâmetro.\n");
+        System.out.println("\tDescrição: remove o usuário dado como argumento.\n");
 
         System.out.println("\t\"print\" [nome]\t\t\t\t\t\t\tAtalho: \"p\"");
-        System.out.println("\tDescrição: printa o usuário dado como parâmetro.\n");
+        System.out.println("\tDescrição: printa o usuário dado como argumento.\n");
 
         System.out.println("\t\"printall\"\t\t\t\t\t\t\tAtalho: \"pa\"");
         System.out.println("\tDescrição: printa todos os usuários salvos na base de dados.\n");
 
         System.out.println("\t\"logar\" [nome]\t\t\t\t\t\t\tAtalho: \"l\"");
-        System.out.println("\tDescrição: loga como o usuário dado como parâmetro.\n");
+        System.out.println("\tDescrição: loga como o usuário dado como argumento.\n");
 
 
 
@@ -175,21 +175,21 @@ public class InterfaceCLI {
         "\n\tKcal/100g são quantas calorias tem 100g desse alimento.\n");
 
         System.out.println("\t\"print\" [nome]\tAtalho: \"p\"");
-        System.out.println("\tDescrição: edita uma propriedade do usuário dado como parâmetro.\n");
+        System.out.println("\tDescrição: edita uma propriedade do usuário dado como argumento.\n");
 
         System.out.println("\t\"remover\" [nome]\t\t\t\t\t\tAtalho: \"r\"");
-        System.out.println("\tDescrição: remove o alimento dado como parâmetro do banco de dados.\n");
+        System.out.println("\tDescrição: remove o alimento dado como argumento do banco de dados.\n");
 
         System.out.println("\t\"alterar\" [nome] [propriedade a ser alterada] [novo valor]\tAtalho: \"alt\"");
         System.out.println("\tPropriedades válidas: nome, kcal");
-        System.out.println("\tDescrição: alterar uma propriedade do alimento dado como parâmetro.\n");
+        System.out.println("\tDescrição: alterar uma propriedade do alimento dado como argumento.\n");
 
 
         System.out.println("\t\"print\" [nome]\t\t\t\t\t\t\tAtalho: \"p\"");
-        System.out.println("\tDescrição: printa os dados do alimento dado como parâmetro.\n");
+        System.out.println("\tDescrição: printa os dados do alimento dado como argumento.\n");
 
         System.out.println("\t\"printpretty\" [nome]\t\t\t\t\t\tAtalho: \"pp\"");
-        System.out.println("\tDescrição: printa os dados do alimento dado como parâmetro, de forma mais bonitinha.\n");
+        System.out.println("\tDescrição: printa os dados do alimento dado como argumento, de forma mais bonitinha.\n");
 
         System.out.println("\t\"printall\" [nome]\t\t\t\t\t\tAtalho: \"pa\"");
         System.out.println("\tDescrição: printa todos os alimentos.\n");
@@ -240,7 +240,7 @@ public class InterfaceCLI {
 
 
                     if(cmd.length != 7) {
-                        System.out.println("Número de parâmetros inválido. Tente novamente.");
+                        System.out.println("Número de argumentos inválido. Tente novamente.");
                         System.out.println("Uso: usuario adicionar [nome] [peso (kg)] [altura (cm)] [idade] [sexo]");
                         entradaUsuario();
                     }
@@ -521,7 +521,7 @@ public class InterfaceCLI {
                         System.out.println("Uso: alimento adicionar [nome] [calorias consumidas] [notas (opcional)]");
                         entradaAlimentos(usuario);
 
-                    // detecta se o usuário errou a ordem dos parâmetros
+                    // detecta se o usuário errou a ordem dos argumentos
                    } else if(cmd[2].matches("[0-9]+")) {
                        System.out.println("O nome do alimento vem antes das calorias.");
                        System.out.println("Uso: alimento adicionar [nome] [calorias consumidas] [notas (opcional)]");
@@ -587,6 +587,7 @@ public class InterfaceCLI {
                     // debug
                     //System.out.println("num array position: "+temNum);
                     // System.out.println(c);
+
                     // Objeto StringBuilder pra juntar as partes do comando que são o nome do alimento
                     // StringBuilder sb = new StringBuilder(50);
                     for(int i=2;i<c;i++) {
@@ -602,38 +603,6 @@ public class InterfaceCLI {
                     // no CSV, os espaços serão substituidos por underlines
                     // System.out.println(sb.toString().trim().replace(" ","_"));
                     String validA = sb.toString().trim().replace(" ","_");
-
-                    // if(!(ali.alimentoExiste(validA))) {
-                    //     System.out.println("\nAlimento não existe no banco de dados principal. Deseja adicioná-lo? Y ou N");
-
-                    //     String u = CLIUtil.getUserInput();
-                    //     while(!(u.equalsIgnoreCase("y") || u.equalsIgnoreCase("n"))) {
-                    //         System.out.println("Digite Y para sim ou N para não.");
-                    //         u = CLIUtil.getUserInput();
-                    //     }
-
-                    //     if(u.equalsIgnoreCase("y")) {
-                    //         System.out.println("\nDigite a quantidade de calorias em 100g desse alimento: ");
-                    //         String al = CLIUtil.getUserInput();    
-                    //         while(!(al.matches("[0-9]+")) || Integer.parseInt(al) > 10000) {
-                    //             System.out.println("\nValor inválido. (Tem que ser número)");
-                    //             al = CLIUtil.getUserInput();
-                    //         }
-
-                    //         Alimento ali2 = new Alimento(validA,al.trim());
-                    //         if(ali2.adicionarAlimento()) {
-                    //             System.out.println("\nAlimento adicionado com sucesso! (Banco de dados)");
-                    //         } else {
-                    //             System.out.println("ERRO: Alimento não foi adicionado.");
-                    //         }
-
-                    //     } else if(u.equalsIgnoreCase("n")) {
-                    //         System.out.println("\nAlimento não será adicionado tanto ao banco de dados quanto ao seu diário.");
-                    //         System.out.println("Voltando para o submenu...");
-                    //         entradaAlimentos(usuario);
-                    //     }
-
-                    // }
 
                     // stringbuilder que vai armazenar a nota
                     StringBuilder nom = new StringBuilder(50);
@@ -675,7 +644,7 @@ public class InterfaceCLI {
 
                 } else if(cmdSec.matches("remover") || cmdSec.matches("r")) {
                     if(cmd.length<3) {
-                        System.out.println("Argumento inválido");
+                        System.out.println("Quantidade de argumentos insuficiente.");
                         System.out.println("Uso: diario remover [nome do alimento]");
                         entradaAlimentos(usuario);
                     }
@@ -739,17 +708,18 @@ public class InterfaceCLI {
                     }
 
                     System.out.printf("\nTOTAL DE CALORIAS CONSUMIDAS HOJE: %.0f\n",kDia);
-
-                    LocalDate date = LocalDate.parse("2018-05-05");
                     
 
+                }
+                else {
+                    System.out.println("Comando inválido. [Diário]");
                 }
 
             } // else ifs de cmdPrinc são aqui
             
 
             else {
-                System.out.println("Comando inválido. [Submenu Diário]"); entradaAlimentos(usuario);
+                System.out.println("Comando inválido. [Submenu]"); entradaAlimentos(usuario);
             }
             entradaAlimentos(usuario);
         }
