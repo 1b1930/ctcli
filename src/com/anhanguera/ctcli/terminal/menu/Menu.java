@@ -14,7 +14,9 @@ import com.anhanguera.ctcli.arquivo.OperadorArquivos;
 import com.anhanguera.ctcli.arquivo.ArquivoConfig;
 import com.anhanguera.ctcli.terminal.Utilidades;
 
-import static com.anhanguera.ctcli.terminal.menu.Constantes.*;
+import static com.anhanguera.ctcli.terminal.menu.CodigosANSI.*;
+import static com.anhanguera.ctcli.terminal.menu.SimbolosUnicode.*;
+// import static com.anhanguera.ctcli.terminal.menu.Mensagens.*;
 
 // Ex: usuario logar daniel; alimento adicionar arroz 40; usuario remover daniel
 
@@ -23,46 +25,38 @@ public class Menu {
     // É, eu sei que seria melhor criar uma classe num outro arquivo só pra interpretar os comandos
     // É minha primeira vez fazendo algo assim e percebi isso muito tarde, agora não tem tempo.
 
-
-
     public static final OperadorArquivos aq = new OperadorArquivos();
     public static final StringBuilder sb = new StringBuilder(50);
 
     public static final ArquivoConfig ctcliConfig = new ArquivoConfig(Main.CTCLICONFIG);
+
+    // public static Mensagens msg;
     
 
     // public static final Alimento ali = new Alimento();
 
-    public void mostrar() {
+    public void iniciar() {
         // Caracteres especiais ANSI para fazer o texto ficar em negrito
-        System.out.println("\033[0;1m");
-        // mensagem de boas vindas + explicação do app
-        System.out.println("ctcli"+" v"+Main.VERSAO);
+        // (msg = VERSAO).print();
+        System.out.println(Mensagens.VERSAO);
 
+        //System.out.println(Erros.DUPLICATE_USER);
         String usr = ctcliConfig.getPermaLoginUsr();
         if(!(usr.equals("") || usr.equals(null))) {
             if(Usuario.usuarioExiste(usr)) {
                 MenuPrincipal mp = new MenuPrincipal();
-                System.out.println("\nLogado automaticamente como "+usr);
-                System.out.println("\nPara desabilitar o login automático, digite: permalogin 0");
-                System.out.println(ANSI_GREEN+"\nDigite \"ajuda\" para obter os comandos disponíveis."+ANSI_RESET);
+                System.out.println(Mensagens.AUTOLOGIN_SUCCESS);
+                System.out.println(Mensagens.INFO_AJUDA);
                 mp.entradaAlimentos(usr);
             } else {
-                System.out.println(ANSI_RED+"\nERRO: Usuário especificado em $permalogin não existe (ctcli.config)"+ANSI_RESET);
+                System.out.println(Erros.USER_PERMALOGIN_NOT_FOUND);
             }
         }
 
-        System.out.println("\n"+NEGRITO+"Entre como um usuário para obter acesso aos demais comandos.");
-        System.out.println("Use: usuario logar [nome do usuário]");
-
-        System.out.println("\n"+ANSI_GREEN+"Digite \"ajuda\" para obter todos os comandos disponíveis"+ANSI_RESET);
-
-
-
-        // CLIUtil.waitNext();
+        System.out.println(Mensagens.INFO_USER_LOGIN);
+        System.out.println(Mensagens.INFO_AJUDA);
         
         // Criando instância da subclasse MenuPrincipal
-        // executando o método sobrescrito mostrar()
         MenuPrincipal mp = new MenuPrincipal();
         mp.entradaUsuario();
     }
@@ -445,7 +439,6 @@ public class Menu {
             } catch (NullPointerException e) {
                 // System.out.println("caught");
                 cmd[0] = cmdStr;
-                System.out.println(cmdStr);
 
             }
 
@@ -454,10 +447,14 @@ public class Menu {
             String cmdTer;
             try {
                 cmdSec = cmd[1];
-                cmdTer = cmd[2];
             } catch (ArrayIndexOutOfBoundsException e) {
                 cmdSec = "";
+            }
+
+            try {
                 cmdTer = cmd[2];
+            } catch (ArrayIndexOutOfBoundsException e) {
+                cmdTer = "";
             }
 
             // TODO: comandos de logar no CSV pessoal
@@ -473,6 +470,7 @@ public class Menu {
                 mostrarComandosAlimentos();
 
             } else if(cmdPrinc.matches("permalogin")) {
+                System.out.println("cmdsec: "+cmdSec);
                 if(cmd.length<2) {
                     System.out.println("Argumentos insuficientes.");
                     System.out.println("Uso: permalogin [0 ou 1]");
