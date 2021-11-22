@@ -1,4 +1,4 @@
-package com.anhanguera.ctcli.terminal.menu;
+package com.anhanguera.ctcli.terminal.util;
 
 public final class SimbolosUnicode {
 

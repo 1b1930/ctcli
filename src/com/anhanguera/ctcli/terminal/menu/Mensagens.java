@@ -1,7 +1,7 @@
 package com.anhanguera.ctcli.terminal.menu;
 
-import static com.anhanguera.ctcli.terminal.menu.CodigosANSI.*;
-import static com.anhanguera.ctcli.terminal.menu.SimbolosUnicode.*;
+import static com.anhanguera.ctcli.terminal.util.CodigosANSI.*;
+import static com.anhanguera.ctcli.terminal.util.SimbolosUnicode.*;
 
 import com.anhanguera.ctcli.Main;
 

@@ -1,4 +1,4 @@
-package com.anhanguera.ctcli.terminal;
+package com.anhanguera.ctcli.terminal.util;
 
 import java.io.File;
 
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 
 
-public class Utilidades {
+public class UtilidadesCLI {
 
     // Segundo um cara no stackoverflow, scanners usados em múltiplos lugares
     // devem ficar fora de um método e ter como características public static e final
@@ -46,6 +46,8 @@ public class Utilidades {
     }
 
     public static List<String> getListaArq(String dir) {
+
+        // TODO: migrar isso pra OperadorArquivos
 
         // TODO: Tem que retornar uma List<String>
         List<String> arqs = new ArrayList<String>();

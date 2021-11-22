@@ -22,8 +22,6 @@ public class Main {
     
     public static void main(String[] args) throws FileNotFoundException, IOException {
 
-        System.out.println();
-
         //Usuario usr = new Usuario();
         // usr.csvPessoalExiste("colette");
 
@@ -31,7 +29,7 @@ public class Main {
         if(init()) {
             Menu intf = new Menu();
             // System.out.println(PRIMEIRAEXEC);
-            intf.mostrar();
+            intf.iniciar();
 
         } else {
             System.out.println("R.I.P");

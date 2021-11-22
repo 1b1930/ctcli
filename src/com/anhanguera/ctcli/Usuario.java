@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.anhanguera.ctcli.arquivo.OperadorArquivos;
-import com.anhanguera.ctcli.terminal.Utilidades;
+import com.anhanguera.ctcli.terminal.util.UtilidadesCLI;
 
 
 public class Usuario {
@@ -37,7 +37,7 @@ public class Usuario {
     // retorna verdadeiro somente se conseguiu criar o usuário + csv pessoal dele
     public boolean criarUsuario() {
         if(!(usuarioExiste(nome) && csvPessoalExiste(nome))) {
-            String data = Utilidades.getDataHora();
+            String data = UtilidadesCLI.getDataHora();
             Double tdee = calcularTDEE();
             if(tdee == -1.0) {
                 return false;
@@ -67,7 +67,7 @@ public class Usuario {
     // retorna verdadeiro se e somente se o CSV pessoal de nome existe.
     public boolean csvPessoalExiste(String nome) {
         List<String> arqs = new ArrayList<String>();
-        arqs.addAll(Utilidades.getListaArq(Main.CSVLOGDIR));
+        arqs.addAll(UtilidadesCLI.getListaArq(Main.CSVLOGDIR));
 
         for(int i=0;i<arqs.size();i++) {
             // System.out.println("match: "+arqs.get(i));
@@ -131,7 +131,7 @@ public class Usuario {
                     case "nome":
                         String[] alt = getDadosUsuario(nome);
                         alt[0] = novoValor;
-                        alt[7] = Utilidades.getDataHora();
+                        alt[7] = UtilidadesCLI.getDataHora();
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt);
                         System.out.println("bleh2");
                         return true;
@@ -139,7 +139,7 @@ public class Usuario {
                     case "peso":
                         String[] alt2 = getDadosUsuario(nome);
                         alt2[1] = novoValor;
-                        alt2[7] = Utilidades.getDataHora();
+                        alt2[7] = UtilidadesCLI.getDataHora();
                         u = new Usuario(alt2[0],alt2[1],alt2[2],alt2[3],alt2[4],alt2[5]);
                         alt2[6] = String.format("%.0f",u.calcularTDEE());
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt2);
@@ -150,7 +150,7 @@ public class Usuario {
                     case "altura":
                         String[] alt3 = getDadosUsuario(nome);
                         alt3[2] = novoValor;
-                        alt3[7] = Utilidades.getDataHora();
+                        alt3[7] = UtilidadesCLI.getDataHora();
                         u = new Usuario(alt3[0],alt3[1],alt3[2],alt3[3],alt3[4],alt3[5]);
                         alt3[6] = String.format("%.0f",u.calcularTDEE());
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt3);
@@ -161,7 +161,7 @@ public class Usuario {
                     case "idade":
                         String[] alt4 = getDadosUsuario(nome);
                         alt4[3] = novoValor;
-                        alt4[7] = Utilidades.getDataHora();
+                        alt4[7] = UtilidadesCLI.getDataHora();
                         u = new Usuario(alt4[0],alt4[1],alt4[2],alt4[3],alt4[4],alt4[5]);
                         alt4[6] = String.format("%.0f",u.calcularTDEE());
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt4);
@@ -172,7 +172,7 @@ public class Usuario {
                     case "sexo":
                         String[] alt5 = getDadosUsuario(nome);
                         alt5[4] = novoValor.toUpperCase();
-                        alt5[7] = Utilidades.getDataHora();
+                        alt5[7] = UtilidadesCLI.getDataHora();
                         u = new Usuario(alt5[0],alt5[1],alt5[2],alt5[3],alt5[4],alt5[5]);
                         alt5[6] = String.format("%.0f",u.calcularTDEE());
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt5);
@@ -182,7 +182,7 @@ public class Usuario {
                     case "nivelatv":
                         String[] alt6 = getDadosUsuario(nome);
                         alt6[5] = novoValor;
-                        alt6[7] = Utilidades.getDataHora();
+                        alt6[7] = UtilidadesCLI.getDataHora();
                         u = new Usuario(alt6[0],alt6[1],alt6[2],alt6[3],alt6[4],alt6[5]);
                         alt6[6] = String.format("%.0f",u.calcularTDEE());
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt6);

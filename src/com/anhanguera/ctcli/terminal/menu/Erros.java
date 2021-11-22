@@ -1,5 +1,5 @@
 package com.anhanguera.ctcli.terminal.menu;
-import static com.anhanguera.ctcli.terminal.menu.CodigosANSI.*;
+import static com.anhanguera.ctcli.terminal.util.CodigosANSI.*;
 
 public enum Erros {
     USER_PERMALOGIN_NOT_FOUND(0, "Usuário especificado em $permalogin não existe (ctcli.config)"),

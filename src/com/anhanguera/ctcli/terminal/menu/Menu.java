@@ -1,4 +1,7 @@
 package com.anhanguera.ctcli.terminal.menu;
+import static com.anhanguera.ctcli.terminal.util.CodigosANSI.*;
+import static com.anhanguera.ctcli.terminal.util.SimbolosUnicode.*;
+
 // import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,12 +14,8 @@ import com.anhanguera.ctcli.Diario;
 import com.anhanguera.ctcli.Main;
 import com.anhanguera.ctcli.Usuario;
 import com.anhanguera.ctcli.arquivo.OperadorArquivos;
+import com.anhanguera.ctcli.terminal.util.UtilidadesCLI;
 import com.anhanguera.ctcli.arquivo.ArquivoConfig;
-import com.anhanguera.ctcli.terminal.Utilidades;
-
-import static com.anhanguera.ctcli.terminal.menu.CodigosANSI.*;
-import static com.anhanguera.ctcli.terminal.menu.SimbolosUnicode.*;
-// import static com.anhanguera.ctcli.terminal.menu.Mensagens.*;
 
 // Ex: usuario logar daniel; alimento adicionar arroz 40; usuario remover daniel
 
@@ -71,7 +70,7 @@ public class Menu {
 
     // Pede ao usuário seu nível de atividade física
     String getNivelAtv() {
-        String resp = Utilidades.getUserInput();
+        String resp = UtilidadesCLI.getUserInput();
         // Pedir pra tentar novamente se a resposta não tiver apenas 
         // um número ou ser algum outro caractere
         if(resp.length() != 1 || !(resp.matches(".*\\d.*"))) {
@@ -90,7 +89,7 @@ public class Menu {
     }
 
     void mostrarComandosUsuario() {
-        Utilidades.clear();
+        UtilidadesCLI.clear();
         // TODO: pode estar desatualizado, verificar
         // System.out.println("\t\t"+NEGRITO+"Comandos"+NORMAL+"\n");       
         // Checa se é a primeira vez que o programa está sendo executado
@@ -153,7 +152,7 @@ public class Menu {
     }
 
     void mostrarComandosAlimentos() {
-        Utilidades.clear();
+        UtilidadesCLI.clear();
         System.out.println(NEGRITO+"Comandos do Submenu Pessoal"+NORMAL);
         System.out.println(NEGRITO+"\nComandos Referentes aos Alimentos\n"+NORMAL);
         System.out.println("Para usar os comandos de alimentos, use como prefixo \"alimento\" ou o seu atalho \"a\"");
@@ -194,7 +193,7 @@ public class Menu {
             String[] cmd = new String[15];
             String cmdStr = "";
             while(cmdStr.isEmpty()) {
-                cmdStr = Utilidades.getUserInput();
+                cmdStr = UtilidadesCLI.getUserInput();
             }
 
             // Interpreta corretamente o comando se só tiver um argumento
@@ -379,7 +378,7 @@ public class Menu {
                         entradaUsuario();
 
                     } else {
-                        Utilidades.clear();
+                        UtilidadesCLI.clear();
                         System.out.println("Logado com sucesso.\n");
                         System.out.println("Você está no seu submenu pessoal.");
                         System.out.println(ANSI_GREEN+"\nDigite \"ajuda\" para obter os comandos disponíveis neste submenu.\n"+ANSI_RESET);
@@ -398,11 +397,11 @@ public class Menu {
 
             /* COMANDOS PRINCIPAIS */
             } else if(cmdPrinc.matches("sair") || cmdPrinc.matches("s")) {
-                Utilidades.clear();
+                UtilidadesCLI.clear();
                 System.exit(0);
                 
             } else if(cmdPrinc.matches("clear") || cmdPrinc.matches("c")) {
-                Utilidades.clear();
+                UtilidadesCLI.clear();
                 entradaUsuario();
 
             } else if(cmdPrinc.matches("ajuda")) {
@@ -428,7 +427,7 @@ public class Menu {
             String cmdStr = "";
             while(cmdStr.isEmpty()) {
                 System.out.print(usuario+" ");
-                cmdStr = Utilidades.getUserInput();
+                cmdStr = UtilidadesCLI.getUserInput();
             }
 
             // Interpreta corretamente o comando se só tiver um argumento
@@ -462,10 +461,10 @@ public class Menu {
             if(cmdPrinc.matches("voltar")) {
                 entradaUsuario();
             } else if(cmdPrinc.matches("sair") || cmdPrinc.matches("s")) {
-                Utilidades.clear();
+                UtilidadesCLI.clear();
                 System.exit(0);
             } else if(cmdPrinc.matches("clear") || cmdPrinc.matches("c")) {
-                Utilidades.clear();
+                UtilidadesCLI.clear();
             } else if(cmdPrinc.matches("ajuda")) {
                 mostrarComandosAlimentos();
 

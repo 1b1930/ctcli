@@ -1,4 +1,4 @@
-package com.anhanguera.ctcli.terminal.menu;
+package com.anhanguera.ctcli.terminal.util;
 
 // declarando as constantes em um arquivo separado pra ficar mais limpo.
 // ATENÇÃO: usar "final" ao criar classe e usar "import static "Constantes.*"" 
