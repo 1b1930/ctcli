@@ -115,5 +115,109 @@ public class Diario {
 
 
     }
+
+    public List<String> getDiarioEntreDias(LocalDate dataInicio, LocalDate dataFim) {
+
+        int inicioDia = dataInicio.getDayOfYear();
+        int fimDia = dataFim.getDayOfYear();
+
+        if(inicioDia > fimDia) {
+            System.exit(0);
+        }
+
+        List<String> lista = new ArrayList<String>();
+        List<String> listaFiltrada = new ArrayList<String>();
+        String[] alimentoArr;
+        String alimentoStr;
+
+        lista.addAll(getDiario());
+
+        LocalDateTime dataHoraDiario;
+        LocalDate dataDiario;
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");  
+
+        for(int i=0;i<lista.size();i++) {
+            alimentoStr = lista.get(i).replaceAll("[\\[\\]]", "");
+            alimentoArr = alimentoStr.split(",");
+            // System.out.println(alimentoArr.length);
+            dataHoraDiario = LocalDateTime.parse(alimentoArr[2].trim(), dtf);
+            // System.out.println(dataHoraDiario);
+            // dSystem.exit(0);
+            dataDiario = dataHoraDiario.toLocalDate();
+            int diarioDia = dataDiario.getDayOfYear();
+            for(int j=0;j<alimentoArr.length;j++) {
+
+                if(diarioDia >= inicioDia && diarioDia <= fimDia ) {
+                    listaFiltrada.add(lista.get(i));
+
+                    // System.exit(0);
+                }
+
+            }
+            //System.out.println();
+            
+        }
+        return listaFiltrada;
+        // System.out.println();
+
+    }
+
+    public double getKcal(LocalDate data) {
+        List<String> lista = new ArrayList<String>();
+        String elementoDiario;
+        String[] elementoDSplit;
+        lista.addAll(getDiario(data));
+        double kcal = 0.0;
+        for(int i=0;i<lista.size();i++) {
+            elementoDiario = lista.get(i).replaceAll("[\\[\\]]", "");
+            elementoDSplit = elementoDiario.split(",");
+            for(int j=0;j<elementoDSplit.length;j++) {
+                if(j == 2) {
+                    kcal += Double.parseDouble(elementoDSplit[1]);
+                }
+            }
+        }
+        return kcal;
+
+    }
+
+    public String getKcal(LocalDate inicio, LocalDate fim) {
+        List<String> lista = new ArrayList<String>();
+        String elementoDiario;
+        String[] elementoDSplit;
+        int inicioDia = inicio.getDayOfYear();
+        int fimDia = fim.getDayOfYear();
+        LocalDateTime dataHoraDiario;
+        LocalDate dataDiario;
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");  
+
+        
+        lista.addAll(getDiario());
+        double kcal = 0.0;
+
+        for(int i=0;i<lista.size();i++) {
+            elementoDiario = lista.get(i).replaceAll("[\\[\\]]", "");
+            elementoDSplit = elementoDiario.split(",");
+            for(int j=0;j<elementoDSplit.length;j++) {
+                dataHoraDiario = LocalDateTime.parse(elementoDSplit[2],dtf);
+                dataDiario = dataHoraDiario.toLocalDate();
+                int diaAno = dataDiario.getDayOfYear();
+                if(diaAno >= inicioDia && diaAno <= fimDia) {
+                    kcal += Double.parseDouble(elementoDSplit[1]);
+                }
+
+            }
+
+        }
+        return String.format("%.0f",kcal);
+
+    }
+
+    public boolean verificarTamanho() {
+        System.out.println(arquivoOps.tamanhoArquivo(nomeCsv));
+        return true;
+    }
+
+
     
 }
