@@ -1,4 +1,5 @@
 package com.anhanguera.ctcli.arquivo;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
@@ -50,7 +51,7 @@ public class OperadorArquivos {
     // Cria um CSV sem nenhum dado exceto o cabeçalho
     // Qual CSV irá criar e qual cabeçalho irá usar depende no parâmetro passado
     // Existem duas possibilidades: CSV c/ dados do usuário e CSV c/ os alimentos
-    // TODO: usar método escreverAoCSV() ao invés de fazer toda essa porra ai em baixo
+    // TODO: usar método escreverAoCSV() ao invés de fazer toda essa coisa aí em baixo
     public boolean criarCSVeMontarCabecalho(String caminhoArq) {
 
         // Cria objeto da classe File usando como parâmetro o caminho do arquivo csv
@@ -95,9 +96,7 @@ public class OperadorArquivos {
     // do diário.
     public boolean criarCSVeMontarCabecalho(String caminhoDir, String uNome) {
         Usuario u = new Usuario(uNome);
-        u.csvPessoalExiste(uNome);
         if(u.csvPessoalExiste(uNome)) {
-           System.out.println("Arquivo diário já existe. Abortando...");
            return false;
         } else {
             String arq = caminhoDir+uNome+".csv";
@@ -110,6 +109,53 @@ public class OperadorArquivos {
             }
 
         }
+
+    }
+
+    public boolean montarCabecalhoDiario(String caminhoArq, String uNome) {
+        Usuario u = new Usuario(uNome);
+        if(u.csvPessoalExiste(uNome)) {
+            String[] header = { "Nome", "Kcal", "Data da Adição", "Notas" };
+
+            if (cabecalhoEstaEmBranco(caminhoArq)) {
+                if (escreverAoCSV(caminhoArq, header)) {
+                    return true;
+
+                } else {
+                    return false;
+                }
+            }
+
+            return false;
+
+        }
+        return false;
+
+    }
+
+    public boolean cabecalhoEstaEmBranco(String caminhoArq) {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(caminhoArq)); 
+            try {
+                if(br.readLine().isBlank()) {
+                    return true;
+                } else {
+                    return false;
+                }
+
+            } catch (NullPointerException e) {
+                return true;
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+
+        return false;
+
+
 
     }
 
@@ -239,7 +285,6 @@ public class OperadorArquivos {
     }
 
     // substituir uma linha $match no arquivo $arq, pela linha $subs
-    // TODO: O que acontece se tiver mais de um permalogin no arquivo config?
     public boolean substituirNoArquivo(String arq, String match, String subs) {
         List<String> lista = new ArrayList<String>();
         ArquivoConfig ctcliConf = new ArquivoConfig(Main.CTCLICONFIG);
@@ -324,6 +369,18 @@ public class OperadorArquivos {
         }
         return false;
 
+    }
+
+    public long tamanhoArquivo(String arq) {
+
+        // cria objeto arquivo
+        File a = new File(arq);
+
+        // armazena o tamanho (em bytes)
+        long tamanho = a.length();
+
+        // retorna tamanho em kbytes
+        return tamanho / 1024;
     }
 
 
