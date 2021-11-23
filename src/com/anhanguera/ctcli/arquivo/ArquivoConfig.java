@@ -1,4 +1,5 @@
 package com.anhanguera.ctcli.arquivo;
+
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -19,15 +20,17 @@ public class ArquivoConfig {
 
     // verifica se config existe
     public boolean configExiste() {
-        if(aq.arquivoExiste(configArq)) {
+        if (aq.arquivoExiste(configArq)) {
             return true;
 
-        } else {return false;}
+        } else {
+            return false;
+        }
     }
 
     public boolean criarConfig() {
-        if(aq.criarArquivo(configArq)) {
-            if(popularConfig()) {
+        if (aq.criarArquivo(configArq)) {
+            if (popularConfig()) {
                 return true;
             }
             return false;
@@ -36,11 +39,12 @@ public class ArquivoConfig {
         }
     }
 
-        // popular ctcli.config com os parâmetros que serão usados pelo código
+    // popular ctcli.config com os parâmetros que serão usados pelo código
     public boolean popularConfig() {
         try {
             PrintWriter writer = new PrintWriter(configArq, "UTF-8");
             writer.println("permalogin=");
+
             // writer.println("The second line");
             writer.close();
             return true;
@@ -50,15 +54,14 @@ public class ArquivoConfig {
             return false;
         }
 
-
     }
 
     // adiciona $usr depois de permalogin em ctcli.config
     public boolean addPermaLoginUsr(String usr) {
-        if(configExiste()) {
+        if (configExiste()) {
             OperadorArquivos arquivoOps = new OperadorArquivos();
-            String subs = "permalogin="+usr;
-            if(arquivoOps.substituirNoArquivo(configArq, "permalogin", subs)) {
+            String subs = "permalogin=" + usr;
+            if (arquivoOps.substituirNoArquivoConfig(configArq, "permalogin", subs)) {
                 return true;
             } else {
                 return false;
@@ -68,23 +71,27 @@ public class ArquivoConfig {
 
     }
 
-    // retorna o que vem depois do = em permalogin= em ctcli.config como String, pode ser "" ou null
+    // retorna o que vem depois do = em permalogin= em ctcli.config como String,
+    // pode ser "" ou null
     public String getPermaLoginUsr() {
+        // lista com as linhas do arquivo
         List<String> lista = new ArrayList<>();
         OperadorArquivos arquivoOps = new OperadorArquivos();
+        // le o arquivo e adiciona todas as linhas na lista
         lista.addAll(arquivoOps.lerArquivo(configArq));
-        for (int i=0;i<lista.size();i++) {
-            if(lista.get(i).contains("permalogin")) {
+        // itera pela lista
+        for (int i = 0; i < lista.size(); i++) {
+            if (lista.get(i).contains("permalogin")) {
                 // retorna uma substring com tudo o que vem depois de =
                 // remove espaços em branco
-                return(lista.get(i)
-                .substring(lista.get(i)
-                .lastIndexOf("=") + 1)
-                .trim());
+                return (lista.get(i).substring(lista.get(i).lastIndexOf("=") + 1).trim());
             }
         }
+        // retorna str vazia se não achou nada
         return "";
-        
+
     }
-    
+
+    // public boolean
+
 }

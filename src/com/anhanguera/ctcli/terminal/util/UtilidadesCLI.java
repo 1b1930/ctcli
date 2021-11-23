@@ -11,9 +11,7 @@ import java.util.Scanner;
 
 public class UtilidadesCLI {
 
-    // Segundo um cara no stackoverflow, scanners usados em múltiplos lugares
-    // devem ficar fora de um método e ter como características public static e final
-    // Funcionou por agora...
+    // scanners usados em múltiplos lugares devem ficar fora de um método e ter como características public, static e final
     public static final Scanner scanner = new Scanner(System.in);
 
     // Método que cuida de pegar os dados entrados pelo usuário

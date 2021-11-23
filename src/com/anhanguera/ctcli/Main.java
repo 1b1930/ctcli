@@ -1,4 +1,5 @@
 package com.anhanguera.ctcli;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -6,9 +7,10 @@ import java.io.IOException;
 import com.anhanguera.ctcli.arquivo.OperadorArquivos;
 import com.anhanguera.ctcli.arquivo.ArquivoConfig;
 import com.anhanguera.ctcli.terminal.menu.Menu;
+import com.anhanguera.ctcli.terminal.menu.mensagens.Erro;
 
 public class Main {
-    public static final String VERSAO = "0.3";
+    public static final String VERSAO = "0.8";
 
     // constantes com os caminhos para os arquivos csv
     public static final String CSVBASEDIR = "dados";
@@ -19,36 +21,36 @@ public class Main {
     public static int PRIMEIRAEXEC = 0;
 
     public static final ArquivoConfig ctcliConfig = new ArquivoConfig(CTCLICONFIG);
-    
+
     public static void main(String[] args) throws FileNotFoundException, IOException {
 
-
-        //Usuario usr = new Usuario();
-        // usr.csvPessoalExiste("colette");
-
-        // aq.criarCSVeMontarCabecalho(Main.CSVLOGDIR, "daniel.csv");
-        if(init()) {
+        // se init retornar true (conseguiu executar todas as tarefas com sucesso)
+        if (init()) {
+            // iniciar menu
             Menu intf = new Menu();
-            // System.out.println(PRIMEIRAEXEC);
             intf.iniciar();
 
+            // se não, printar erro e sair
         } else {
-            System.out.println("R.I.P");
+            System.out.println(Erro.ERRO_INIT);
+            System.exit(-1);
         }
-        
-        // 
-        
+
     }
 
+    // verificações iniciais antes de iniciar o menu
+    // garante que os arquivos necessários sejam criados e populados.
     public static boolean init() {
         OperadorArquivos aqv = new OperadorArquivos();
 
         File logdir = new File(Main.CSVLOGDIR);
 
-        // verifica se logdir existe, se não existir, tenta criar
-        if(!(logdir.exists())) {
-            // mkdirs() só retorna verdadeiro se todos os diretórios e subdiretórios foram criados
-            if(logdir.mkdirs()) {
+        // verifica se logdir existe, se não existir, tenta criar, se não conseguir
+        // criar, retornar falso (erro)
+        if (!(logdir.exists())) {
+            // mkdirs() só retorna verdadeiro se todos os diretórios e subdiretórios foram
+            // criados
+            if (logdir.mkdirs()) {
                 System.out.println("DIR: Diretório 'dados' + subdiretórios criados.");
                 PRIMEIRAEXEC++;
             } else {
@@ -58,9 +60,9 @@ public class Main {
 
         }
 
-        // se CSV não existe, tenta criar, se não conseguir criar, retorna falso
-        if(!(aqv.csvExiste(Main.CSVUSUARIO))) {
-            if(aqv.criarCSVeMontarCabecalho(Main.CSVUSUARIO)) {
+        // se CSV não existe, tenta criar, se não conseguir criar, retorna falso (erro)
+        if (!(aqv.csvExiste(Main.CSVUSUARIO))) {
+            if (aqv.criarCSVeMontarCabecalho(Main.CSVUSUARIO)) {
                 System.out.println("CSV: DadosUsuario.csv não existia e foi criado.");
                 PRIMEIRAEXEC++;
 
@@ -68,12 +70,13 @@ public class Main {
                 System.out.println("CSV: DadosUsuario.csv não foi criado.");
                 return false;
             }
-    
+
         }
 
-        if(!(ctcliConfig.configExiste())) {
-            if(ctcliConfig.criarConfig()) {
-                System.out.println("CONFIG: Arquivo criado. "+"("+ctcliConfig.configArq+")");
+        // se config não existe, criar, se não conseguir criar, retornar falso (erro)
+        if (!(ctcliConfig.configExiste())) {
+            if (ctcliConfig.criarConfig()) {
+                System.out.println("CONFIG: Arquivo criado. " + "(" + ctcliConfig.configArq + ")");
                 PRIMEIRAEXEC++;
             } else {
                 System.out.println("CONFIG: Arquivo não foi criado.");

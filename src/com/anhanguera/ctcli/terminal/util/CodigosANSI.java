@@ -15,6 +15,10 @@ public final class CodigosANSI {
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_WHITE = "\u001B[37m";
+    public static final String NEGRITO = "\033[0;1m";
+    public static final String ESTL = "\t\033[0;1m*\033[0;0m ";
+    public static final String NORMAL = "\033[0;0m";
+    public static final String SUBL = "\033[0;4m";
 
 
 
