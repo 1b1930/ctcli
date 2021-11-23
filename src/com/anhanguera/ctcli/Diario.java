@@ -18,35 +18,24 @@ public class Diario {
         this.usr = usr;
         nomeCsv = Main.CSVLOGDIR+usr+".csv";
 
+        if(!arquivoOps.csvExiste(nomeCsv)) {
+            arquivoOps.criarCSVeMontarCabecalho(nomeCsv);
+        }
+
+        if(arquivoOps.csvExiste(nomeCsv) && arquivoOps.cabecalhoEstaEmBranco(nomeCsv)) {
+            arquivoOps.montarCabecalhoDiario(nomeCsv, usr);
+        }
+
 
     }
     
     public boolean adicionarAlimentoAoDiario(String[] dadosAlimento) {
 
-        // if(!(alimentoExiste(dadosAlimento[0]))) {
-        //     // System.out.println("Alimento existe. Abortando...");
-        //     return false;
-        // }
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");  
         LocalDateTime now = LocalDateTime.now();  
         String data = dtf.format(now).toString();
 
-        // Alimento a = new Alimento();
-        // String[] csvA = a.getDadosAlimento(dadosAlimento[0]);
 
-        // dadosAlimento[1] = gramas consumidas
-        // csvA[1] = kcal/100g
-
-        // System.out.println(csvA[1].trim()+dadosAlimento[1]);
-
-        // Divide a quantidade de kcal em 100g de alimento por 100, pra obter a quantidade de kcal em 1g de alimento
-        // em seguida multiplica esse novo valor por quantas gramas o usuário consumiu do alimento
-        // double kcal = (Integer.parseInt(csvA[1].trim()) / 100.0) * Integer.parseInt(dadosAlimento[1]);
-        // String kcald = String.format("%.1f", kcal);
-        
-        //System.out.println(String.format("%.1f", kcal));
-        // System.out.println(data);  
-        // salva os valores, incluindo as calorias consumidas calculadas acima, pro diário
         String[] fileira = { dadosAlimento[0], dadosAlimento[1], data, dadosAlimento[2] };
         arquivoOps.acrescentarAoCSV(nomeCsv, fileira);
         return true;
@@ -67,13 +56,13 @@ public class Diario {
     return false;
     }
 
-    public List<String> getDadosAlimentosDiario() {
+    public List<String> getDiario() {
         List<String> lista = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(nomeCsv));
         return lista;
 
     }
 
-    public List<String> getDadosAlimentosDiario(LocalDate data) {
+    public List<String> getDiario(LocalDate data) {
         List<String> lista = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(nomeCsv));
         List<String> listaFiltrada = new ArrayList<String>();
         String alimento;
@@ -85,12 +74,14 @@ public class Diario {
 
         for(int i=0;i<lista.size();i++) {
             alimento = lista.get(i).replaceAll("[\\[\\]]", "").trim();
+            //System.out.println("DEBUGUGUG"+lista.get(i));
             alimentoSplit = alimento.split(",");
             for(int j=0;j<alimentoSplit.length;j++) {
                 if(j==2) {
-                    dataHoraAlimento = LocalDateTime.parse(alimentoSplit[j], dtf);
+                    dataHoraAlimento = LocalDateTime.parse(alimentoSplit[j].trim(), dtf);
                     dataAlimento = dataHoraAlimento.toLocalDate();
                     if(dataAlimento.isEqual(data)) {
+                        // System.out.println("2DEBUGUGUG"+lista.get(i));
                         listaFiltrada.add(lista.get(i));
                     }
 
@@ -99,11 +90,7 @@ public class Diario {
             }
 
         }
-
         return listaFiltrada;
-
-
-
     }
 
     public boolean deletarDiario() {
