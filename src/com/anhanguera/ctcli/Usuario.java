@@ -16,6 +16,7 @@ public class Usuario {
     String nivelatv;
     String idade;
     String sexo;
+    String nomeCsv;
 
     public static final OperadorArquivos arquivoOps = new OperadorArquivos();
 
@@ -27,6 +28,7 @@ public class Usuario {
         this.nivelatv = nivelatv;
         this.idade = idade;
         this.sexo = sexo;
+        this.nomeCsv = Main.CSVLOGDIR+nome+".csv";
 
     }
 
@@ -36,9 +38,12 @@ public class Usuario {
 
     // retorna verdadeiro somente se conseguiu criar o usuário + csv pessoal dele
     public boolean criarUsuario() {
-        if(!(usuarioExiste(nome) && csvPessoalExiste(nome))) {
+        if(!(usuarioExiste(nome))) {
             String data = UtilidadesCLI.getDataHora();
             Double tdee = calcularTDEE();
+            if(csvPessoalExiste(nome)) {
+                arquivoOps.deletarArquivo(nomeCsv);
+            }
             if(tdee == -1.0) {
                 return false;
             }
@@ -72,7 +77,7 @@ public class Usuario {
         for(int i=0;i<arqs.size();i++) {
             // System.out.println("match: "+arqs.get(i));
             if(arqs.get(i).contains(nome)) {
-                System.out.println("existe!");
+                // System.out.println("existe!");
                 return true;
 
             }
@@ -130,20 +135,25 @@ public class Usuario {
 
                     case "nome":
                         String[] alt = getDadosUsuario(nome);
+                        // substitui a propriedade no array com um novo valor
                         alt[0] = novoValor;
+                        // muda a data de alteração dos dados
                         alt[7] = UtilidadesCLI.getDataHora();
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt);
-                        System.out.println("bleh2");
+
                         return true;
 
                     case "peso":
                         String[] alt2 = getDadosUsuario(nome);
                         alt2[1] = novoValor;
                         alt2[7] = UtilidadesCLI.getDataHora();
+                        // cria um novo usuário com os dados substituidos para assim poder calcular o novo TDEE
+                        // baseado nos novos dados
                         u = new Usuario(alt2[0],alt2[1],alt2[2],alt2[3],alt2[4],alt2[5]);
+                        // adiciona o novo TDEE ao arquivo
                         alt2[6] = String.format("%.0f",u.calcularTDEE());
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt2);
-                        System.out.println("bleh");
+
                         return true;
 
                     
@@ -154,7 +164,7 @@ public class Usuario {
                         u = new Usuario(alt3[0],alt3[1],alt3[2],alt3[3],alt3[4],alt3[5]);
                         alt3[6] = String.format("%.0f",u.calcularTDEE());
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt3);
-                        System.out.println("bleh3");
+
                         return true;
 
 
@@ -165,7 +175,7 @@ public class Usuario {
                         u = new Usuario(alt4[0],alt4[1],alt4[2],alt4[3],alt4[4],alt4[5]);
                         alt4[6] = String.format("%.0f",u.calcularTDEE());
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt4);
-                        System.out.println("bleh5");
+
                         return true;
 
 
@@ -176,7 +186,7 @@ public class Usuario {
                         u = new Usuario(alt5[0],alt5[1],alt5[2],alt5[3],alt5[4],alt5[5]);
                         alt5[6] = String.format("%.0f",u.calcularTDEE());
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt5);
-                        System.out.println("bleh6");
+
                         return true;
 
                     case "nivelatv":
@@ -186,11 +196,11 @@ public class Usuario {
                         u = new Usuario(alt6[0],alt6[1],alt6[2],alt6[3],alt6[4],alt6[5]);
                         alt6[6] = String.format("%.0f",u.calcularTDEE());
                         arquivoOps.substituirFila(Main.CSVUSUARIO, i+1, alt6);
-                        System.out.println("bleh4");
+
                         return true;
 
                     case default:
-                        System.out.println("lol");
+                        return false;
 
                 }
 
