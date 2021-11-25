@@ -33,7 +33,7 @@ public class UtilidadesCLI {
     public static void clear() {
         // Sempre use println e não print quando usar esse caractere especial
         // Se usar print(), dá erro depois de um tempo.
-        System.out.println("\033[H\033[2J");
+        System.out.print("\n"+"\033[H\033[2J");
     }
 
     public static String getDataHora() {
@@ -71,5 +71,9 @@ public class UtilidadesCLI {
 
 
 
+    }
+
+    public static boolean isBlankString(String string) {
+        return string == null || string.trim().isEmpty();
     }
 }

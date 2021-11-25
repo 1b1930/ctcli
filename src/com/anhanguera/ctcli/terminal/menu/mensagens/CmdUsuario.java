@@ -2,6 +2,8 @@ package com.anhanguera.ctcli.terminal.menu.mensagens;
 
 import static com.anhanguera.ctcli.terminal.util.CodigosANSI.*;
 
+import com.anhanguera.ctcli.terminal.util.UtilidadesCLI;
+
 
 // Enums não precisam de import, só chamar os métodos estaticamente
 // Ex: System.out.println(Mensagens.VERSAO)
@@ -128,19 +130,19 @@ public enum CmdUsuario {
         // cmd + atalho + descrição (sem extra, porque não tem)
 
         // se info não estiver em branco, retornar isso
-        if(!info.isBlank()) {
+        if(!UtilidadesCLI.isBlankString(info)) {
             return info+"\n";
         }
 
         // se info estiver em branco e extra não estiver em branco, retornar isso
-        if(!extra.isBlank()) {
+        if(!UtilidadesCLI.isBlankString(extra)) {
             return NEGRITO+cmd+ANSI_RESET+" "+sintaxe+"\n"+"Atalho: "
             +"\""+atalho+"\""+"\n"
             +"Descrição: "+descricao+"\n"+extra+"\n";
         }
 
         // se info e extra estiverem em branco e sintaxe não estiver em branco, retornar isso
-        if(!sintaxe.isBlank()) {
+        if(!UtilidadesCLI.isBlankString(sintaxe)) {
             return NEGRITO+cmd+ANSI_RESET+" "+sintaxe+"\n"+"Atalho: "
             +"\""+atalho+"\""+"\n"
             +"Descrição: "+descricao+"\n";

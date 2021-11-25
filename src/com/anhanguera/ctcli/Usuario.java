@@ -208,7 +208,7 @@ public class Usuario {
 
                     return true;
 
-                case default:
+                default:
                     return false;
 
                 }
@@ -314,7 +314,7 @@ public class Usuario {
             case "5":
                 System.out.println("Nível de Atividade: Atleta");
                 break;
-            case default:
+            default:
                 System.out.println("printDadosUsuario: nivelatv inválido.");
                 break;
             }
@@ -373,7 +373,7 @@ public class Usuario {
         case "5":
             tdee = bmi * 1.9;
             return tdee;
-        case default:
+        default:
             return -1.0;
 
         }

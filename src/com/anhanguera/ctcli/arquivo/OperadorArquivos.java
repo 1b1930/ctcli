@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import com.anhanguera.ctcli.terminal.util.UtilidadesCLI;
 
 // Essa classe contém todos os métodos que fazem operações com arquivos
 public class OperadorArquivos {
@@ -145,7 +146,7 @@ public class OperadorArquivos {
         try {
             BufferedReader br = new BufferedReader(new FileReader(caminhoArq));
             try {
-                if (br.readLine().isBlank()) {
+                if (UtilidadesCLI.isBlankString(br.readLine())) {
                     br.close();
                     return true;
                 } else {

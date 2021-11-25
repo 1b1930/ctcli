@@ -1,5 +1,7 @@
 package com.anhanguera.ctcli.terminal.menu.mensagens;
 
+import com.anhanguera.ctcli.terminal.util.UtilidadesCLI;
+
 // enum que armazena todos os erros que o menu pode querer usar
 
 public enum Erro {
@@ -105,13 +107,13 @@ public enum Erro {
 
         }
 
-        if(!info2.isBlank()) {
+        if(!UtilidadesCLI.isBlankString(info2)) {
             return "ERRO: " + descricao + " (Código " 
             + codigo + ")" + "\n" + info1 
             + "\n" + info2;
         }
 
-        if(!info1.isBlank()) {
+        if(!UtilidadesCLI.isBlankString(info1)) {
           return "ERRO: " + descricao + " (Código " 
           + codigo + ")" + "\n" + info1;
       }

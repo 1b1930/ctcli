@@ -2,6 +2,8 @@ package com.anhanguera.ctcli.terminal.menu.mensagens;
 
 import static com.anhanguera.ctcli.terminal.util.CodigosANSI.*;
 
+import com.anhanguera.ctcli.terminal.util.UtilidadesCLI;
+
 // esse enum armazena informações sobre os comandos globais, como o comando em si, seu atalho e sua descrição
 
 public enum CmdGlobal {
@@ -57,7 +59,7 @@ public enum CmdGlobal {
     public String toString() {
 
         // se info não estiver em branco, retornar isso
-        if(!info.isBlank()) {
+        if(!UtilidadesCLI.isBlankString(info)) {
             return info+"\n";
         }
 

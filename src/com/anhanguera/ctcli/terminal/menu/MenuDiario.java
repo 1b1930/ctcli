@@ -192,7 +192,7 @@ public class MenuDiario extends MenuUsuario {
 
                 }
                 // checa se o nome do alimento tem muitos espaços
-                if (c > 5) {
+                if (c > 9) {
                     System.out.println(Erro.DIARIO_ADD_NOME_MUITOS_ESPACOS);
                     System.out.println(CmdDiario.ADICIONAR.getSintaxe());
                     entradaAlimentos(usuario);
@@ -425,7 +425,7 @@ public class MenuDiario extends MenuUsuario {
 
         }
 
-        if (uTDEE.isBlank()) {
+        if (UtilidadesCLI.isBlankString(uTDEE)) {
             System.out.println(ANSI_RESET);
 
         } else {
