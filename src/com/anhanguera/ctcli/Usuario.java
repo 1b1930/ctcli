@@ -336,17 +336,16 @@ public class Usuario {
     public double calcularBMI() {
 
         if (sexo.equalsIgnoreCase("f")) {
-            double bmi = 655 + (9.6 * Double.parseDouble(peso)) + (1.8 * Double.parseDouble(altura))
-                    - (4.7 * Double.parseDouble(idade));
+            double bmi = (10 * Double.parseDouble(peso)) + (6.25 * Double.parseDouble(altura))
+                    - (5 * Double.parseDouble(idade)) - 161;
 
-            return bmi;
+            return Math.round(bmi);
 
         } else if (sexo.equalsIgnoreCase("m")) {
-            double bmi = 66 + (13.7 * Double.parseDouble(peso)) + (5 * Double.parseDouble(altura))
-                    - (6.5 * Double.parseDouble(idade));
+            double bmi = (10 * Double.parseDouble(peso)) + (6.25 * Double.parseDouble(altura))
+                    - (5 * Double.parseDouble(idade)) + 5;
 
-            // System.out.println(bmi);
-            return bmi;
+            return Math.round(bmi);
         }
         return 0.0;
     }
@@ -360,19 +359,19 @@ public class Usuario {
         switch (nivelatv) {
         case "1":
             tdee = bmi * 1.2;
-            return tdee;
+            return Math.round(tdee);
         case "2":
             tdee = bmi * 1.375;
-            return tdee;
+            return Math.round(tdee);
         case "3":
             tdee = bmi * 1.55;
-            return tdee;
+            return Math.round(tdee);
         case "4":
             tdee = bmi * 1.725;
-            return tdee;
+            return Math.round(tdee);
         case "5":
             tdee = bmi * 1.9;
-            return tdee;
+            return Math.round(tdee);
         default:
             return -1.0;
 
