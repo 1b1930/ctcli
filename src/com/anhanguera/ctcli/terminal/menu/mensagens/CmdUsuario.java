@@ -1,6 +1,6 @@
 package com.anhanguera.ctcli.terminal.menu.mensagens;
 
-import static com.anhanguera.ctcli.terminal.util.CodigosANSI.*;
+// import static com.anhanguera.ctcli.terminal.util.CodigosANSI.*;
 
 import com.anhanguera.ctcli.terminal.util.UtilidadesCLI;
 
@@ -14,10 +14,10 @@ import com.anhanguera.ctcli.terminal.util.UtilidadesCLI;
 
 public enum CmdUsuario {
 
-    HEADER(NEGRITO+"Comandos de Usuário"+NORMAL),
+    HEADER("Comandos de Usuário"),
 
-    TUTORIAL_SINTAXE(ANSI_GREEN+"Para usar os comandos de usuário, use como prefixo \"usuario\" ou o seu atalho \"u\""
-    +"\nEx: usuario remover [usuario]"+ANSI_RESET),
+    TUTORIAL_SINTAXE("Para usar os comandos de usuário, use como prefixo \"usuario\" ou o seu atalho \"u\""
+    +"\nEx: usuario remover [usuario]"),
 
     ADICIONAR("adicionar"
     ,"[nome] [peso (kg)] [altura (cm)] [idade] [sexo (F ou M])"
@@ -136,54 +136,23 @@ public enum CmdUsuario {
 
         // se info estiver em branco e extra não estiver em branco, retornar isso
         if(!UtilidadesCLI.isBlankString(extra)) {
-            return NEGRITO+cmd+ANSI_RESET+" "+sintaxe+"\n"+"Atalho: "
+            return cmd+" "+sintaxe+"\n"+"Atalho: "
             +"\""+atalho+"\""+"\n"
             +"Descrição: "+descricao+"\n"+extra+"\n";
         }
 
         // se info e extra estiverem em branco e sintaxe não estiver em branco, retornar isso
         if(!UtilidadesCLI.isBlankString(sintaxe)) {
-            return NEGRITO+cmd+ANSI_RESET+" "+sintaxe+"\n"+"Atalho: "
+            return cmd+" "+sintaxe+"\n"+"Atalho: "
             +"\""+atalho+"\""+"\n"
             +"Descrição: "+descricao+"\n";
 
         }
 
         // finalmente, se info, extra e sintaxe estiverem em branco, retornar isso
-        return NEGRITO+cmd+ANSI_RESET+"\n"+"Atalho: "
+        return cmd+"\n"+"Atalho: "
         +"\""+atalho+"\""+"\n"
         +"Descrição: "+descricao+"\n";
-
-
-
-
-
-
-
-        // if(StringUtils.isNoneBlank(cmd,sintaxe,atalho,descricao,extra)) {
-        //     return NEGRITO+cmd+ANSI_RESET+" "+sintaxe+"\n"+"Atalho: "
-        //     +"\""+atalho+"\""+"\n"
-        //     +"Descrição: "+descricao+"\n"+extra+"\n";
-        // }
-
-        // if(StringUtils.isNoneBlank(cmd,atalho,descricao) && extra.isBlank()) {
-        //     return NEGRITO+cmd+ANSI_RESET+" "+sintaxe+"\n"+"Atalho: "
-        //     +"\""+atalho+"\""+"\n"
-        //     +"Descrição: "+descricao+"\n";
-
-        // }
-
-        // // se não, verificar se cmd e extra estão em branco
-        // // se sim, quer dizer que só tem um campo, info
-        // if(StringUtils.isAllBlank(cmd,sintaxe,atalho,descricao,extra) && !info.isBlank()) {
-        //     return info+"\n";
-
-        // }
-
-        // // if(StringUtils.isNoneBlank(cmd,atalho,descricao) && StringUtils.isAllBlank(extra,info,sintaxe)) {
-
-        // // }
-    
 
     }
 

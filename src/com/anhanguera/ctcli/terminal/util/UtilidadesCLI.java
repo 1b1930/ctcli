@@ -1,12 +1,14 @@
 package com.anhanguera.ctcli.terminal.util;
 
 import java.io.File;
-
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import com.anhanguera.ctcli.terminal.menu.mensagens.Msg;
 
 
 public class UtilidadesCLI {
@@ -16,7 +18,7 @@ public class UtilidadesCLI {
 
     // Método que cuida de pegar os dados entrados pelo usuário
     public static String getUserInput() {
-        System.out.print("\033[0;4m>>\033[0;0m ");
+        System.out.print(">> ");
         String str = scanner.nextLine();
         str.replace("\n", "");
         return str.trim();
@@ -31,9 +33,24 @@ public class UtilidadesCLI {
 
     // Limpar saída do terminal
     public static void clear() {
-        // Sempre use println e não print quando usar esse caractere especial
-        // Se usar print(), dá erro depois de um tempo.
-        System.out.print("\n"+"\033[H\033[2J");
+
+        final String os = System.getProperty("os.name");
+
+
+        System.out.println(Msg.CLEARSC+""+Msg.CLEARSC);
+
+
+        if(os.contains("Windows")) {
+            for(int i=0;i<=2;i++) {
+                // System.out.println(Msg.CLEARSC);
+                System.out.println(Msg.CLEARSC+""+Msg.CLEARSC);
+
+            }
+        } else {
+            // Sempre use println e não print quando usar esse caractere especial
+            // Se usar print(), dá erro depois de um tempo.
+            System.out.print("\n"+"\033[H\033[2J");
+        }
     }
 
     public static String getDataHora() {

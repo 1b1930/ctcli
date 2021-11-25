@@ -51,10 +51,10 @@ public class Main {
             // mkdirs() só retorna verdadeiro se todos os diretórios e subdiretórios foram
             // criados
             if (logdir.mkdirs()) {
-                System.out.println("DIR: Diretório 'dados' + subdiretórios criados.");
+                System.err.println("DIR: Diretório 'dados' + subdiretórios criados.");
                 PRIMEIRAEXEC++;
             } else {
-                System.out.println("ERRO: Diretórios não foram criados!");
+                System.err.println("ERRO: Diretórios não foram criados!");
                 return false;
             }
 
@@ -63,7 +63,7 @@ public class Main {
         // se CSV não existe, tenta criar, se não conseguir criar, retorna falso (erro)
         if (!(aqv.csvExiste(Main.CSVUSUARIO))) {
             if (aqv.criarCSVeMontarCabecalho(Main.CSVUSUARIO)) {
-                System.out.println("CSV: DadosUsuario.csv não existia e foi criado.");
+                System.err.println("CSV: DadosUsuario.csv não existia e foi criado.");
                 PRIMEIRAEXEC++;
 
             } else {
@@ -76,10 +76,10 @@ public class Main {
         // se config não existe, criar, se não conseguir criar, retornar falso (erro)
         if (!(ctcliConfig.configExiste())) {
             if (ctcliConfig.criarConfig()) {
-                System.out.println("CONFIG: Arquivo criado. " + "(" + ctcliConfig.configArq + ")");
+                System.err.println("CONFIG: Arquivo criado. " + "(" + ctcliConfig.configArq + ")");
                 PRIMEIRAEXEC++;
             } else {
-                System.out.println("CONFIG: Arquivo não foi criado.");
+                System.err.println("CONFIG: Arquivo não foi criado.");
                 return false;
             }
         }

@@ -15,7 +15,7 @@ import com.anhanguera.ctcli.terminal.menu.mensagens.Erro;
 import com.anhanguera.ctcli.terminal.menu.mensagens.Msg;
 import com.anhanguera.ctcli.terminal.util.UtilidadesCLI;
 
-import static com.anhanguera.ctcli.terminal.util.CodigosANSI.*;
+//import static com.anhanguera.ctcli.terminal.util.CodigosANSI.*;
 
 public class MenuDiario extends MenuUsuario {
 
@@ -229,7 +229,6 @@ public class MenuDiario extends MenuUsuario {
 
                 }
                 // no CSV, os espaços serão substituidos por underlines
-                // System.out.println(sb.toString().trim().replace(" ","_"));
                 String validA = sb.toString().trim().replace(" ", "_");
 
                 // stringbuilder que vai armazenar a nota
@@ -250,7 +249,6 @@ public class MenuDiario extends MenuUsuario {
                     nom.append(" " + cmd[temNum + i]);
                 }
                 String no = nom.toString().trim().replace(" ", "_");
-                // System.out.println("length of no: "+no.length());
 
                 // quantidade de caracteres da nota não pode ter maior que 18 (inclui espaços)
                 if (no.length() > 18) {
@@ -340,8 +338,8 @@ public class MenuDiario extends MenuUsuario {
                 }
 
                 // printa o cabeçalho da lista
-                // usa um mínimo de 22 caracteres para cada string e é alinhado à esquerda por
-                // causa do - antes do 22.
+                // usa um mínimo de 30 caracteres para cada string e é alinhado à esquerda por
+                // causa do - antes do 30.
 
             } else if (cmdSec.matches("ajuda")) {
                 System.out.println();
@@ -366,7 +364,7 @@ public class MenuDiario extends MenuUsuario {
     }
 
     void printDiarioHeader() {
-        System.out.printf("%-22s%-22s%-22s%-22s", "NOME", "KCAL", "DATA", "NOTAS");
+        System.out.printf("%-30s%-30s%-30s%-30s", "NOME", "KCAL", "DATA", "NOTAS");
         System.out.println();
     }
 
@@ -401,8 +399,8 @@ public class MenuDiario extends MenuUsuario {
             indiv = alimento.split(",");
             // itera pelo array
             for (int j = 0; j < indiv.length; j++) {
-                // printa os dados formatados, mínimo de 22 espaços, alinhado à esquerda
-                System.out.print(String.format("%-22s", indiv[j].replace("_", " ").trim()));
+                // printa os dados formatados, mínimo de 30 espaços, alinhado à esquerda
+                System.out.print(String.format("%-30s", indiv[j].replace("_", " ").trim()));
                 if (j == 1) {
                     kDia += Double.parseDouble(indiv[j]);
 
@@ -412,27 +410,24 @@ public class MenuDiario extends MenuUsuario {
         }
 
         if (data.isEqual(LocalDate.now())) {
-            System.out.printf(NEGRITO + "\nTOTAL DE CALORIAS CONSUMIDAS HOJE: " + ANSI_GREEN + "%.0f\n" + ANSI_RESET,
-                    kDia);
+            System.out.printf("\nTOTAL DE CALORIAS CONSUMIDAS HOJE: " + "%.0f\n", kDia);
 
         } else if (data.isEqual(LocalDate.now().minus(Period.ofDays(1)))) {
-            System.out.printf(NEGRITO + "\nTOTAL DE CALORIAS CONSUMIDAS ONTEM: " + ANSI_GREEN + "%.0f\n" + ANSI_RESET,
-                    kDia);
+            System.out.printf("\nTOTAL DE CALORIAS CONSUMIDAS ONTEM: " + "%.0f\n", kDia);
 
         } else {
-            System.out.printf(NEGRITO + "\nTOTAL DE CALORIAS CONSUMIDAS" + "NO DIA " + data.toString() + ": "
-                    + ANSI_GREEN + "%.0f\n" + ANSI_RESET, kDia);
+            System.out.printf("\nTOTAL DE CALORIAS CONSUMIDAS" + "NO DIA " + data.toString() + ": " + "%.0f\n", kDia);
 
         }
 
         if (UtilidadesCLI.isBlankString(uTDEE)) {
-            System.out.println(ANSI_RESET);
+            System.out.println("");
 
         } else {
             porcentagem = (kDia / uTDEEconv) * 100;
-            System.out.printf(NEGRITO + "\nVOCÊ CONSUMIU ");
-            System.out.printf(ANSI_GREEN + "%.0f%%" + ANSI_RESET + NEGRITO, ((kDia / uTDEEconv) * 100));
-            System.out.printf(" DO SEU TDEE (%s)\n" + ANSI_RESET, uTDEE);
+            System.out.printf("\nVOCÊ CONSUMIU ");
+            System.out.printf("%.0f%%", ((kDia / uTDEEconv) * 100));
+            System.out.printf(" DO SEU TDEE (%s)\n", uTDEE);
         }
 
     }
@@ -463,8 +458,8 @@ public class MenuDiario extends MenuUsuario {
             indiv = alimento.split(",");
             // itera pelo array
             for (int j = 0; j < indiv.length; j++) {
-                // printa os dados formatados, mínimo de 22 espaços, alinhado à esquerda
-                System.out.print(String.format("%-22s", indiv[j].replace("_", " ").trim()));
+                // printa os dados formatados, mínimo de 30 espaços, alinhado à esquerda
+                System.out.print(String.format("%-30s", indiv[j].replace("_", " ").trim()));
                 if (j == 1) {
                     kRange += Double.parseDouble(indiv[j]);
 
@@ -474,25 +469,23 @@ public class MenuDiario extends MenuUsuario {
         }
 
         // printa as calorias consumidas nessa semana
-        System.out.printf(NEGRITO + "\nTOTAL DE CALORIAS CONSUMIDAS" + " ENTRE " + inicio.toString() + " E "
-                + fim.toString() + ": " + ANSI_GREEN + "%.0f\n" + ANSI_RESET, kRange);
+        System.out.printf("\nTOTAL DE CALORIAS CONSUMIDAS" + " ENTRE " + inicio.toString() + " E " + fim.toString()
+                + ": " + "%.0f\n", kRange);
 
         double tdee = Double.parseDouble(u.getTDEE());
         double tdeeSemana = tdee * 7;
         double percent = (kRange / tdeeSemana) * 100;
-        System.out.printf(NEGRITO + "\nVOCÊ CONSUMIU ");
-        System.out.printf(ANSI_GREEN + "%.0f%%" + ANSI_RESET + NEGRITO, percent);
-        System.out.printf(" DO SEU TDEE SEMANAL (%.0f)\n" + ANSI_RESET, tdeeSemana);
+        System.out.printf("\nVOCÊ CONSUMIU ");
+        System.out.printf("%.0f%%", percent);
+        System.out.printf(" DO SEU TDEE SEMANAL (%.0f)\n", tdeeSemana);
 
         if (percent < 100) {
-            System.out.println(
-                    NEGRITO + "\nVOCÊ ESTÁ ABAIXO DO SEU CONSUMO DE ENERGIA SEMANAL E PERDERÁ PESO SE CONTINUAR ASSIM!"
-                            + ANSI_RESET);
+            System.out
+                    .println("\nVOCÊ ESTÁ ABAIXO DO SEU CONSUMO DE ENERGIA SEMANAL E PERDERÁ PESO SE CONTINUAR ASSIM!");
 
         } else if (percent > 100) {
-            System.out.println(
-                    NEGRITO + "\nVOCÊ ESTÁ ACIMA DO SEU CONSUMO DE ENERGIA SEMANAL E GANHARÁ PESO SE CONTINUAR ASSIM."
-                            + ANSI_RESET);
+            System.out
+                    .println("\nVOCÊ ESTÁ ACIMA DO SEU CONSUMO DE ENERGIA SEMANAL E GANHARÁ PESO SE CONTINUAR ASSIM.");
         }
 
     }
@@ -513,7 +506,7 @@ public class MenuDiario extends MenuUsuario {
             diarioStr = lista.get(i).replaceAll("[\\[\\]]", "");
             diarioArr = diarioStr.split(",");
             for (int j = 0; j < diarioArr.length; j++) {
-                System.out.print(String.format("%-22s", diarioArr[j].replace("_", " ").trim()));
+                System.out.print(String.format("%-30s", diarioArr[j].replace("_", " ").trim()));
                 if (j == 1) {
                     kcal += Double.parseDouble(diarioArr[j]);
                 }
@@ -521,7 +514,6 @@ public class MenuDiario extends MenuUsuario {
             System.out.println();
         }
 
-        System.out.printf(
-                NEGRITO + "\nTOTAL DE CALORIAS CONSUMIDAS DESDE O INÍCIO: " + ANSI_GREEN + "%.0f\n" + ANSI_RESET, kcal);
+        System.out.printf("\nTOTAL DE CALORIAS CONSUMIDAS DESDE O INÍCIO: " + "%.0f\n", kcal);
     }
 }

@@ -1,6 +1,6 @@
 package com.anhanguera.ctcli.terminal.menu.mensagens;
 
-import static com.anhanguera.ctcli.terminal.util.CodigosANSI.*;
+// import static com.anhanguera.ctcli.terminal.util.CodigosANSI.*;
 
 import com.anhanguera.ctcli.terminal.util.UtilidadesCLI;
 
@@ -11,7 +11,7 @@ import com.anhanguera.ctcli.terminal.util.UtilidadesCLI;
 
 // esse enum armazena informações sobre os comandos do diário como o comando em si, sua sintaxe, seu atalho e sua descrição
 public enum CmdDiario {
-    HEADER(NEGRITO+"Comandos do Diário"+NORMAL),
+    HEADER("Comandos do Diário"),
     TUTORIAL_SINTAXE("Para usar os comandos do diário, use como prefixo \"diario\" ou o seu atalho \"d\""),
     EXEMPLO_SINTAXE("Ex: diario remover [nome], que é a mesma coisa que \"d r [nome]\""),
 
@@ -134,14 +134,14 @@ public enum CmdDiario {
 
         // se info estiver em branco e extra não estiver em branco, retornar isso
         if(!UtilidadesCLI.isBlankString(extra)) {
-            return NEGRITO+cmd+ANSI_RESET+" "+sintaxe+"\n"+"Atalho: "
+            return cmd+" "+sintaxe+"\n"+"Atalho: "
             +"\""+atalho+"\""+"\n"
             +"Descrição: "+descricao+"\n"+extra+"\n";
         }
 
         // se info e extra estiverem em branco e sintaxe não estiver em branco, retornar isso
         if(!UtilidadesCLI.isBlankString(sintaxe)) {
-            return NEGRITO+cmd+ANSI_RESET+" "+sintaxe+"\n"+"Atalho: "
+            return cmd+" "+sintaxe+"\n"+"Atalho: "
             +"\""+atalho+"\""+"\n"
             +"Descrição: "+descricao+"\n";
 
@@ -149,14 +149,14 @@ public enum CmdDiario {
 
         // se info, extra e sintaxe estiverem em branco mas atalho não estiver em branco, retornar isso
         if(!UtilidadesCLI.isBlankString(atalho)) {
-            return NEGRITO+cmd+ANSI_RESET+"\n"+"Atalho: "
+            return cmd+"\n"+"Atalho: "
             +"\""+atalho+"\""+"\n"
             +"Descrição: "+descricao+"\n";
 
         }
 
         // finalmente, se info, extra, sintaxe e atalho estiverem em branco, retornar isso
-        return NEGRITO+cmd+ANSI_RESET+"\n"
+        return cmd+"\n"
         +"Descrição: "+descricao+"\n";
 
 

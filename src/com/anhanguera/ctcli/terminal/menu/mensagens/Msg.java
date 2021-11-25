@@ -1,6 +1,6 @@
 package com.anhanguera.ctcli.terminal.menu.mensagens;
 
-import static com.anhanguera.ctcli.terminal.util.CodigosANSI.*;
+// import static com.anhanguera.ctcli.terminal.util.CodigosANSI.*;
 
 import com.anhanguera.ctcli.Main;
 
@@ -12,7 +12,7 @@ import com.anhanguera.ctcli.Main;
 // armazena todas as mensagens que o menu pode querer usar
 
 public enum Msg {
-    VERSAO(NEGRITO+"ctcli"+" v"+Main.VERSAO+ANSI_RESET),
+    VERSAO("ctcli"+" v"+Main.VERSAO),
     AUTOLOGIN_SUCCESS("Logado automaticamente"),
 
     INFO_PRIMEIRAEXEC("Essa é a primeira vez que o programa está sendo executado."
@@ -20,9 +20,9 @@ public enum Msg {
 
     
     INFO_AUTOLOGIN("Para desabilitar o login automático, digite: permalogin 0"),
-    INFO_AJUDA(ANSI_GREEN+"Digite \"ajuda\" para visualizar a lista de comandos."+ANSI_RESET),
-    INFO_AJUDA_USUARIO(ANSI_GREEN+"Digite \"ajuda\" para visualizar a lista completa de comandos disponíveis nessa área."+ANSI_RESET),
-    INFO_AJUDA_DIARIO(ANSI_GREEN+"Digite \"diario ajuda\" para visualizar a lista de comandos do diário."+ANSI_RESET),
+    INFO_AJUDA("Digite \"ajuda\" para visualizar a lista de comandos."),
+    INFO_AJUDA_USUARIO("Digite \"ajuda\" para visualizar a lista completa de comandos disponíveis nessa área."),
+    INFO_AJUDA_DIARIO("Digite \"diario ajuda\" para visualizar a lista de comandos do diário."),
 
     INFO_USER_LOGIN("Entre como um usuário para obter acesso aos comandos do diário."
     +"\nUse: usuario logar [nome do usuário]"),
@@ -40,15 +40,15 @@ public enum Msg {
     USUARIO_EDITADO_SUCESSO("Usuário editado com sucesso."),
     USUARIO_LOGADO_SUCESSO("Logado com sucesso.\n"),
     INFO_MENU_DIARIO("Você está no menu do diário."
-    +"\n"
-    +ANSI_GREEN+"\nDigite \"ajuda\" para obter os comandos disponíveis neste submenu.\n"
-    +"\nDigite \"permalogin 1\" para habilitar login automático para esse usuário."+ANSI_RESET),
+    +"\n"+"\nDigite \"ajuda\" para obter os comandos disponíveis neste submenu.\n"
+    +"\nDigite \"permalogin 1\" para habilitar login automático para esse usuário."),
     CSV_LIMPO("CSV limpo."),
     PERMALOGIN_HABILITADO("Permalogin habilitado para esse usuário."),
     PERMALOGIN_DESABILITADO("Permalogin desabilitado para esse usuário."),
     DIARIO_ALIMENTO_ADICIONAR_SUCESSO("Alimento adicionado com sucesso."),
     DIARIO_ALIMENTO_REMOVER_SUCESSO("Alimento removido com sucesso."),
-    DIARIO_FAXINA("Diário limpo.");
+    DIARIO_FAXINA("Diário limpo."),
+    CLEARSC("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
 
 

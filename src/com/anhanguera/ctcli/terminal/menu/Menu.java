@@ -1,6 +1,6 @@
 package com.anhanguera.ctcli.terminal.menu;
 
-import static com.anhanguera.ctcli.terminal.util.CodigosANSI.*;
+// import static com.anhanguera.ctcli.terminal.util.CodigosANSI.*;
 
 import com.anhanguera.ctcli.Main;
 import com.anhanguera.ctcli.Usuario;
@@ -93,7 +93,6 @@ public class Menu {
     public void mostrarComandosUsuario() {
         UtilidadesCLI.clear();
         // TODO: pode estar desatualizado, verificar
-        // System.out.println("\t\t"+NEGRITO+"Comandos"+NORMAL+"\n");
         // Checa se é a primeira vez que o programa está sendo executado
 
         // loop for each pra iterar e printar todos os valores do Enum 'Comandos'
@@ -110,48 +109,6 @@ public class Menu {
 
         MenuUsuario mp = new MenuUsuario();
         mp.entradaUsuario();
-
-    }
-
-    public void mostrarComandosUsuarioAdicionais() {
-        System.out.println(NEGRITO + "Comandos Adicionais" + NORMAL);
-        System.out.println("\n\tusuario: \"limparcsv\"\t\t\t\t\t\tAtalho: \"lcsv\"");
-        System.out.println("\tDescrição: limpa o arquivo CSV do usuário, só deixa o cabeçalho.");
-
-        MenuUsuario mp = new MenuUsuario();
-        mp.entradaUsuario();
-
-    }
-
-    void mostrarComandosAlimentos() {
-        UtilidadesCLI.clear();
-        System.out.println(NEGRITO + "Comandos do Submenu Pessoal" + NORMAL);
-        System.out.println(NEGRITO + "\nComandos Referentes aos Alimentos\n" + NORMAL);
-        System.out.println("Para usar os comandos de alimentos, use como prefixo \"alimento\" ou o seu atalho \"a\"");
-        System.out.println("Ex: alimento remover [nome], que é a mesma coisa que \"a r [nome]\"\n");
-
-        System.out.println("\t\"adicionar\" [nome] [kcal/100g]\t\t\t\t\tAtalho: \"a\"");
-        System.out.println("\tDescrição: Adiciona um alimento à base de dados."
-                + "\n\tKcal/100g são quantas calorias tem 100g desse alimento.\n");
-
-        System.out.println("\t\"print\" [nome]\tAtalho: \"p\"");
-        System.out.println("\tDescrição: edita uma propriedade do usuário dado como argumento.\n");
-
-        System.out.println("\t\"remover\" [nome]\t\t\t\t\t\tAtalho: \"r\"");
-        System.out.println("\tDescrição: remove o alimento dado como argumento do banco de dados.\n");
-
-        System.out.println("\t\"alterar\" [nome] [propriedade a ser alterada] [novo valor]\tAtalho: \"alt\"");
-        System.out.println("\tPropriedades válidas: nome, kcal");
-        System.out.println("\tDescrição: alterar uma propriedade do alimento dado como argumento.\n");
-
-        System.out.println("\t\"print\" [nome]\t\t\t\t\t\t\tAtalho: \"p\"");
-        System.out.println("\tDescrição: printa os dados do alimento dado como argumento.\n");
-
-        System.out.println("\t\"printpretty\" [nome]\t\t\t\t\t\tAtalho: \"pp\"");
-        System.out.println("\tDescrição: printa os dados do alimento dado como argumento, de forma mais bonitinha.\n");
-
-        System.out.println("\t\"printall\" [nome]\t\t\t\t\t\tAtalho: \"pa\"");
-        System.out.println("\tDescrição: printa todos os alimentos.\n");
 
     }
 

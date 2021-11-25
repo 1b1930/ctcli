@@ -23,11 +23,9 @@ public class MenuUsuario extends Menu {
 
         // Interpreta corretamente o comando se só tiver um argumento
         try {
-            // System.out.println(cmdStr);
             cmd = cmdStr.split(" ");
 
         } catch (NullPointerException e) {
-            // System.out.println("caught");
             cmd[0] = cmdStr;
 
         }
@@ -57,7 +55,6 @@ public class MenuUsuario extends Menu {
 
                 // copia só os dados que usuário entrou, sem os comandos
                 String[] dados = Arrays.copyOfRange(cmd, 2, cmd.length);
-                System.out.println(Arrays.toString(dados));
 
                 int validar = Usuario.validarDadosUsuario(dados);
 
@@ -89,6 +86,7 @@ public class MenuUsuario extends Menu {
 
                 }
 
+                UtilidadesCLI.clear();
                 System.out.println(Msg.EXP_TDEE);
                 System.out.println(Msg.EXP_GETNIVELATV);
                 System.out.println();
@@ -214,9 +212,6 @@ public class MenuUsuario extends Menu {
             mostrarComandosUsuario();
             entradaUsuario();
 
-        } else if (cmdPrinc.matches("adc")) {
-            mostrarComandosUsuarioAdicionais();
-            entradaUsuario();
         }
 
         else {

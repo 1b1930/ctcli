@@ -1,14 +1,14 @@
 package com.anhanguera.ctcli.terminal.menu.mensagens;
 
-import static com.anhanguera.ctcli.terminal.util.CodigosANSI.*;
+// import static com.anhanguera.ctcli.terminal.util.CodigosANSI.*;
 
 import com.anhanguera.ctcli.terminal.util.UtilidadesCLI;
 
 // esse enum armazena informações sobre os comandos globais, como o comando em si, seu atalho e sua descrição
 
 public enum CmdGlobal {
-    HEADER(NEGRITO+"Comandos Globais"+NORMAL),
-    GLOBAL_CMD_INFO(ANSI_GREEN+"Esses comandos não necessitam de um prefixo."+ANSI_RESET),
+    HEADER("Comandos Globais"),
+    GLOBAL_CMD_INFO("Esses comandos não necessitam de um prefixo."),
     
     SAIR("sair"
     ,"s"
@@ -64,7 +64,7 @@ public enum CmdGlobal {
         }
 
         // se estiver em branco sim, retornar isso
-        return NEGRITO+cmd+ANSI_RESET+"\n"+"Atalho: "
+        return cmd+"\n"+"Atalho: "
         +"\""+atalho+"\""+"\n"
         +"Descrição: "+descricao+"\n";
 

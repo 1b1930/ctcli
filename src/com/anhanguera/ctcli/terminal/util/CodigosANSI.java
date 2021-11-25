@@ -4,6 +4,8 @@ package com.anhanguera.ctcli.terminal.util;
 // ATENÇÃO: usar "final" ao criar classe e usar "import static "Constantes.*"" 
 // no arquivo onde deseja essas constantes
 
+// ********* NÃO USADO NESSA VERSÃO POIS NÃO FUNCIONA NO WINDOWS
+
 public final class CodigosANSI {
 
     public static final String ANSI_RESET = "\u001B[0m";
