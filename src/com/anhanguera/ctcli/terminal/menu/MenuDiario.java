@@ -399,8 +399,14 @@ public class MenuDiario extends MenuUsuario {
             indiv = alimento.split(",");
             // itera pelo array
             for (int j = 0; j < indiv.length; j++) {
+                if(j == 2) {
+                    System.out.print(String.format("%-30s", indiv[j].replace("-", " ").trim()));
+
+                } else {
+                    System.out.print(String.format("%-30s", indiv[j].replace("_", " ").trim()));
+                }
                 // printa os dados formatados, mínimo de 30 espaços, alinhado à esquerda
-                System.out.print(String.format("%-30s", indiv[j].replace("_", " ").trim()));
+                // System.out.print(String.format("%-30s", indiv[j].replace("_", " ").trim()));
                 if (j == 1) {
                     kDia += Double.parseDouble(indiv[j]);
 
@@ -458,8 +464,13 @@ public class MenuDiario extends MenuUsuario {
             indiv = alimento.split(",");
             // itera pelo array
             for (int j = 0; j < indiv.length; j++) {
+                if(j == 2) {
+                    System.out.print(String.format("%-30s", indiv[j].replace("-", " ").trim()));
+
+                } else {
+                    System.out.print(String.format("%-30s", indiv[j].replace("_", " ").trim()));
+                }
                 // printa os dados formatados, mínimo de 30 espaços, alinhado à esquerda
-                System.out.print(String.format("%-30s", indiv[j].replace("_", " ").trim()));
                 if (j == 1) {
                     kRange += Double.parseDouble(indiv[j]);
 
@@ -506,7 +517,13 @@ public class MenuDiario extends MenuUsuario {
             diarioStr = lista.get(i).replaceAll("[\\[\\]]", "");
             diarioArr = diarioStr.split(",");
             for (int j = 0; j < diarioArr.length; j++) {
-                System.out.print(String.format("%-30s", diarioArr[j].replace("_", " ").trim()));
+                if(j == 2) {
+                    System.out.print(String.format("%-30s", diarioArr[j].replace("-", " ").trim()));
+
+                } else {
+                    System.out.print(String.format("%-30s", diarioArr[j].replace("_", " ").trim()));
+                }
+                // System.out.print(String.format("%-30s", diarioArr[j].replace("_", " ").trim()));
                 if (j == 1) {
                     kcal += Double.parseDouble(diarioArr[j]);
                 }

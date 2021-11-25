@@ -45,7 +45,7 @@ public class Diario {
         // pega a data e hora atuais
         LocalDateTime now = LocalDateTime.now();
         // transforma essa data numa string
-        String data = dtf.format(now).toString();
+        String data = dtf.format(now).toString().replace(" ","-");
 
         // adiciona os elementos (+data) no CSV
         String[] fileira = { dadosAlimento[0], dadosAlimento[1], data, dadosAlimento[2] };
@@ -101,7 +101,7 @@ public class Diario {
             for (int j = 0; j < alimentoSplit.length; j++) {
                 if (j == 2) {
                     // pega a data e hora do alimento e extrai só a data dela
-                    dataHoraAlimento = LocalDateTime.parse(alimentoSplit[j].trim(), dtf);
+                    dataHoraAlimento = LocalDateTime.parse(alimentoSplit[j].trim().replace("-"," "), dtf);
                     dataAlimento = dataHoraAlimento.toLocalDate();
                     // se a data do alimento for igual a data dada como parametro, adicionar a lista
                     if (dataAlimento.isEqual(data)) {
@@ -163,7 +163,7 @@ public class Diario {
             alimentoArr = alimentoStr.split(",");
 
             // joga a data do alimento na variavel dataHoraDiario
-            dataHoraDiario = LocalDateTime.parse(alimentoArr[2].trim(), dtf);
+            dataHoraDiario = LocalDateTime.parse(alimentoArr[2].trim().replace("-"," "), dtf);
 
             // adiciona só a data de dataHoraDiario em dataDiario
             dataDiario = dataHoraDiario.toLocalDate();
@@ -263,7 +263,7 @@ public class Diario {
 
         try {
             // armazena o cabeçalho
-            String cbc = "\"Nome\",\"Kcal\",\"Data da Adição\",\"Notas\"";
+            String cbc = "\"Nome\",\"Kcal\",\"Data da Adicao\",\"Notas\"";
 
             // bufferedreader que irá ser usado para ler a primeira linha do arquivo
             BufferedReader br = new BufferedReader(new FileReader(nomeCsv));

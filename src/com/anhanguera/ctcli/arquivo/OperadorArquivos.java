@@ -74,8 +74,8 @@ public class OperadorArquivos {
                 // escreve o cabeçalho do usuário no arquivo
                 if (caminhoArq.contains("Usuario")) {
 
-                    String[] header = { "Nome", "Peso", "Altura", "Idade", "Sexo", "Nível de Atividade", "TDEE",
-                            "Última Atualização" };
+                    String[] header = { "Nome", "Peso", "Altura", "Idade", "Sexo", "Nivel de Atividade", "TDEE",
+                            "Ultima Atualizacao" };
                     writer.writeNext(header);
 
                     // se caminho do arquivo não contém a palavra Usuario, retornar false
@@ -107,7 +107,7 @@ public class OperadorArquivos {
             return false;
         } else {
             String arq = caminhoDir + uNome + ".csv";
-            String[] header = { "Nome", "Kcal", "Data da Adição", "Notas" };
+            String[] header = { "Nome", "Kcal", "Data da Adicao", "Notas" };
             if (escreverAoCSV(arq, header)) {
                 return true;
 
@@ -123,7 +123,7 @@ public class OperadorArquivos {
     public boolean montarCabecalhoDiario(String caminhoArq, String uNome) {
         Usuario u = new Usuario(uNome);
         if (u.csvPessoalExiste(uNome)) {
-            String[] header = { "Nome", "Kcal", "Data da Adição", "Notas" };
+            String[] header = { "Nome", "Kcal", "Data da Adicao", "Notas" };
 
             if (cabecalhoEstaEmBranco(caminhoArq)) {
                 if (escreverAoCSV(caminhoArq, header)) {
