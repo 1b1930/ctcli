@@ -8,46 +8,46 @@ import com.anhanguera.ctcli.terminal.util.UtilidadesCLI;
 // Enums não precisam de import, só chamar os métodos estaticamente
 // Ex: System.out.println(Mensagens.VERSAO)
 
-// Todos os enums devem ter uma vírgula depois de ), exceto o último Enum, que deverá ter um ;
+// Todos os enums devem ter uma vírgula depois de ), exceto o último Enum, que devera ter um ;
 
-// esse enum armazena informações sobre os comandos do usuário, como o comando em si, sua sintaxe, seu atalho e sua descrição
+// esse enum armazena informações sobre os comandos do usuario, como o comando em si, sua sintaxe, seu atalho e sua Descricao
 
 public enum CmdUsuario {
 
-    HEADER("Comandos de Usuário"),
+    HEADER("Comandos de Usuario"),
 
-    TUTORIAL_SINTAXE("Para usar os comandos de usuário, use como prefixo \"usuario\" ou o seu atalho \"u\""
+    TUTORIAL_SINTAXE("Para usar os comandos de usuario, use como prefixo \"usuario\" ou o seu atalho \"u\""
     +"\nEx: usuario remover [usuario]"),
 
     ADICIONAR("adicionar"
     ,"[nome] [peso (kg)] [altura (cm)] [idade] [sexo (F ou M])"
     ,"a"
-    ,"adiciona um usuário à base de dados."),
+    ,"adiciona um usuario a base de dados."),
 
     EDITAR("editar"
     , "[nome] [propriedade a ser alterada] [novo valor]"
     ,"e"
-    ,"edita uma propriedade do usuário dado como argumento."
-    ,"Propriedades válidas: nome, peso, altura, idade, nivelatv"),
+    ,"edita uma propriedade do usuario dado como argumento."
+    ,"Propriedades validas: nome, peso, altura, idade, nivelatv"),
 
     REMOVER("remover"
     ,"[nome]"
     ,"p"
-    ,"remove o usuário dado como argumento."),
+    ,"remove o usuario dado como argumento."),
 
     PRINT("print"
     ,"[nome]"
     ,"p"
-    ,"printa os dados do usuário dado como argumento."),
+    ,"printa os dados do usuario dado como argumento."),
 
     PRINTALL("printall"
     ,"pa"
-    ,"printa todos os usuários salvos na base de dados."),
+    ,"printa todos os usuarios salvos na base de dados."),
 
     LOGAR("logar"
-    ,"[nome do usuário]"
+    ,"[nome do usuario]"
     ,"l"
-    ,"loga como o usuário dado como argumento.");
+    ,"loga como o usuario dado como argumento.");
 
 
 
@@ -126,8 +126,8 @@ public enum CmdUsuario {
     // printar o valor do Enum (string) 
     @Override
     public String toString() {
-        // se cmd não está em branco e extra estiver em branco, printar
-        // cmd + atalho + descrição (sem extra, porque não tem)
+        // se cmd não esta em branco e extra estiver em branco, printar
+        // cmd + atalho + Descricao (sem extra, porque não tem)
 
         // se info não estiver em branco, retornar isso
         if(!UtilidadesCLI.isBlankString(info)) {
@@ -138,21 +138,21 @@ public enum CmdUsuario {
         if(!UtilidadesCLI.isBlankString(extra)) {
             return cmd+" "+sintaxe+"\n"+"Atalho: "
             +"\""+atalho+"\""+"\n"
-            +"Descrição: "+descricao+"\n"+extra+"\n";
+            +"Descricao: "+descricao+"\n"+extra+"\n";
         }
 
         // se info e extra estiverem em branco e sintaxe não estiver em branco, retornar isso
         if(!UtilidadesCLI.isBlankString(sintaxe)) {
             return cmd+" "+sintaxe+"\n"+"Atalho: "
             +"\""+atalho+"\""+"\n"
-            +"Descrição: "+descricao+"\n";
+            +"Descricao: "+descricao+"\n";
 
         }
 
         // finalmente, se info, extra e sintaxe estiverem em branco, retornar isso
         return cmd+"\n"+"Atalho: "
         +"\""+atalho+"\""+"\n"
-        +"Descrição: "+descricao+"\n";
+        +"Descricao: "+descricao+"\n";
 
     }
 

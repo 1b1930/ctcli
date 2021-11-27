@@ -10,62 +10,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.anhanguera.ctcli.arquivo.OperadorArquivos;
+import com.anhanguera.ctcli.terminal.util.Datas;
+import com.anhanguera.ctcli.terminal.util.Listas;
+import com.anhanguera.ctcli.terminal.util.UtilidadesCLI;
 
 public class Diario {
 
-    public static final OperadorArquivos arquivoOps = new OperadorArquivos();
+    public final OperadorArquivos arqDiario;
     public static final int TAMANHO_MAXIMO_KB = 500;
     public static final int TAMANHO_MAXIMO_LIST = 1000;
 
     // nome do usuário a qual o diário pertence
-    String usr;
+    String usuario;
     // caminho do arquivo csv desse diário
     String nomeCsv;
 
-    public Diario(String usr) {
-        this.usr = usr;
-        nomeCsv = Main.CSVLOGDIR + usr + ".csv";
-
-        // ao criar o diário, verificar se csv existe, se não, tentar criar
-        if (!arquivoOps.csvExiste(nomeCsv)) {
-            arquivoOps.criarCSVeMontarCabecalho(nomeCsv);
-        }
-
-        if (arquivoOps.csvExiste(nomeCsv) && arquivoOps.cabecalhoEstaEmBranco(nomeCsv)) {
-            arquivoOps.montarCabecalhoDiario(nomeCsv, usr);
-        }
+    public Diario(String usuario) {
+        this.usuario = usuario;
+        nomeCsv = Main.CSVLOGDIR + usuario + ".csv";
+        arqDiario = new OperadorArquivos(nomeCsv);
 
     }
 
-    // adiciona um alimento ao diario, nunca sobrescreve
-    public boolean adicionarAlimentoAoDiario(String[] dadosAlimento) {
-
-        // formatador de data, basicamente o metodo como formatará uma data
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
-        // pega a data e hora atuais
-        LocalDateTime now = LocalDateTime.now();
-        // transforma essa data numa string
-        String data = dtf.format(now).toString().replace(" ","-");
-
-        // adiciona os elementos (+data) no CSV
-        String[] fileira = { dadosAlimento[0], dadosAlimento[1], data, dadosAlimento[2] };
-        arquivoOps.acrescentarAoCSV(nomeCsv, fileira);
-        return true;
-
+    public boolean criarDiario() {
+        Usuario u = new Usuario(usuario);
+        if (u.existe()) {
+            if (!(diarioExiste())) {
+                if (arqDiario.criarCSVeMontarCabecalho(usuario)) {
+                    // System.out.println("CSV criado");
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return false;
     }
 
-    // remove um alimento do diário
-    public boolean removerAlimento(String nome) {
-        // lista que armazena o conteudo do diario
-        List<String> b = getDiario();
-        // itera pela lista
-        for (int i = 0; i < b.size(); i++) {
-            if (b.get(i).contains(nome)) {
-                // o +1 é porque o substituirFila() lê todo o arquivo, incluindo o cabeçalho
-                // então é necessário pular o cabeçalho, por isso o +1
-                arquivoOps.substituirFila(nomeCsv, i + 1);
-                // System.out.println("werks?");
+    public boolean diarioExiste() {
+        List<String> arqs = new ArrayList<String>();
+        arqs.addAll(UtilidadesCLI.getListaArq(Main.CSVLOGDIR));
+
+        for (int i = 0; i < arqs.size(); i++) {
+            // se a lista de arquivos contém o nome, retorna existe
+            if (arqs.get(i).contains(usuario)) {
                 return true;
+
             }
         }
         return false;
@@ -73,36 +63,31 @@ public class Diario {
 
     // retorna todos os elementos do diário
     public List<String> getDiario() {
-        List<String> lista = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(nomeCsv));
+        List<String> lista = arqDiario.listaCSVRemoverHeader(arqDiario.lerDadosCSV());
         return lista;
 
     }
 
     // retorna o conteúdo do diário que tem a mesma data que o parâmetro
     public List<String> getDiario(LocalDate data) {
-        List<String> lista = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(nomeCsv));
+        List<String> lista = arqDiario.listaCSVRemoverHeader(arqDiario.lerDadosCSV());
 
         // lista que irá armazenar os alimentos com a mesma data dada como parametro
         List<String> listaFiltrada = new ArrayList<String>();
 
-        String alimento;
         String[] alimentoSplit;
         LocalDate dataAlimento;
-        LocalDateTime dataHoraAlimento;
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
 
         // itera pela lista
         for (int i = 0; i < lista.size(); i++) {
             // adiciona uma linha a string alimento
-            alimento = lista.get(i).replaceAll("[\\[\\]]", "").trim();
             // quebra a string em varios pedaços, adiciona esses pedaços a alimentoSplit
-            alimentoSplit = alimento.split(",");
+            alimentoSplit = Listas.separarElementos(lista.get(i));
             // itera por alimentoSplit
             for (int j = 0; j < alimentoSplit.length; j++) {
                 if (j == 2) {
                     // pega a data e hora do alimento e extrai só a data dela
-                    dataHoraAlimento = LocalDateTime.parse(alimentoSplit[j].trim().replace("-"," "), dtf);
-                    dataAlimento = dataHoraAlimento.toLocalDate();
+                    dataAlimento = Datas.converterDiarioLDTparaLD(alimentoSplit[j]);
                     // se a data do alimento for igual a data dada como parametro, adicionar a lista
                     if (dataAlimento.isEqual(data)) {
                         listaFiltrada.add(lista.get(i));
@@ -118,7 +103,7 @@ public class Diario {
 
     // tenta deletar o diario, retorna true se conseguiu, se não, false
     public boolean deletarDiario() {
-        if (arquivoOps.deletarArquivo(nomeCsv)) {
+        if (arqDiario.deletarArquivo()) {
             return true;
         } else {
             return false;
@@ -145,28 +130,23 @@ public class Diario {
         // armazena uma linha quebrada por virgula
         String[] alimentoArr;
         // armazena uma linha do arquivo
-        String alimentoStr;
+        // String alimentoStr;
 
         // armazena a data completa armazenada no diario
-        LocalDateTime dataHoraDiario;
         // armazena só a data (sem hora) armazenada no diário
         LocalDate dataDiario;
-        // formatador de datas, é o método usado pra formatar uma data
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
 
         // itera pela lista
         for (int i = 0; i < lista.size(); i++) {
 
             // adiciona uma linha a string alimentoStr
-            alimentoStr = lista.get(i).replaceAll("[\\[\\]]", "");
             // quebra essa linha na virgula, adiciona os pedaços em alimentoArr
-            alimentoArr = alimentoStr.split(",");
+            alimentoArr = Listas.separarElementos(lista.get(i));
 
             // joga a data do alimento na variavel dataHoraDiario
-            dataHoraDiario = LocalDateTime.parse(alimentoArr[2].trim().replace("-"," "), dtf);
 
             // adiciona só a data de dataHoraDiario em dataDiario
-            dataDiario = dataHoraDiario.toLocalDate();
+            dataDiario = Datas.converterDiarioLDTparaLD(alimentoArr[2]);
             // pega o dia do ano de dataDiario
             int diarioDia = dataDiario.getDayOfYear();
 
@@ -187,13 +167,12 @@ public class Diario {
     // dos alimentos consumidos pelo usuario na data dada como parametro
     public double getKcal(LocalDate data) {
         List<String> lista = new ArrayList<String>();
-        String elementoDiario;
+        // String elementoDiario;
         String[] elementoDSplit;
         lista.addAll(getDiario(data));
         double kcal = 0.0;
         for (int i = 0; i < lista.size(); i++) {
-            elementoDiario = lista.get(i).replaceAll("[\\[\\]]", "");
-            elementoDSplit = elementoDiario.split(",");
+            elementoDSplit = Listas.separarElementos(lista.get(i));
             for (int j = 0; j < elementoDSplit.length; j++) {
                 if (j == 2) {
                     kcal += Double.parseDouble(elementoDSplit[1]);
@@ -206,6 +185,7 @@ public class Diario {
 
     // não é usado, pelo menos nessa versão, é suposto a retornar as calorias
     // consumidas pelo usuario entre as duas datas
+    // TODO: usar método pra converter data do diário disponível na classe Datas em util
     public String getKcal(LocalDate inicio, LocalDate fim) {
         List<String> lista = new ArrayList<String>();
         String elementoDiario;
@@ -240,7 +220,7 @@ public class Diario {
     // retorna o tamanho do arquivo diario em kbytes
     public boolean tamanhoFoiExcedido() {
         // se o tamanho do arquivo for
-        if (arquivoOps.tamanhoArquivo(nomeCsv) < TAMANHO_MAXIMO_KB) {
+        if (arqDiario.tamanhoArquivo() < TAMANHO_MAXIMO_KB) {
             return false;
         }
         return true;
@@ -254,8 +234,8 @@ public class Diario {
     // que o arquivo seja menor que 1000 linhas
 
     public void faxina() {
-        if (!(arquivoOps.csvExiste(nomeCsv))) {
-            arquivoOps.criarCSVeMontarCabecalho(Main.CSVLOGDIR, usr);
+        if (!(arqDiario.arquivoExiste())) {
+            arqDiario.criarCSVeMontarCabecalho(usuario);
 
         }
         // lista que vai armazenar cada linha do diário
@@ -310,7 +290,7 @@ public class Diario {
                 // deleta o arquivo velho
                 deletarDiario();
                 // cria um novo arquivo com o cabeçalho
-                arquivoOps.criarCSVeMontarCabecalho(Main.CSVLOGDIR, usr);
+                arqDiario.criarCSVeMontarCabecalho(usuario);
                 // itera por lista2
                 for (int i = 0; i < lista2.size(); i++) {
                     // armazena uma linha de lista2 em el
@@ -322,7 +302,7 @@ public class Diario {
                         elArr[j] = elArr[j].trim();
                     }
                     // acrescenta elArr (uma linha) ao CSV
-                    arquivoOps.acrescentarAoCSV(nomeCsv, elArr);
+                    arqDiario.acrescentarAoCSV(elArr);
 
                 }
             }
@@ -331,4 +311,29 @@ public class Diario {
 
     }
 
+    public boolean cabecalhoEstaEmBranco() {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(nomeCsv));
+            try {
+                if (UtilidadesCLI.isBlankString(br.readLine())) {
+                    br.close();
+                    return true;
+                } else {
+                    br.close();
+                    return false;
+                }
+
+            } catch (NullPointerException e) {
+                br.close();
+                return true;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+
+        return false;
+
+    }
 }

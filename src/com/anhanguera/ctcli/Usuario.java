@@ -15,9 +15,10 @@ public class Usuario {
     String nivelatv;
     String idade;
     String sexo;
-    String nomeCsv;
+    String diarioPath;
 
-    public static final OperadorArquivos arquivoOps = new OperadorArquivos();
+    public final OperadorArquivos diarioArq;
+    public final OperadorArquivos csvUsuarioArq;
 
     public Usuario(String nome, String peso, String altura, String idade, String sexo, String nivelatv) {
 
@@ -28,27 +29,37 @@ public class Usuario {
         this.idade = idade;
         this.sexo = sexo;
         // caminho do arquivo do diário desse usuário
-        this.nomeCsv = Main.CSVLOGDIR + nome + ".csv";
+        this.diarioPath = Main.CSVLOGDIR + nome + ".csv";
+        diarioArq = new OperadorArquivos(diarioPath);
+        csvUsuarioArq = new OperadorArquivos(Main.CSVUSUARIO);
 
     }
 
     public Usuario(String nome) {
         this.nome = nome;
+        this.diarioPath = Main.CSVLOGDIR + nome + ".csv";
+        diarioArq = new OperadorArquivos(diarioPath);
+        csvUsuarioArq = new OperadorArquivos(Main.CSVUSUARIO);
     }
 
     // retorna verdadeiro somente se conseguiu criar o usuário + csv pessoal dele
-    public boolean criarUsuario() {
+    public boolean criar() {
         // tenta criar o usuário somente se o usuário não existe
-        if (!(usuarioExiste(nome))) {
+        if (!(existe())) {
+            System.out.println("teste");
             // armazena a data e hora atual
             String data = UtilidadesCLI.getDataHora();
             // armazena o tdee calculado do usuário
             Double tdee = calcularTDEE();
-            if (csvPessoalExiste(nome)) {
-                arquivoOps.deletarArquivo(nomeCsv);
+            Diario d = new Diario(nome);
+            // System.out.println(d.diarioPath);
+            if (d.diarioExiste()) {
+                System.out.println("diario existe!");
+                diarioArq.deletarArquivo();
             }
             // se o tdee não foi calculado corretamente, retornar false
             if (tdee == -1.0) {
+                System.out.println("tdee -1");
                 return false;
             }
             // transforma o tdee em uma string
@@ -57,12 +68,12 @@ public class Usuario {
             String[] fileira = { nome, peso, altura, idade, sexo.toUpperCase(), nivelatv, strtdee, data };
 
             // acrescente esses dados no csv
-            arquivoOps.acrescentarAoCSV(Main.CSVUSUARIO, fileira);
+            csvUsuarioArq.acrescentarAoCSV(fileira);
             // Depois de acrescentar ao CSV, checa se o usuário agora está presente
-            if (Usuario.usuarioExiste(nome)) {
+            if (existe()) {
                 System.out.println("Usuário criado");
                 // Se está presente, tenta criar o diário do usuário (CSV Pessoal)
-                if (criarCSVPessoal()) {
+                if (d.criarDiario()) {
                     System.out.println("Diário criado");
                     return true;
                 } else {
@@ -76,47 +87,16 @@ public class Usuario {
 
     }
 
-    // retorna verdadeiro se e somente se o CSV pessoal de $nome existe.
-    // versão diferente do método de OperadorArquivos
-    public boolean csvPessoalExiste(String nome) {
-        List<String> arqs = new ArrayList<String>();
-        arqs.addAll(UtilidadesCLI.getListaArq(Main.CSVLOGDIR));
-
-        for (int i = 0; i < arqs.size(); i++) {
-            // se a lista de arquivos contém o nome, retorna existe
-            if (arqs.get(i).contains(nome)) {
-                return true;
-
-            }
-        }
-        return false;
-    }
-
-    // retorna verdadeiro só se conseguiu criar o CSV pessoal.
-    public boolean criarCSVPessoal() {
-        if (usuarioExiste(nome)) {
-            if (!(csvPessoalExiste(nome))) {
-                if (arquivoOps.criarCSVeMontarCabecalho(Main.CSVLOGDIR, nome)) {
-                    // System.out.println("CSV criado");
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-        return false;
-    }
-
     // Remove um usuário, se achou o usuário no arquivo e removeu, retorna true, se
     // não, false
-    public boolean removerUsuario() {
+    public boolean remover() {
         // lista com todos os usuários
-        List<String> b = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO));
+        List<String> b = csvUsuarioArq.listaCSVRemoverHeader(csvUsuarioArq.lerDadosCSV());
         for (int i = 0; i < b.size(); i++) {
             if (b.get(i).contains(nome)) {
                 // o +1 é porque o removerFila() lê todo o arquivo, incluindo o cabeçalho
                 // então é necessário pular o cabeçalho, por isso o +1
-                arquivoOps.substituirFila(Main.CSVUSUARIO, i + 1);
+                csvUsuarioArq.substituirFila(i + 1);
                 Diario c = new Diario(nome);
                 if (c.deletarDiario()) {
                     return true;
@@ -134,28 +114,30 @@ public class Usuario {
     public boolean alterarDados(String prop, String novoValor) {
         // Pegando a lista de usuários
         List<String> lista = new ArrayList<String>(
-                arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO)));
+                csvUsuarioArq.listaCSVRemoverHeader(csvUsuarioArq.lerDadosCSV()));
         Usuario u = new Usuario(nome);
         // Iterando a lista
         for (int i = 0; i < lista.size(); i++) {
             // tenta acha o nome do usuário
+            System.out.println(nome);
+            System.out.println(lista.get(i));
             if (lista.get(i).contains(nome)) {
                 // controla qual propriedade irá ser substituida
                 switch (prop) {
 
                 case "nome":
                     // pega os dados do usuário
-                    String[] alt = getDadosUsuario(nome);
+                    String[] alt = getDados();
                     // substitui a propriedade no array com um novo valor
                     alt[0] = novoValor;
                     // muda a data de alteração dos dados
                     alt[7] = UtilidadesCLI.getDataHora();
-                    arquivoOps.substituirFila(Main.CSVUSUARIO, i + 1, alt);
+                    csvUsuarioArq.substituirFila(i + 1, alt);
 
                     return true;
 
                 case "peso":
-                    String[] alt2 = getDadosUsuario(nome);
+                    String[] alt2 = getDados();
                     alt2[1] = novoValor;
                     alt2[7] = UtilidadesCLI.getDataHora();
                     // cria um novo usuário com os dados substituidos para assim poder calcular o
@@ -164,47 +146,47 @@ public class Usuario {
                     u = new Usuario(alt2[0], alt2[1], alt2[2], alt2[3], alt2[4], alt2[5]);
                     // adiciona o novo TDEE ao arquivo
                     alt2[6] = String.format("%.0f", u.calcularTDEE());
-                    arquivoOps.substituirFila(Main.CSVUSUARIO, i + 1, alt2);
+                    csvUsuarioArq.substituirFila(i + 1, alt2);
 
                     return true;
 
                 case "altura":
-                    String[] alt3 = getDadosUsuario(nome);
+                    String[] alt3 = getDados();
                     alt3[2] = novoValor;
                     alt3[7] = UtilidadesCLI.getDataHora();
                     u = new Usuario(alt3[0], alt3[1], alt3[2], alt3[3], alt3[4], alt3[5]);
                     alt3[6] = String.format("%.0f", u.calcularTDEE());
-                    arquivoOps.substituirFila(Main.CSVUSUARIO, i + 1, alt3);
+                    csvUsuarioArq.substituirFila(i + 1, alt3);
 
                     return true;
 
                 case "idade":
-                    String[] alt4 = getDadosUsuario(nome);
+                    String[] alt4 = getDados();
                     alt4[3] = novoValor;
                     alt4[7] = UtilidadesCLI.getDataHora();
                     u = new Usuario(alt4[0], alt4[1], alt4[2], alt4[3], alt4[4], alt4[5]);
                     alt4[6] = String.format("%.0f", u.calcularTDEE());
-                    arquivoOps.substituirFila(Main.CSVUSUARIO, i + 1, alt4);
+                    csvUsuarioArq.substituirFila(i + 1, alt4);
 
                     return true;
 
                 case "sexo":
-                    String[] alt5 = getDadosUsuario(nome);
+                    String[] alt5 = getDados();
                     alt5[4] = novoValor.toUpperCase();
                     alt5[7] = UtilidadesCLI.getDataHora();
                     u = new Usuario(alt5[0], alt5[1], alt5[2], alt5[3], alt5[4], alt5[5]);
                     alt5[6] = String.format("%.0f", u.calcularTDEE());
-                    arquivoOps.substituirFila(Main.CSVUSUARIO, i + 1, alt5);
+                    csvUsuarioArq.substituirFila(i + 1, alt5);
 
                     return true;
 
                 case "nivelatv":
-                    String[] alt6 = getDadosUsuario(nome);
+                    String[] alt6 = getDados();
                     alt6[5] = novoValor;
                     alt6[7] = UtilidadesCLI.getDataHora();
                     u = new Usuario(alt6[0], alt6[1], alt6[2], alt6[3], alt6[4], alt6[5]);
                     alt6[6] = String.format("%.0f", u.calcularTDEE());
-                    arquivoOps.substituirFila(Main.CSVUSUARIO, i + 1, alt6);
+                    csvUsuarioArq.substituirFila(i + 1, alt6);
 
                     return true;
 
@@ -221,17 +203,15 @@ public class Usuario {
     }
 
     // Retorna true se o usuário existe, se não, false
-    // Novo método! não aceita mais nomes incompletos, agora o nome do usuário tem
-    // que ser exato.
-    public static boolean usuarioExiste(String nome) {
+    public boolean existe() {
         String[] arrt;
         String element;
         // ArquivoOps arquivoOps = new ArquivoOps();
         List<String> lista = new ArrayList<String>(
-                arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO)));
+                csvUsuarioArq.listaCSVRemoverHeader(csvUsuarioArq.lerDadosCSV()));
         for (int i = 0; i < lista.size(); i++) {
             if (lista.get(i).contains(nome)) {
-                // Limpando a string, removendo caracteres inúteis
+                // Limpando a string, removendo caracteres inUteis
                 element = lista.get(i).replaceAll("[\\[\\] ]", "");
                 // quebrando a string em um array usando , como ponto de quebra
                 arrt = element.split(",");
@@ -248,30 +228,21 @@ public class Usuario {
     }
 
     // Printa todos os usuários
-    public static void printUsuarios() {
-        // ArquivoOps arquivoOps = new ArquivoOps();
-        List<String> lista = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO));
-        // Método bonito pra printar todos os elementos de uma lista
 
-        // Printa a lista que só tem os elementos (sem cabeçalho)
-        for (int i = 0; i < lista.size(); i++) {
-            System.out.println(lista.get(i));
-        }
-    }
 
     // Retorna os dados do usuário em um array[]
-    public static String[] getDadosUsuario(String nome) {
+    public String[] getDados() {
         // inicializações tão dentro do if porque se estivessem fora,
         // e o usuário não existisse, seria perda de tempo iniciar e instanciar tudo
         // isso
-        if (usuarioExiste(nome)) {
+        if (existe()) {
             // ArquivoOps a = new ArquivoOps();
-            List<String> b = arquivoOps.listaCSVRemoverHeader(arquivoOps.lerDadosCSV(Main.CSVUSUARIO));
+            List<String> b = csvUsuarioArq.listaCSVRemoverHeader(csvUsuarioArq.lerDadosCSV());
             String[] arrt;
             String element;
             for (int i = 0; i < b.size(); i++) {
                 if (b.get(i).contains(nome)) {
-                    // Limpando a string, removendo caracteres inúteis
+                    // Limpando a string, removendo caracteres inUteis
                     element = b.get(i).replaceAll("[\\[\\] ]", "");
                     // quebrando a string em um array usando , como ponto de quebra
                     arrt = element.split(",");
@@ -282,7 +253,7 @@ public class Usuario {
             }
 
         } else {
-            System.out.println("Usuário não existe.");
+            System.out.println("Usuário nao existe.");
             return null;
         }
         return null;
@@ -290,8 +261,8 @@ public class Usuario {
     }
 
     // printa os dados do usuário para o stdout
-    public static void printDadosUsuario(String nome) {
-        String[] dados = Usuario.getDadosUsuario(nome);
+    public void printDados() {
+        String[] dados = getDados();
         if (dados != null) {
             System.out.println("Nome: " + dados[0]);
             System.out.println("Peso: " + dados[1] + "kg");
@@ -300,27 +271,27 @@ public class Usuario {
             System.out.println("Sexo: " + dados[4]);
             switch (dados[5]) {
             case "1":
-                System.out.println("Nível de Atividade: Sedentário");
+                System.out.println("Nivel de Atividade: Sedentário");
                 break;
             case "2":
-                System.out.println("Nível de Atividade: Levemente Ativo");
+                System.out.println("Nivel de Atividade: Levemente Ativo");
                 break;
             case "3":
-                System.out.println("Nível de Atividade: Moderadamente Ativo");
+                System.out.println("Nivel de Atividade: Moderadamente Ativo");
                 break;
             case "4":
-                System.out.println("Nível de Atividade: Muito Ativo");
+                System.out.println("Nivel de Atividade: Muito Ativo");
                 break;
             case "5":
-                System.out.println("Nível de Atividade: Atleta");
+                System.out.println("Nivel de Atividade: Atleta");
                 break;
             default:
-                System.out.println("printDadosUsuario: nivelatv inválido.");
+                System.out.println("printDados: nivelatv inválido.");
                 break;
             }
 
             System.out.println("TDEE: " + dados[6]);
-            System.out.println("Última atualização: " + dados[7].replace("-", " "));
+            System.out.println("Ultima atualizacao: " + dados[7].replace("-", " "));
 
         }
     }
@@ -380,7 +351,7 @@ public class Usuario {
     }
 
     public String getTDEE() {
-        String[] dados = getDadosUsuario(nome);
+        String[] dados = getDados();
         if (dados.length < 8) {
             return "";
         }
@@ -400,7 +371,8 @@ public class Usuario {
     // 4 - Falha - Valor do parâmetro idade inválido
     // 5 - Falha - Valor do parâmetro sexo inválido
     public static int validarDadosUsuario(String[] dados) {
-        if (Usuario.usuarioExiste(dados[0])) {
+        Usuario u = new Usuario(dados[0]);
+        if (u.existe()) {
             return 1;
         }
 

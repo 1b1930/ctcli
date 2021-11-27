@@ -4,10 +4,10 @@ package com.anhanguera.ctcli.terminal.menu.mensagens;
 
 import com.anhanguera.ctcli.Main;
 
-// Enums não precisam de import, só chamar os métodos estaticamente
+// Enums nao precisam de import, só chamar os metodos estaticamente
 // Ex: System.out.println(Mensagens.VERSAO)
 
-// Todos os enums devem ter uma vírgula depois de ), exceto o último Enum, que deverá ter um ;
+// Todos os enums devem ter uma virgula depois de ), exceto o último Enum, que devera ter um ;
 
 // armazena todas as mensagens que o menu pode querer usar
 
@@ -15,39 +15,39 @@ public enum Msg {
     VERSAO("ctcli"+" v"+Main.VERSAO),
     AUTOLOGIN_SUCCESS("Logado automaticamente"),
 
-    INFO_PRIMEIRAEXEC("Essa é a primeira vez que o programa está sendo executado."
-    +"\n\nPara começar, crie um usuário usando o comando 'usuario adicionar'"),
+    INFO_PRIMEIRAEXEC("Essa e a primeira vez que o programa esta sendo executado."
+    +"\n\nPara começar, crie um usuario usando o comando 'usuario adicionar'"),
 
     
-    INFO_AUTOLOGIN("Para desabilitar o login automático, digite: permalogin 0"),
+    INFO_AUTOLOGIN("Para desabilitar o login automatico, digite: permalogin 0"),
     INFO_AJUDA("Digite \"ajuda\" para visualizar a lista de comandos."),
-    INFO_AJUDA_USUARIO("Digite \"ajuda\" para visualizar a lista completa de comandos disponíveis nessa área."),
-    INFO_AJUDA_DIARIO("Digite \"diario ajuda\" para visualizar a lista de comandos do diário."),
+    INFO_AJUDA_USUARIO("Digite \"usuario ajuda\" para visualizar a lista completa de comandos de usuarios disponiveis nessa área."),
+    INFO_AJUDA_DIARIO("Digite \"diario ajuda\" para visualizar a lista de comandos do diario."),
 
-    INFO_USER_LOGIN("Entre como um usuário para obter acesso aos comandos do diário."
-    +"\nUse: usuario logar [nome do usuário]"),
-    EXP_TDEE("Para monitorar ganho ou perda de peso, é recomendado calcular o seu TDEE"
-    +", sigla em inglês para gasto diário total de energia.\n"
-    +"Esse valor é representado em calorias e é usado para o controle de ingestão de calorias.\n"
-    +"Se você ingeriu menos calorias que o seu TDEE em um dia, significa que você perdeu peso.\n"
-    +"\nPara calcular o TDEE, são necessários os dados: peso, altura, idade, sexo, e nivel de atividade física."),
-    EXP_GETNIVELATV("\nSelecione seu nível de atividade física"+"\n1. Sedentário\n2. Exercício leve\n"
-    +"3. Exercício moderado\n4. Exercício intenso\n5. Exercício muito intenso (Atleta)"),
-    USUARIO_CRIADO_SUCESSO("Usuário criado com sucesso."
-    +"\n\nEntre como um usuário para obter acesso aos comandos do diário!"
-    +"\nUse: usuario logar [nome do usuário]"),
-    USUARIO_REMOVIDO_SUCESSO("Usuário removido"),
-    USUARIO_EDITADO_SUCESSO("Usuário editado com sucesso."),
+    INFO_USER_LOGIN("Entre como um usuario para obter acesso aos comandos do diario."
+    +"\nUse: usuario logar [nome do usuario]"),
+    EXP_TDEE("Para monitorar ganho ou perda de peso, e recomendado calcular o seu TDEE"
+    +", sigla em ingles para gasto diario total de energia.\n"
+    +"Esse valor e representado em calorias e e usado para o controle de ingestao de calorias.\n"
+    +"Se voce ingeriu menos calorias que o seu TDEE em um dia, significa que voce perdeu peso.\n"
+    +"\nPara calcular o TDEE, sao necessarios os dados: peso, altura, idade, sexo, e nivel de atividade fisica."),
+    EXP_GETNIVELATV("\nSelecione seu nivel de atividade fisica"+"\n1. Sedentario\n2. Exercicio leve\n"
+    +"3. Exercicio moderado\n4. Exercicio intenso\n5. Exercicio muito intenso (Atleta)"),
+    USUARIO_CRIADO_SUCESSO("Usuario criado com sucesso."
+    +"\n\nEntre como um usuario para obter acesso aos comandos do diario!"
+    +"\nUse: usuario logar [nome do usuario]"),
+    USUARIO_REMOVIDO_SUCESSO("Usuario removido"),
+    USUARIO_EDITADO_SUCESSO("Usuario editado com sucesso."),
     USUARIO_LOGADO_SUCESSO("Logado com sucesso.\n"),
-    INFO_MENU_DIARIO("Você está no menu do diário."
-    +"\n"+"\nDigite \"ajuda\" para obter os comandos disponíveis neste submenu.\n"
-    +"\nDigite \"permalogin 1\" para habilitar login automático para esse usuário."),
+    INFO_MENU_DIARIO("Voce esta no menu do diario."
+    +"\n"+"\nDigite \"ajuda\" para obter os comandos disponiveis neste submenu.\n"
+    +"\nDigite \"permalogin 1\" para habilitar login automatico para esse usuario."),
     CSV_LIMPO("CSV limpo."),
-    PERMALOGIN_HABILITADO("Permalogin habilitado para esse usuário."),
-    PERMALOGIN_DESABILITADO("Permalogin desabilitado para esse usuário."),
+    PERMALOGIN_HABILITADO("Permalogin habilitado para esse usuario."),
+    PERMALOGIN_DESABILITADO("Permalogin desabilitado para esse usuario."),
     DIARIO_ALIMENTO_ADICIONAR_SUCESSO("Alimento adicionado com sucesso."),
     DIARIO_ALIMENTO_REMOVER_SUCESSO("Alimento removido com sucesso."),
-    DIARIO_FAXINA("Diário limpo."),
+    DIARIO_FAXINA("Diario limpo."),
     CLEARSC("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
 

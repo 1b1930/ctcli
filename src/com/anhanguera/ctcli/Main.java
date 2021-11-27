@@ -41,9 +41,12 @@ public class Main {
     // verificações iniciais antes de iniciar o menu
     // garante que os arquivos necessários sejam criados e populados.
     public static boolean init() {
-        OperadorArquivos aqv = new OperadorArquivos();
 
-        File logdir = new File(Main.CSVLOGDIR);
+        System.out.println();
+        
+        OperadorArquivos csvUsuarioArq = new OperadorArquivos(CSVUSUARIO);
+
+        File logdir = new File(CSVLOGDIR);
 
         // verifica se logdir existe, se não existir, tenta criar, se não conseguir
         // criar, retornar falso (erro)
@@ -61,8 +64,8 @@ public class Main {
         }
 
         // se CSV não existe, tenta criar, se não conseguir criar, retorna falso (erro)
-        if (!(aqv.csvExiste(Main.CSVUSUARIO))) {
-            if (aqv.criarCSVeMontarCabecalho(Main.CSVUSUARIO)) {
+        if (!(csvUsuarioArq.arquivoExiste())) {
+            if (csvUsuarioArq.criarCSVeMontarCabecalho()) {
                 System.err.println("CSV: DadosUsuario.csv não existia e foi criado.");
                 PRIMEIRAEXEC++;
 
@@ -76,10 +79,10 @@ public class Main {
         // se config não existe, criar, se não conseguir criar, retornar falso (erro)
         if (!(ctcliConfig.configExiste())) {
             if (ctcliConfig.criarConfig()) {
-                System.err.println("CONFIG: Arquivo criado. " + "(" + ctcliConfig.configArq + ")");
+                System.err.println("CONFIG: Arquivo criado. " + "(" + ctcliConfig.configArqPath + ")");
                 PRIMEIRAEXEC++;
             } else {
-                System.err.println("CONFIG: Arquivo não foi criado.");
+                System.err.println("CONFIG: Arquivo nao foi criado.");
                 return false;
             }
         }

@@ -8,19 +8,22 @@ import java.util.List;
 
 public class ArquivoConfig {
 
-    public static final OperadorArquivos aq = new OperadorArquivos();
 
-    public String configArq;
+    public String configArqPath;
 
-    public ArquivoConfig(String configArq) {
-        this.configArq = configArq;
+    private final OperadorArquivos configArq;
+
+
+    public ArquivoConfig(String configArqPath) {
+        this.configArqPath = configArqPath;
+        configArq = new OperadorArquivos(configArqPath);
     }
 
     // tenta criar config
 
     // verifica se config existe
     public boolean configExiste() {
-        if (aq.arquivoExiste(configArq)) {
+        if (configArq.arquivoExiste()) {
             return true;
 
         } else {
@@ -29,7 +32,7 @@ public class ArquivoConfig {
     }
 
     public boolean criarConfig() {
-        if (aq.criarArquivo(configArq)) {
+        if (configArq.criarArquivo()) {
             if (popularConfig()) {
                 return true;
             }
@@ -42,7 +45,7 @@ public class ArquivoConfig {
     // popular ctcli.config com os parâmetros que serão usados pelo código
     public boolean popularConfig() {
         try {
-            PrintWriter writer = new PrintWriter(configArq, "UTF-8");
+            PrintWriter writer = new PrintWriter(configArqPath, "UTF-8");
             writer.println("permalogin=");
 
             // writer.println("The second line");
@@ -59,9 +62,8 @@ public class ArquivoConfig {
     // adiciona $usr depois de permalogin em ctcli.config
     public boolean addPermaLoginUsr(String usr) {
         if (configExiste()) {
-            OperadorArquivos arquivoOps = new OperadorArquivos();
             String subs = "permalogin=" + usr;
-            if (arquivoOps.substituirNoArquivoConfig(configArq, "permalogin", subs)) {
+            if (substituirNoArquivoConfig("permalogin", subs)) {
                 return true;
             } else {
                 return false;
@@ -76,9 +78,9 @@ public class ArquivoConfig {
     public String getPermaLoginUsr() {
         // lista com as linhas do arquivo
         List<String> lista = new ArrayList<>();
-        OperadorArquivos arquivoOps = new OperadorArquivos();
+        //OperadorArquivos arquivoOps = new OperadorArquivos();
         // le o arquivo e adiciona todas as linhas na lista
-        lista.addAll(arquivoOps.lerArquivo(configArq));
+        lista.addAll(configArq.lerArquivo());
         // itera pela lista
         for (int i = 0; i < lista.size(); i++) {
             if (lista.get(i).contains("permalogin")) {
@@ -89,6 +91,41 @@ public class ArquivoConfig {
         }
         // retorna str vazia se não achou nada
         return "";
+
+    }
+
+    public boolean substituirNoArquivoConfig(String match, String subs) {
+        // lista com as linhas do Arquivo
+        List<String> lista = new ArrayList<String>();
+        // objeto config
+        // adiciona todas as linhas de config na lista
+        lista.addAll(configArq.lerArquivo());
+        int cont = 0;
+        for (int i = 0; i < lista.size(); i++) {
+            if (lista.get(i).contains(match)) {
+                lista.remove(i);
+                lista.add(i, subs);
+                cont++;
+            }
+        }
+        // só continua se só achou uma instância de permalogin=
+        if (cont == 1) {
+            // deleta tudo do Arquivo
+            if (configArq.escreverNoArquivo()) {
+                for (int i = 0; i < lista.size(); i++) {
+                    // escreve as linhas no Arquivo denovo, se nao conseguiu, retorna false
+                    if (!(configArq.acrescentarAoArquivo(lista.get(i).toString()))) {
+                        return false;
+                    }
+                }
+            } else {
+                return false;
+            }
+            return true;
+        } else {
+            System.out.println("ERRO: Mais de um 'permalogin' no Arquivo ctcli.config?");
+        }
+        return false;
 
     }
 

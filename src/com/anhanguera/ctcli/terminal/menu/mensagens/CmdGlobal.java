@@ -4,11 +4,11 @@ package com.anhanguera.ctcli.terminal.menu.mensagens;
 
 import com.anhanguera.ctcli.terminal.util.UtilidadesCLI;
 
-// esse enum armazena informações sobre os comandos globais, como o comando em si, seu atalho e sua descrição
+// esse enum armazena informações sobre os comandos globais, como o comando em si, seu atalho e sua Descricao
 
 public enum CmdGlobal {
     HEADER("Comandos Globais"),
-    GLOBAL_CMD_INFO("Esses comandos não necessitam de um prefixo."),
+    GLOBAL_CMD_INFO("Esses comandos nao necessitam de um prefixo."),
     
     SAIR("sair"
     ,"s"
@@ -16,7 +16,7 @@ public enum CmdGlobal {
 
     CLEAR("clear"
     ,"c"
-    ,"limpa a tela do terminal (se for possível).");
+    ,"limpa a tela do terminal (se for possivel).");
     
 
 
@@ -58,7 +58,7 @@ public enum CmdGlobal {
     @Override
     public String toString() {
 
-        // se info não estiver em branco, retornar isso
+        // se info nao estiver em branco, retornar isso
         if(!UtilidadesCLI.isBlankString(info)) {
             return info+"\n";
         }
@@ -66,7 +66,7 @@ public enum CmdGlobal {
         // se estiver em branco sim, retornar isso
         return cmd+"\n"+"Atalho: "
         +"\""+atalho+"\""+"\n"
-        +"Descrição: "+descricao+"\n";
+        +"Descricao: "+descricao+"\n";
 
 
 

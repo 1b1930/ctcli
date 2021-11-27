@@ -9,8 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import com.anhanguera.ctcli.Main;
-import com.anhanguera.ctcli.Usuario;
+import com.anhanguera.ctcli.Diario;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
@@ -22,21 +21,28 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import com.anhanguera.ctcli.terminal.util.UtilidadesCLI;
 
-// Essa classe contém todos os métodos que fazem operações com arquivos
+// Essa classe contém todos os métodos que fazem operações com Arquivos
 public class OperadorArquivos {
 
-    // Lê os dados do arquivo csv especificado como parâmetro
-    public List<List<String>> lerDadosCSV(String arq) {
+    String arquivo;
 
-        // Cria uma lista vazia que irá armazenar todos os dados do arquivo csv
+    public OperadorArquivos(String arquivo) {
+        this.arquivo = arquivo;
+
+    }
+
+    // Lê os dados do Arquivo csv especificado como parâmetro
+    public List<List<String>> lerDadosCSV() {
+
+        // Cria uma lista vazia que ira armazenar todos os dados do Arquivo csv
         List<List<String>> records = new ArrayList<List<String>>();
-        // Cria uma lista vazia que irá armazenar tudo menos o cabeçalho
+        // Cria uma lista vazia que ira armazenar tudo menos o cabeçalho
 
         try {
-            // Criando objeto para ler o arquivo CSV
-            CSVReader csvReader = new CSVReader(new FileReader(arq));
+            // Criando objeto para ler o Arquivo CSV
+            CSVReader csvReader = new CSVReader(new FileReader(arquivo));
             String[] val = null;
-            // Enquanto uma linha não for nula, leia e adicione ela a lista
+            // Enquanto uma linha nao for nula, leia e adicione ela a lista
             while ((val = csvReader.readNext()) != null) {
                 records.add(Arrays.asList(val));
             }
@@ -49,18 +55,18 @@ public class OperadorArquivos {
         return records;
     }
 
-    // Só executa se o arquivo CSV não existe
+    // Só executa se o Arquivo CSV nao existe
     // Cria um CSV sem nenhum dado exceto o cabeçalho
-    // Qual CSV irá criar e qual cabeçalho irá usar depende no parâmetro passado
-    // Existem duas possibilidades: CSV c/ dados do usuário e CSV c/ os alimentos
+    // Qual CSV ira criar e qual cabeçalho ira usar depende no parâmetro passado
+    // Existem duas possibilidades: CSV c/ dados do usuario e CSV c/ os alimentos
     // TODO: usar método escreverAoCSV() ao invés de fazer toda essa coisa aí em
     // baixo
-    public boolean criarCSVeMontarCabecalho(String caminhoArq) {
+    public boolean criarCSVeMontarCabecalho() {
 
-        // Cria objeto da classe File usando como parâmetro o caminho do arquivo csv
-        File file = new File(caminhoArq);
+        // Cria objeto da classe File usando como parâmetro o caminho do Arquivo csv
+        File file = new File(arquivo);
         if (file.length() != 0) {
-            System.out.println("Arquivo não está vazio, abortando...");
+            System.out.println("Arquivo nao esta vazio, abortando...");
             return false;
         } else {
             try {
@@ -71,14 +77,14 @@ public class OperadorArquivos {
                 // parâmetro
                 CSVWriter writer = new CSVWriter(outputfile);
 
-                // escreve o cabeçalho do usuário no arquivo
-                if (caminhoArq.contains("Usuario")) {
+                // escreve o cabeçalho do usuario no Arquivo
+                if (arquivo.contains("Usuario")) {
 
                     String[] header = { "Nome", "Peso", "Altura", "Idade", "Sexo", "Nivel de Atividade", "TDEE",
                             "Ultima Atualizacao" };
                     writer.writeNext(header);
 
-                    // se caminho do arquivo não contém a palavra Usuario, retornar false
+                    // se caminho do Arquivo nao contém a palavra Usuario, retornar false
                 } else {
                     writer.close();
                     return false;
@@ -96,19 +102,19 @@ public class OperadorArquivos {
         }
     }
 
-    // Mesma coisa do de cima, mas pro diário contendo os alimentos consumidos pelo
-    // usuário.
-    // Ao invés de ter como parâmetro o caminho relativo do arquivo DadosUsuario,
+    // Mesma coisa do de cima, mas pro diario contendo os alimentos consumidos pelo
+    // usuario.
+    // Ao invés de ter como parâmetro o caminho relativo do Arquivo DadosUsuario,
     // ele usa o caminho do diretório
-    // do diário.
-    public boolean criarCSVeMontarCabecalho(String caminhoDir, String uNome) {
-        Usuario u = new Usuario(uNome);
-        if (u.csvPessoalExiste(uNome)) {
+    // do diario.
+    public boolean criarCSVeMontarCabecalho(String uNome) {
+        Diario d = new Diario(uNome);
+        if (d.diarioExiste()) {
             return false;
         } else {
-            String arq = caminhoDir + uNome + ".csv";
+            // String arquivo = Main.CSVLOGDIR + uNome + ".csv";
             String[] header = { "Nome", "Kcal", "Data da Adicao", "Notas" };
-            if (escreverAoCSV(arq, header)) {
+            if (escreverAoCSV(header)) {
                 return true;
 
             } else {
@@ -119,32 +125,28 @@ public class OperadorArquivos {
 
     }
 
-    // tenta escrever o cabeçalho, sem criar um arquivo csv.
-    public boolean montarCabecalhoDiario(String caminhoArq, String uNome) {
-        Usuario u = new Usuario(uNome);
-        if (u.csvPessoalExiste(uNome)) {
-            String[] header = { "Nome", "Kcal", "Data da Adicao", "Notas" };
+    // tenta escrever o cabeçalho, sem criar um Arquivo csv.
+    public boolean escreverCabecalhoDiario(String uNome) {
+        Diario d = new Diario(uNome);
+        String[] header = { "Nome", "Kcal", "Data da Adicao", "Notas" };
 
-            if (cabecalhoEstaEmBranco(caminhoArq)) {
-                if (escreverAoCSV(caminhoArq, header)) {
-                    return true;
+        if (d.diarioExiste() && d.cabecalhoEstaEmBranco()) {
+            if (escreverAoCSV(header)) {
+                return true;
 
-                } else {
-                    return false;
-                }
+            } else {
+                return false;
             }
-
-            return false;
-
         }
+
         return false;
 
     }
 
-    // verifica se o cabeçalho está em branco, só
-    public boolean cabecalhoEstaEmBranco(String caminhoArq) {
+    // verifica se o cabeçalho esta em branco, só
+    public boolean cabecalhoEstaEmBranco() {
         try {
-            BufferedReader br = new BufferedReader(new FileReader(caminhoArq));
+            BufferedReader br = new BufferedReader(new FileReader(arquivo));
             try {
                 if (UtilidadesCLI.isBlankString(br.readLine())) {
                     br.close();
@@ -168,19 +170,10 @@ public class OperadorArquivos {
 
     }
 
-    public boolean csvExiste(String caminhoArq) {
-        if (new File(caminhoArq).exists()) {
-            return true;
-        } else {
-            return false;
-        }
-
-    }
-
-    // Acrescenta dados ao final do arquivo csv
-    public boolean acrescentarAoCSV(String arq, String[] fileira) {
+    // Acrescenta dados ao final do Arquivo csv
+    public boolean acrescentarAoCSV(String[] fileira) {
         try {
-            CSVWriter writer = new CSVWriter(new FileWriter(arq, true));
+            CSVWriter writer = new CSVWriter(new FileWriter(arquivo, true));
             writer.writeNext(fileira);
             writer.close();
             return true;
@@ -192,10 +185,10 @@ public class OperadorArquivos {
     }
 
     // Deleta tudo, e escreve um String[] array ao CSV
-    // array pode ser nulo pra limpar o arquivo completamente
-    public boolean escreverAoCSV(String arq, String[] fileira) {
+    // array pode ser nulo pra limpar o Arquivo completamente
+    public boolean escreverAoCSV(String[] fileira) {
         try {
-            CSVWriter writer = new CSVWriter(new FileWriter(arq, false));
+            CSVWriter writer = new CSVWriter(new FileWriter(arquivo, false));
             writer.writeNext(fileira);
             writer.close();
             return true;
@@ -216,24 +209,24 @@ public class OperadorArquivos {
         return listaNoHeader;
     }
 
-    // Substitui uma linha (fila) no arquivo CSV por outra.
-    public void substituirFila(String arq, int numFila, String[] novaFila) {
+    // Substitui uma linha (fila) no Arquivo CSV por outra.
+    public void substituirFila(int numFila, String[] novaFila) {
 
-        String arqRem = arq;
-        // Index de numFila começa com 0, não 1.
+        String arquivoRem = arquivo;
+        // Index de numFila começa com 0, nao 1.
 
         try {
-            CSVReader reader2 = new CSVReader(new FileReader(arqRem));
+            CSVReader reader2 = new CSVReader(new FileReader(arquivoRem));
             // Lê todos os elementos e joga eles numa lista
             List<String[]> allElements = reader2.readAll();
             // Remove o elemento na linha de número numFila
             allElements.remove(numFila);
             // Adiciona os novos dados (novaFila) no lugar do objeto removido
             allElements.add(numFila, novaFila);
-            // Cria objeto da classe FileWriter para reescrever todo o arquivo, agora sem a
+            // Cria objeto da classe FileWriter para reescrever todo o Arquivo, agora sem a
             // linha
-            FileWriter sw = new FileWriter(arqRem);
-            // Nova instância de CSVWriter, que irá escrever os dados no arquivo
+            FileWriter sw = new FileWriter(arquivoRem);
+            // Nova instância de CSVWriter, que ira escrever os dados no Arquivo
             CSVWriter writer = new CSVWriter(sw);
             writer.writeAll(allElements);
             writer.close();
@@ -243,24 +236,24 @@ public class OperadorArquivos {
 
     }
 
-    // Método sobrecarregado que faz a mesma coisa desse de cima, porém não adiciona
+    // Método sobrecarregado que faz a mesma coisa desse de cima, porém nao adiciona
     // nenhum elemento
     // Só remove.
-    public void substituirFila(String arq, int numFila) {
-        // Caminho do arquivo
-        String arqRem = arq;
-        // Index de numFila começa com 0, não 1.
+    public void substituirFila(int numFila) {
+        // Caminho do Arquivo
+        String arquivoRem = arquivo;
+        // Index de numFila começa com 0, nao 1.
 
         try {
-            CSVReader reader2 = new CSVReader(new FileReader(arqRem));
+            CSVReader reader2 = new CSVReader(new FileReader(arquivoRem));
             // Lê todos os elementos e joga eles numa lista
             List<String[]> allElements = reader2.readAll();
             // Remove o elemento na linha de número numFila
             allElements.remove(numFila);
-            // Cria objeto da classe FileWriter para reescrever todo o arquivo, agora sem a
+            // Cria objeto da classe FileWriter para reescrever todo o Arquivo, agora sem a
             // linha
-            FileWriter sw = new FileWriter(arqRem);
-            // Nova instância de CSVWriter, que irá escrever os dados no arquivo
+            FileWriter sw = new FileWriter(arquivoRem);
+            // Nova instância de CSVWriter, que ira escrever os dados no Arquivo
             CSVWriter writer = new CSVWriter(sw);
             writer.writeAll(allElements);
             writer.close();
@@ -270,15 +263,15 @@ public class OperadorArquivos {
 
     }
 
-    // cria um arquivo se não existe.
-    public boolean criarArquivo(String arquivo) {
+    // cria um Arquivo se nao existe.
+    public boolean criarArquivo() {
         try {
-            File arq = new File(arquivo);
-            if (arq.createNewFile()) {
-                // System.out.println("Arquivo de configuração criado: " + arq.getName());
+            File arquivouiv = new File(arquivo);
+            if (arquivouiv.createNewFile()) {
+                // System.out.println("Arquivo de configuraçao criado: " + arquivo.getName());
                 return true;
             } else {
-                // System.out.println("Arquivo já existe.");
+                // System.out.println("Arquivo ja existe.");
                 return false;
 
             }
@@ -289,10 +282,10 @@ public class OperadorArquivos {
 
     }
 
-    // lê todas as linhas do arquivo para uma Lista<String> e retorna ela
-    public List<String> lerArquivo(String arq) {
+    // lê todas as linhas do Arquivo para uma Lista<String> e retorna ela
+    public List<String> lerArquivo() {
         List<String> resultado = new ArrayList<>();
-        try (Stream<String> lines = Files.lines(Paths.get(arq))) {
+        try (Stream<String> lines = Files.lines(Paths.get(arquivo))) {
             resultado = lines.collect(Collectors.toList());
             return resultado;
         } catch (IOException e) {
@@ -304,49 +297,15 @@ public class OperadorArquivos {
 
     }
 
-    // substituir uma linha que tenha $match no arquivo config, pela linha $subs
-    // TODO: Não é genérico
-    public boolean substituirNoArquivoConfig(String arq, String match, String subs) {
-        // lista com as linhas do arquivo
-        List<String> lista = new ArrayList<String>();
-        // objeto config
-        ArquivoConfig ctcliConf = new ArquivoConfig(Main.CTCLICONFIG);
-        // adiciona todas as linhas de config na lista
-        lista.addAll(lerArquivo(ctcliConf.configArq));
-        int cont = 0;
-        for (int i = 0; i < lista.size(); i++) {
-            if (lista.get(i).contains(match)) {
-                lista.remove(i);
-                lista.add(i, subs);
-                cont++;
-            }
-        }
-        // só continua se só achou uma instância de permalogin=
-        if (cont == 1) {
-            // deleta tudo do arquivo
-            if (escreverAoArquivo(arq)) {
-                for (int i = 0; i < lista.size(); i++) {
-                    // escreve as linhas no arquivo denovo, se não conseguiu, retorna false
-                    if (!(acrescentarAoArquivo(arq, lista.get(i).toString()))) {
-                        return false;
-                    }
-                }
-            } else {
-                return false;
-            }
-            return true;
-        } else {
-            System.out.println("ERRO: Mais de um 'permalogin' no arquivo ctcli.config?");
-        }
-        return false;
+    // substituir uma linha que tenha $match no Arquivo config, pela linha $subs
+    // TODO: Nao é genérico, mudar pra ArquivoConfig!
 
-    }
 
-    // acrescenta $asc ao final do arquivo, não sobrescreve nada
-    public boolean acrescentarAoArquivo(String arq, String asc) {
+    // acrescenta $asc ao final do Arquivo, nao sobrescreve nada
+    public boolean acrescentarAoArquivo(String asc) {
         try {
             String str = asc;
-            String fileName = arq;
+            String fileName = arquivo;
             // cria BW com objeto FileWriter em modo append (acrescentar)
             BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true));
             // acrescenta a string + uma nova linha
@@ -363,11 +322,11 @@ public class OperadorArquivos {
 
     }
 
-    // escreve ao arquivo, deletando tudo
-    public boolean escreverAoArquivo(String arq) {
+    // escreve ao Arquivo, deletando tudo
+    public boolean escreverNoArquivo() {
         try {
             String str = "";
-            BufferedWriter writer = new BufferedWriter(new FileWriter(arq));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(arquivo));
             writer.write(str);
 
             writer.close();
@@ -379,8 +338,8 @@ public class OperadorArquivos {
 
     }
 
-    public boolean deletarArquivo(String arq) {
-        File f = new File(arq);
+    public boolean deletarArquivo() {
+        File f = new File(arquivo);
         if (f.delete()) {
             return true;
         } else {
@@ -389,18 +348,18 @@ public class OperadorArquivos {
 
     }
 
-    public boolean arquivoExiste(String arq) {
-        if (new File(arq).exists()) {
+    public boolean arquivoExiste() {
+        if (new File(arquivo).exists()) {
             return true;
         }
         return false;
 
     }
 
-    public long tamanhoArquivo(String arq) {
+    public long tamanhoArquivo() {
 
-        // cria objeto arquivo
-        File a = new File(arq);
+        // cria objeto Arquivo
+        File a = new File(arquivo);
 
         // armazena o tamanho (em bytes)
         long tamanho = a.length();

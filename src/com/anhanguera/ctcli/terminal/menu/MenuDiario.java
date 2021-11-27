@@ -6,8 +6,8 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.anhanguera.ctcli.Alimento;
 import com.anhanguera.ctcli.Diario;
-import com.anhanguera.ctcli.Main;
 import com.anhanguera.ctcli.Usuario;
 import com.anhanguera.ctcli.terminal.menu.mensagens.CmdDiario;
 import com.anhanguera.ctcli.terminal.menu.mensagens.CmdGlobal;
@@ -17,11 +17,16 @@ import com.anhanguera.ctcli.terminal.util.UtilidadesCLI;
 
 //import static com.anhanguera.ctcli.terminal.util.CodigosANSI.*;
 
-public class MenuDiario extends MenuUsuario {
+public class MenuDiario extends Menu {
 
-    public void entradaAlimentos(String usuario) {
+    String usuario;
 
-        aq.montarCabecalhoDiario(Main.CSVLOGDIR + usuario + ".csv", usuario);
+    MenuDiario(String usuario) {
+        this.usuario = usuario;
+
+    }
+
+    public void entradaDiario() {
 
         Diario d = new Diario(usuario);
         d.faxina();
@@ -32,7 +37,7 @@ public class MenuDiario extends MenuUsuario {
         System.out.println();
         String[] cmd = new String[10];
         String cmdStr = "";
-        // enquanto usuário não digitar nenhum comando, continuar printando prompt
+        // enquanto usuArio não digitar nenhum comando, continuar printando prompt
         while (cmdStr.isEmpty()) {
             System.out.print(usuario + " ");
             cmdStr = UtilidadesCLI.getUserInput();
@@ -76,7 +81,8 @@ public class MenuDiario extends MenuUsuario {
         // Comandos globais
 
         if (cmdPrinc.matches("voltar")) {
-            entradaUsuario();
+            MenuUsuario mu = new MenuUsuario();
+            mu.entradaUsuario();
         } else if (cmdPrinc.matches("sair") || cmdPrinc.matches("s")) {
             UtilidadesCLI.clear();
             System.exit(0);
@@ -98,7 +104,7 @@ public class MenuDiario extends MenuUsuario {
 
                 // se argumento for 1, tentar habilitar
             } else if (cmdSec.matches("1")) {
-                // se o permalogin já está habilitado para esse usuário, printar erro
+                // se o permalogin jA estA habilitado para esse usuArio, printar erro
                 if (ctcliConfig.getPermaLoginUsr().equals(usuario)) {
                     System.out.println(Erro.PERMALOGIN_JA_HABILITADO);
                 }
@@ -120,8 +126,8 @@ public class MenuDiario extends MenuUsuario {
                     } else {
                         System.out.println(Erro.PERMALOGIN_NAO_FOI_DESAB);
                     }
-                    // printa erro se permalogin não está habilitado pro usuário
-                    // se não está habilitado, não precisa desabilitar,
+                    // printa erro se permalogin não estA habilitado pro usuArio
+                    // se não estA habilitado, não precisa desabilitar,
                 } else {
                     System.out.println(Erro.PERMALOGIN_NAO_ESTA_HAB);
                 }
@@ -132,10 +138,10 @@ public class MenuDiario extends MenuUsuario {
                 System.out.println(CmdDiario.PERMALOGIN.getSintaxe());
 
             }
-            // voltar ao menu do diário
-            entradaAlimentos(usuario);
+            // voltar ao menu do diArio
+            entradaDiario();
 
-            // comandos de diário
+            // comandos de diArio
         } else if (cmdPrinc.matches("diario") || cmdPrinc.matches("d")) {
 
             if (cmdSec.matches("adicionar") || cmdSec.matches("a")) {
@@ -145,13 +151,13 @@ public class MenuDiario extends MenuUsuario {
 
                     System.out.println(Erro.ARG_NUM_INVALIDO);
                     System.out.println(CmdDiario.ADICIONAR.getSintaxe());
-                    entradaAlimentos(usuario);
+                    entradaDiario();
 
-                    // detecta se o usuário errou a ordem dos argumentos
+                    // detecta se o usuArio errou a ordem dos argumentos
                 } else if (cmd[2].matches("[0-9]+")) {
                     System.out.println(Erro.DIARIO_NOME_INCORRETO);
                     System.out.println(CmdDiario.ADICIONAR.getSintaxe());
-                    entradaAlimentos(usuario);
+                    entradaDiario();
                 }
 
                 // c contém o número de partes do comando que tem letras
@@ -173,7 +179,7 @@ public class MenuDiario extends MenuUsuario {
 
                     // verdadeiro se cmd[i] conter SOMENTE números
                     if (cmd[i].matches("[0-9]+")) {
-                        // se for a primeira vez que esse if está sendo executado,
+                        // se for a primeira vez que esse if estA sendo executado,
                         // pegar o valor de i e botar em temNum
                         // basicamente pega o valor das calorias
                         if (temNumQ == 0) {
@@ -184,26 +190,26 @@ public class MenuDiario extends MenuUsuario {
 
                 }
 
-                // checa se o usuário realmente adicionou as calorias antes de continuar
+                // checa se o usuArio realmente adicionou as calorias antes de continuar
                 if (temNum == 0) {
                     System.out.println(Erro.DIARIO_CALORIAS_NAO_ENC);
                     System.out.println(CmdDiario.ADICIONAR.getSintaxe());
-                    entradaAlimentos(usuario);
+                    entradaDiario();
 
                 }
                 // checa se o nome do alimento tem muitos espaços
                 if (c > 9) {
                     System.out.println(Erro.DIARIO_ADD_NOME_MUITOS_ESPACOS);
                     System.out.println(CmdDiario.ADICIONAR.getSintaxe());
-                    entradaAlimentos(usuario);
+                    entradaDiario();
 
                 }
 
-                // checa se o nome está em branco
+                // checa se o nome estA em branco
                 if (c == 2) {
                     System.out.println(Erro.DIARIO_NOME_INCORRETO);
                     System.out.println(CmdDiario.ADICIONAR.getSintaxe());
-                    entradaAlimentos(usuario);
+                    entradaDiario();
 
                 }
 
@@ -211,7 +217,7 @@ public class MenuDiario extends MenuUsuario {
                 if (cmd[temNum].length() > 4) {
                     System.out.println(Erro.ARG_KCAL_INVALIDO);
                     System.out.println(CmdDiario.ADICIONAR.getSintaxe());
-                    entradaAlimentos(usuario);
+                    entradaDiario();
 
                 }
 
@@ -223,7 +229,7 @@ public class MenuDiario extends MenuUsuario {
                     if (cmd[i].length() > 14) {
                         System.out.println(Erro.DIARIO_NOME_COMPRIMENTO_EXCEDIDO);
                         System.out.println(CmdDiario.ADICIONAR.getSintaxe());
-                        entradaAlimentos(usuario);
+                        entradaDiario();
                     }
                     sb.append(" " + cmd[i]);
 
@@ -241,7 +247,7 @@ public class MenuDiario extends MenuUsuario {
                 // se o comprimento da nota é maior que 6
                 if (diff > 6) {
                     System.out.println(Erro.DIARIO_NOTA_COMPRIMENTO_EXCEDIDO);
-                    entradaAlimentos(usuario);
+                    entradaDiario();
                 }
 
                 // junta todas as 'partes' da nota no stringbuilder
@@ -253,33 +259,35 @@ public class MenuDiario extends MenuUsuario {
                 // quantidade de caracteres da nota não pode ter maior que 18 (inclui espaços)
                 if (no.length() > 18) {
                     System.out.println(Erro.DIARIO_NOTA_COMPRIMENTO_EXCEDIDO);
-                    entradaAlimentos(usuario);
+                    entradaDiario();
                 }
 
-                String[] dados = { validA, cmd[temNum], no };
+                Alimento ali = new Alimento(validA, cmd[temNum], no, usuario);
 
-                Diario diario = new Diario(usuario);
+                // String[] dados = { validA, cmd[temNum], no };
 
-                // só printa sucesso se o alimento foi adicionado ao diário com sucesso
-                if (diario.adicionarAlimentoAoDiario(dados)) {
+                // Diario diario = new Diario(usuario);
+
+                // só printa sucesso se o alimento foi adicionado ao diArio com sucesso
+                if (ali.adicionar()) {
                     System.out.println(Msg.DIARIO_ALIMENTO_ADICIONAR_SUCESSO);
-                    entradaAlimentos(usuario);
+                    entradaDiario();
 
                     // se não, printa erro
                 } else {
                     System.out.println(Erro.DIARIO_ALIMENTO_NAO_ADICIONADO);
                     System.out.println(CmdDiario.ADICIONAR.getSintaxe());
-                    entradaAlimentos(usuario);
+                    entradaDiario();
                 }
 
-                System.out.println("Você não é suposto a ver essa mensagem. Oops!");
+                System.out.println("Voce nao e suposto a ver essa mensagem. Oops!");
                 System.exit(0);
 
             } else if (cmdSec.matches("remover") || cmdSec.matches("r")) {
                 if (cmd.length < 3) {
                     System.out.println(Erro.ARG_NUM_INVALIDO);
                     System.out.println(CmdDiario.REMOVER.getSintaxe());
-                    entradaAlimentos(usuario);
+                    entradaDiario();
                 }
                 // acrescentando todas as partes do nome do alimento ao objeto sb
                 // (StringBuilder)
@@ -288,15 +296,16 @@ public class MenuDiario extends MenuUsuario {
 
                 }
                 // criando objeto diario
-                Diario ali = new Diario(usuario);
-                if (ali.removerAlimento(sb.toString().trim().replace(" ", "_")) == false) {
+                // Diario ali = new Diario(usuario);
+                Alimento ali = new Alimento(sb.toString().trim().replace(" ", "_"), usuario);
+                if (ali.remover() == false) {
                     System.out.println(Erro.DIARIO_ALIMENTO_NAO_EXISTE);
                     System.out.println(CmdDiario.REMOVER.getSintaxe());
-                    entradaAlimentos(usuario);
+                    entradaDiario();
 
                 }
                 System.out.println(Msg.DIARIO_ALIMENTO_REMOVER_SUCESSO);
-                entradaAlimentos(usuario);
+                entradaDiario();
 
             } else if (cmdSec.matches("print") || cmdSec.matches("p")) {
 
@@ -318,11 +327,11 @@ public class MenuDiario extends MenuUsuario {
                     LocalDate comecoSemana = hoje.with(DayOfWeek.MONDAY);
 
                     printDiarioHeader();
-                    printDiarioEntreDias(comecoSemana, hoje, usuario);
+                    printDiarioSemana(comecoSemana, hoje, usuario);
 
-                    // printDiarioEntreDias(umaSemanaAtras, hoje, usuario);
+                    // printDiarioSemana(umaSemanaAtras, hoje, usuario);
                     // printKcalDia(hoje, usuario);
-                    entradaAlimentos(usuario);
+                    entradaDiario();
 
                 }
 
@@ -358,9 +367,9 @@ public class MenuDiario extends MenuUsuario {
 
         else {
             System.out.println(Erro.CMD_INVALIDO_DIARIO);
-            entradaAlimentos(usuario);
+            entradaDiario();
         }
-        entradaAlimentos(usuario);
+        entradaDiario();
     }
 
     void printDiarioHeader() {
@@ -370,22 +379,21 @@ public class MenuDiario extends MenuUsuario {
 
     void printDiarioDia(LocalDate data, String usr) {
 
-        // Cria um objeto diário que vamos usar pra ler o conteúdo do diário do usuário
+        // Cria um objeto diArio que vamos usar pra ler o conteúdo do diArio do usuArio
         Diario d = new Diario(usr);
 
         Usuario u = new Usuario(usr);
         // armazena o tdee do usuario
         String uTDEE = u.getTDEE();
         double uTDEEconv = Double.parseDouble(uTDEE);
-        double porcentagem;
 
         // lista que vai armazenar os dados lidos
         List<String> lista = new ArrayList<>();
         // pega os dados e adiciona eles na lista
         lista.addAll(d.getDiario(data));
-        // irá armazenar os dados de um registro individualmente
+        // irA armazenar os dados de um registro individualmente
         String[] indiv;
-        // armazena todos os dados de um registro, irá ser quebrado
+        // armazena todos os dados de um registro, irA ser quebrado
         // e os dados serão adicionados individualmente em indiv[]
         String alimento;
         // calorias consumidas no dia (hoje)
@@ -430,16 +438,16 @@ public class MenuDiario extends MenuUsuario {
             System.out.println("");
 
         } else {
-            porcentagem = (kDia / uTDEEconv) * 100;
-            System.out.printf("\nVOCÊ CONSUMIU ");
+            // porcentagem = (kDia / uTDEEconv) * 100;
+            System.out.printf("\nVOCE CONSUMIU ");
             System.out.printf("%.0f%%", ((kDia / uTDEEconv) * 100));
             System.out.printf(" DO SEU TDEE (%s)\n", uTDEE);
         }
 
     }
 
-    void printDiarioEntreDias(LocalDate inicio, LocalDate fim, String usr) {
-        // Cria um objeto diário que vamos usar pra ler o conteúdo do diário do usuário
+    void printDiarioSemana(LocalDate inicio, LocalDate fim, String usr) {
+        // Cria um objeto diArio que vamos usar pra ler o conteúdo do diArio do usuArio
         Diario d = new Diario(usr);
 
         Usuario u = new Usuario(usr);
@@ -448,9 +456,9 @@ public class MenuDiario extends MenuUsuario {
         List<String> lista = new ArrayList<>();
         // pega os dados e adiciona eles na lista
         lista.addAll(d.getDiarioEntreDias(inicio, fim));
-        // irá armazenar os dados de um registro individualmente
+        // irA armazenar os dados de um registro individualmente
         String[] indiv;
-        // armazena todos os dados de um registro, irá ser quebrado
+        // armazena todos os dados de um registro, irA ser quebrado
         // e os dados serão adicionados individualmente em indiv[]
         String alimento;
         // calorias consumidas no dia (hoje)
@@ -486,17 +494,17 @@ public class MenuDiario extends MenuUsuario {
         double tdee = Double.parseDouble(u.getTDEE());
         double tdeeSemana = tdee * 7;
         double percent = (kRange / tdeeSemana) * 100;
-        System.out.printf("\nVOCÊ CONSUMIU ");
+        System.out.printf("\nVOCE CONSUMIU ");
         System.out.printf("%.0f%%", percent);
         System.out.printf(" DO SEU TDEE SEMANAL (%.0f)\n", tdeeSemana);
 
         if (percent < 100) {
             System.out
-                    .println("\nVOCÊ ESTÁ ABAIXO DO SEU CONSUMO DE ENERGIA SEMANAL E PERDERÁ PESO SE CONTINUAR ASSIM!");
+                    .println("\nVOCE ESTA ABAIXO DO SEU CONSUMO DE ENERGIA SEMANAL E PERDERA PESO SE CONTINUAR ASSIM!");
 
         } else if (percent > 100) {
             System.out
-                    .println("\nVOCÊ ESTÁ ACIMA DO SEU CONSUMO DE ENERGIA SEMANAL E GANHARÁ PESO SE CONTINUAR ASSIM.");
+                    .println("\nVOCE ESTA ACIMA DO SEU CONSUMO DE ENERGIA SEMANAL E GANHARA PESO SE CONTINUAR ASSIM.");
         }
 
     }
@@ -531,6 +539,6 @@ public class MenuDiario extends MenuUsuario {
             System.out.println();
         }
 
-        System.out.printf("\nTOTAL DE CALORIAS CONSUMIDAS DESDE O INÍCIO: " + "%.0f\n", kcal);
+        System.out.printf("\nTOTAL DE CALORIAS CONSUMIDAS DESDE O INICIO: " + "%.0f\n", kcal);
     }
 }

@@ -4,38 +4,38 @@ package com.anhanguera.ctcli.terminal.menu.mensagens;
 
 import com.anhanguera.ctcli.terminal.util.UtilidadesCLI;
 
-// Enums não precisam de import, só chamar os métodos estaticamente
+// Enums não precisam de import, só chamar os metodos estaticamente
 // Ex: System.out.println(Mensagens.VERSAO)
 
-// Todos os enums devem ter uma vírgula depois de ), exceto o último Enum, que deverá ter um ;
+// Todos os enums devem ter uma vírgula depois de ), exceto o último Enum, que devera ter um ;
 
-// esse enum armazena informações sobre os comandos do diário como o comando em si, sua sintaxe, seu atalho e sua descrição
+// esse enum armazena informações sobre os comandos do diario como o comando em si, sua sintaxe, seu atalho e sua Descricao
 public enum CmdDiario {
-    HEADER("Comandos do Diário"),
-    TUTORIAL_SINTAXE("Para usar os comandos do diário, use como prefixo \"diario\" ou o seu atalho \"d\""),
-    EXEMPLO_SINTAXE("Ex: diario remover [nome], que é a mesma coisa que \"d r [nome]\""),
+    HEADER("Comandos do Diario"),
+    TUTORIAL_SINTAXE("Para usar os comandos do diario, use como prefixo \"diario\" ou o seu atalho \"d\""),
+    EXEMPLO_SINTAXE("Ex: diario remover [nome], que e a mesma coisa que \"d r [nome]\""),
 
     ADICIONAR("adicionar"
     ,"[nome] [calorias consumidas] [nota (opcional)]"
     ,"a"
-    ,"adiciona um alimento ao diário."),
+    ,"adiciona um alimento ao diario."),
 
     REMOVER("remover"
     ,"[nome]"
     ,"r"
-    ,"remove um alimento do diário."),
+    ,"remove um alimento do diario."),
 
     PRINT("print"
     ,"[dia] ou [dia/mes] ou palavras-chave \"ontem\" ou \"hoje\""
     ,"p"
-    ,"printa o diário para o console."
-    +" Se nenhum argumento válido referido a tempo foi dado, printa todo o diário."),
+    ,"printa o diario para o console."
+    +" Se nenhum argumento valido referido a tempo foi dado, printa todo o diario."),
 
     VOLTAR("voltar"
-    ,"voltar ao menu de usuários."),
+    ,"voltar ao menu de usuarios."),
 
     PERMALOGIN("permalogin"
-    ,"habilita o login automático para o usuário atualmente logado."
+    ,"habilita o login automatico para o usuario atualmente logado."
     ,"[0 ou 1]");
 
 
@@ -124,8 +124,8 @@ public enum CmdDiario {
     // printar o valor do Enum (string) 
     @Override
     public String toString() {
-        // se cmd não está em branco e extra estiver em branco, printar
-        // cmd + atalho + descrição (sem extra, porque não tem)
+        // se cmd não esta em branco e extra estiver em branco, printar
+        // cmd + atalho + Descricao (sem extra, porque não tem)
 
         // se info não estiver em branco, retornar isso
         if(!UtilidadesCLI.isBlankString(info)) {
@@ -136,14 +136,14 @@ public enum CmdDiario {
         if(!UtilidadesCLI.isBlankString(extra)) {
             return cmd+" "+sintaxe+"\n"+"Atalho: "
             +"\""+atalho+"\""+"\n"
-            +"Descrição: "+descricao+"\n"+extra+"\n";
+            +"Descricao: "+descricao+"\n"+extra+"\n";
         }
 
         // se info e extra estiverem em branco e sintaxe não estiver em branco, retornar isso
         if(!UtilidadesCLI.isBlankString(sintaxe)) {
             return cmd+" "+sintaxe+"\n"+"Atalho: "
             +"\""+atalho+"\""+"\n"
-            +"Descrição: "+descricao+"\n";
+            +"Descricao: "+descricao+"\n";
 
         }
 
@@ -151,44 +151,13 @@ public enum CmdDiario {
         if(!UtilidadesCLI.isBlankString(atalho)) {
             return cmd+"\n"+"Atalho: "
             +"\""+atalho+"\""+"\n"
-            +"Descrição: "+descricao+"\n";
+            +"Descricao: "+descricao+"\n";
 
         }
 
         // finalmente, se info, extra, sintaxe e atalho estiverem em branco, retornar isso
         return cmd+"\n"
-        +"Descrição: "+descricao+"\n";
-
-
-
-
-
-
-
-        // if(StringUtils.isNoneBlank(cmd,sintaxe,atalho,descricao,extra)) {
-        //     return NEGRITO+cmd+ANSI_RESET+" "+sintaxe+"\n"+"Atalho: "
-        //     +"\""+atalho+"\""+"\n"
-        //     +"Descrição: "+descricao+"\n"+extra+"\n";
-        // }
-
-        // if(StringUtils.isNoneBlank(cmd,atalho,descricao) && extra.isBlank()) {
-        //     return NEGRITO+cmd+ANSI_RESET+" "+sintaxe+"\n"+"Atalho: "
-        //     +"\""+atalho+"\""+"\n"
-        //     +"Descrição: "+descricao+"\n";
-
-        // }
-
-        // // se não, verificar se cmd e extra estão em branco
-        // // se sim, quer dizer que só tem um campo, info
-        // if(StringUtils.isAllBlank(cmd,sintaxe,atalho,descricao,extra) && !info.isBlank()) {
-        //     return info+"\n";
-
-        // }
-
-        // // if(StringUtils.isNoneBlank(cmd,atalho,descricao) && StringUtils.isAllBlank(extra,info,sintaxe)) {
-
-        // // }
-    
+        +"Descricao: "+descricao+"\n";
 
     }
 
