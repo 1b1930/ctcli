@@ -10,7 +10,7 @@ import com.anhanguera.ctcli.terminal.menu.Menu;
 import com.anhanguera.ctcli.terminal.menu.mensagens.Erro;
 
 public class Main {
-    public static final String VERSAO = "0.9";
+    public static final String VERSAO = "0.9.5";
 
     // constantes com os caminhos para os arquivos csv
     public static final String CSVBASEDIR = "dados";
