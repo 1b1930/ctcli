@@ -185,7 +185,8 @@ public class Diario {
 
     // não é usado, pelo menos nessa versão, é suposto a retornar as calorias
     // consumidas pelo usuario entre as duas datas
-    // TODO: usar método pra converter data do diário disponível na classe Datas em util
+    // TODO: usar método pra converter data do diário disponível na classe Datas em
+    // util
     public String getKcal(LocalDate inicio, LocalDate fim) {
         List<String> lista = new ArrayList<String>();
         String elementoDiario;

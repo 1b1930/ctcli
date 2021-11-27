@@ -26,7 +26,7 @@ public class Main {
 
         // se init retornar true (conseguiu executar todas as tarefas com sucesso)
         if (init()) {
-            // iniciar menu
+            // ...então iniciar menu
             Menu intf = new Menu();
             intf.iniciar();
 
@@ -43,7 +43,7 @@ public class Main {
     public static boolean init() {
 
         System.out.println();
-        
+
         OperadorArquivos csvUsuarioArq = new OperadorArquivos(CSVUSUARIO);
 
         File logdir = new File(CSVLOGDIR);

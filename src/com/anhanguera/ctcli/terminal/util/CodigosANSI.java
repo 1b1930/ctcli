@@ -1,10 +1,10 @@
 package com.anhanguera.ctcli.terminal.util;
 
 // declarando as constantes em um arquivo separado pra ficar mais limpo.
-// ATENÇÃO: usar "final" ao criar classe e usar "import static "Constantes.*"" 
+// ATENÇÃO: usar "final" ao criar classe e usar "import static "CodigosANSI.*"" 
 // no arquivo onde deseja essas constantes
 
-// ********* NÃO USADO NESSA VERSÃO POIS NÃO FUNCIONA NO WINDOWS
+// ********* NÃO USADO NESSA VERSÃO POIS NÃO FUNCIONA NO WINDOWS, :/
 
 public final class CodigosANSI {
 

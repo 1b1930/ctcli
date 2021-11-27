@@ -8,11 +8,9 @@ import java.util.List;
 
 public class ArquivoConfig {
 
-
     public String configArqPath;
 
     private final OperadorArquivos configArq;
-
 
     public ArquivoConfig(String configArqPath) {
         this.configArqPath = configArqPath;
@@ -78,7 +76,7 @@ public class ArquivoConfig {
     public String getPermaLoginUsr() {
         // lista com as linhas do arquivo
         List<String> lista = new ArrayList<>();
-        //OperadorArquivos arquivoOps = new OperadorArquivos();
+        // OperadorArquivos arquivoOps = new OperadorArquivos();
         // le o arquivo e adiciona todas as linhas na lista
         lista.addAll(configArq.lerArquivo());
         // itera pela lista

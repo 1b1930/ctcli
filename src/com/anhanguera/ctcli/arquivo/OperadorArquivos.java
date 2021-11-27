@@ -300,7 +300,6 @@ public class OperadorArquivos {
     // substituir uma linha que tenha $match no Arquivo config, pela linha $subs
     // TODO: Nao é genérico, mudar pra ArquivoConfig!
 
-
     // acrescenta $asc ao final do Arquivo, nao sobrescreve nada
     public boolean acrescentarAoArquivo(String asc) {
         try {

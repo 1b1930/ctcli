@@ -125,73 +125,73 @@ public class Usuario {
                 // controla qual propriedade irá ser substituida
                 switch (prop) {
 
-                case "nome":
-                    // pega os dados do usuário
-                    String[] alt = getDados();
-                    // substitui a propriedade no array com um novo valor
-                    alt[0] = novoValor;
-                    // muda a data de alteração dos dados
-                    alt[7] = UtilidadesCLI.getDataHora();
-                    csvUsuarioArq.substituirFila(i + 1, alt);
+                    case "nome":
+                        // pega os dados do usuário
+                        String[] alt = getDados();
+                        // substitui a propriedade no array com um novo valor
+                        alt[0] = novoValor;
+                        // muda a data de alteração dos dados
+                        alt[7] = UtilidadesCLI.getDataHora();
+                        csvUsuarioArq.substituirFila(i + 1, alt);
 
-                    return true;
+                        return true;
 
-                case "peso":
-                    String[] alt2 = getDados();
-                    alt2[1] = novoValor;
-                    alt2[7] = UtilidadesCLI.getDataHora();
-                    // cria um novo usuário com os dados substituidos para assim poder calcular o
-                    // novo TDEE
-                    // baseado nos novos dados
-                    u = new Usuario(alt2[0], alt2[1], alt2[2], alt2[3], alt2[4], alt2[5]);
-                    // adiciona o novo TDEE ao arquivo
-                    alt2[6] = String.format("%.0f", u.calcularTDEE());
-                    csvUsuarioArq.substituirFila(i + 1, alt2);
+                    case "peso":
+                        String[] alt2 = getDados();
+                        alt2[1] = novoValor;
+                        alt2[7] = UtilidadesCLI.getDataHora();
+                        // cria um novo usuário com os dados substituidos para assim poder calcular o
+                        // novo TDEE
+                        // baseado nos novos dados
+                        u = new Usuario(alt2[0], alt2[1], alt2[2], alt2[3], alt2[4], alt2[5]);
+                        // adiciona o novo TDEE ao arquivo
+                        alt2[6] = String.format("%.0f", u.calcularTDEE());
+                        csvUsuarioArq.substituirFila(i + 1, alt2);
 
-                    return true;
+                        return true;
 
-                case "altura":
-                    String[] alt3 = getDados();
-                    alt3[2] = novoValor;
-                    alt3[7] = UtilidadesCLI.getDataHora();
-                    u = new Usuario(alt3[0], alt3[1], alt3[2], alt3[3], alt3[4], alt3[5]);
-                    alt3[6] = String.format("%.0f", u.calcularTDEE());
-                    csvUsuarioArq.substituirFila(i + 1, alt3);
+                    case "altura":
+                        String[] alt3 = getDados();
+                        alt3[2] = novoValor;
+                        alt3[7] = UtilidadesCLI.getDataHora();
+                        u = new Usuario(alt3[0], alt3[1], alt3[2], alt3[3], alt3[4], alt3[5]);
+                        alt3[6] = String.format("%.0f", u.calcularTDEE());
+                        csvUsuarioArq.substituirFila(i + 1, alt3);
 
-                    return true;
+                        return true;
 
-                case "idade":
-                    String[] alt4 = getDados();
-                    alt4[3] = novoValor;
-                    alt4[7] = UtilidadesCLI.getDataHora();
-                    u = new Usuario(alt4[0], alt4[1], alt4[2], alt4[3], alt4[4], alt4[5]);
-                    alt4[6] = String.format("%.0f", u.calcularTDEE());
-                    csvUsuarioArq.substituirFila(i + 1, alt4);
+                    case "idade":
+                        String[] alt4 = getDados();
+                        alt4[3] = novoValor;
+                        alt4[7] = UtilidadesCLI.getDataHora();
+                        u = new Usuario(alt4[0], alt4[1], alt4[2], alt4[3], alt4[4], alt4[5]);
+                        alt4[6] = String.format("%.0f", u.calcularTDEE());
+                        csvUsuarioArq.substituirFila(i + 1, alt4);
 
-                    return true;
+                        return true;
 
-                case "sexo":
-                    String[] alt5 = getDados();
-                    alt5[4] = novoValor.toUpperCase();
-                    alt5[7] = UtilidadesCLI.getDataHora();
-                    u = new Usuario(alt5[0], alt5[1], alt5[2], alt5[3], alt5[4], alt5[5]);
-                    alt5[6] = String.format("%.0f", u.calcularTDEE());
-                    csvUsuarioArq.substituirFila(i + 1, alt5);
+                    case "sexo":
+                        String[] alt5 = getDados();
+                        alt5[4] = novoValor.toUpperCase();
+                        alt5[7] = UtilidadesCLI.getDataHora();
+                        u = new Usuario(alt5[0], alt5[1], alt5[2], alt5[3], alt5[4], alt5[5]);
+                        alt5[6] = String.format("%.0f", u.calcularTDEE());
+                        csvUsuarioArq.substituirFila(i + 1, alt5);
 
-                    return true;
+                        return true;
 
-                case "nivelatv":
-                    String[] alt6 = getDados();
-                    alt6[5] = novoValor;
-                    alt6[7] = UtilidadesCLI.getDataHora();
-                    u = new Usuario(alt6[0], alt6[1], alt6[2], alt6[3], alt6[4], alt6[5]);
-                    alt6[6] = String.format("%.0f", u.calcularTDEE());
-                    csvUsuarioArq.substituirFila(i + 1, alt6);
+                    case "nivelatv":
+                        String[] alt6 = getDados();
+                        alt6[5] = novoValor;
+                        alt6[7] = UtilidadesCLI.getDataHora();
+                        u = new Usuario(alt6[0], alt6[1], alt6[2], alt6[3], alt6[4], alt6[5]);
+                        alt6[6] = String.format("%.0f", u.calcularTDEE());
+                        csvUsuarioArq.substituirFila(i + 1, alt6);
 
-                    return true;
+                        return true;
 
-                default:
-                    return false;
+                    default:
+                        return false;
 
                 }
 
@@ -228,7 +228,6 @@ public class Usuario {
     }
 
     // Printa todos os usuários
-
 
     // Retorna os dados do usuário em um array[]
     public String[] getDados() {
@@ -270,24 +269,24 @@ public class Usuario {
             System.out.println("Idade: " + dados[3] + " anos");
             System.out.println("Sexo: " + dados[4]);
             switch (dados[5]) {
-            case "1":
-                System.out.println("Nivel de Atividade: Sedentário");
-                break;
-            case "2":
-                System.out.println("Nivel de Atividade: Levemente Ativo");
-                break;
-            case "3":
-                System.out.println("Nivel de Atividade: Moderadamente Ativo");
-                break;
-            case "4":
-                System.out.println("Nivel de Atividade: Muito Ativo");
-                break;
-            case "5":
-                System.out.println("Nivel de Atividade: Atleta");
-                break;
-            default:
-                System.out.println("printDados: nivelatv inválido.");
-                break;
+                case "1":
+                    System.out.println("Nivel de Atividade: Sedentário");
+                    break;
+                case "2":
+                    System.out.println("Nivel de Atividade: Levemente Ativo");
+                    break;
+                case "3":
+                    System.out.println("Nivel de Atividade: Moderadamente Ativo");
+                    break;
+                case "4":
+                    System.out.println("Nivel de Atividade: Muito Ativo");
+                    break;
+                case "5":
+                    System.out.println("Nivel de Atividade: Atleta");
+                    break;
+                default:
+                    System.out.println("printDados: nivelatv inválido.");
+                    break;
             }
 
             System.out.println("TDEE: " + dados[6]);
@@ -328,23 +327,23 @@ public class Usuario {
             return -1.0;
         }
         switch (nivelatv) {
-        case "1":
-            tdee = bmi * 1.2;
-            return Math.round(tdee);
-        case "2":
-            tdee = bmi * 1.375;
-            return Math.round(tdee);
-        case "3":
-            tdee = bmi * 1.55;
-            return Math.round(tdee);
-        case "4":
-            tdee = bmi * 1.725;
-            return Math.round(tdee);
-        case "5":
-            tdee = bmi * 1.9;
-            return Math.round(tdee);
-        default:
-            return -1.0;
+            case "1":
+                tdee = bmi * 1.2;
+                return Math.round(tdee);
+            case "2":
+                tdee = bmi * 1.375;
+                return Math.round(tdee);
+            case "3":
+                tdee = bmi * 1.55;
+                return Math.round(tdee);
+            case "4":
+                tdee = bmi * 1.725;
+                return Math.round(tdee);
+            case "5":
+                tdee = bmi * 1.9;
+                return Math.round(tdee);
+            default:
+                return -1.0;
 
         }
 
@@ -401,42 +400,42 @@ public class Usuario {
 
     public static boolean validarDadosUsuario(String prop, String dado) {
         switch (prop) {
-        case "peso":
-            if (!dado.matches("[0-9]+") || dado.length() < 2 || Integer.parseInt(dado) > 500) {
+            case "peso":
+                if (!dado.matches("[0-9]+") || dado.length() < 2 || Integer.parseInt(dado) > 500) {
+                    return false;
+                }
+                return true;
+
+            case "altura":
+                if (!dado.matches("[0-9]+") || dado.length() < 2 || Integer.parseInt(dado) > 300) {
+                    return false;
+                }
+                return true;
+
+            case "idade":
+                int d5 = Integer.parseInt(dado);
+                if (!dado.matches("[0-9]+") || d5 > 110 || d5 < 10) {
+                    return false;
+                }
+                return true;
+
+            case "sexo":
+
+                if (!(dado.equalsIgnoreCase("f") || dado.equalsIgnoreCase("m"))) {
+                    return false;
+                }
+                return true;
+
+            case "nivelatv":
+
+                int d6 = Integer.parseInt(dado);
+                if (!dado.matches("[0-9]+") || d6 > 5 || d6 < 1) {
+                    return false;
+                }
+                return true;
+
+            case "default":
                 return false;
-            }
-            return true;
-
-        case "altura":
-            if (!dado.matches("[0-9]+") || dado.length() < 2 || Integer.parseInt(dado) > 300) {
-                return false;
-            }
-            return true;
-
-        case "idade":
-            int d5 = Integer.parseInt(dado);
-            if (!dado.matches("[0-9]+") || d5 > 110 || d5 < 10) {
-                return false;
-            }
-            return true;
-
-        case "sexo":
-
-            if (!(dado.equalsIgnoreCase("f") || dado.equalsIgnoreCase("m"))) {
-                return false;
-            }
-            return true;
-
-        case "nivelatv":
-
-            int d6 = Integer.parseInt(dado);
-            if (!dado.matches("[0-9]+") || d6 > 5 || d6 < 1) {
-                return false;
-            }
-            return true;
-
-        case "default":
-            return false;
         }
         return false;
     }

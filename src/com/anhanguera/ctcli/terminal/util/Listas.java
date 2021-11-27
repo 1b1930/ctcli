@@ -8,10 +8,6 @@ public class Listas {
         String[] elemSplit = elemString.split(",");
         return elemSplit;
 
-
-        
     }
 
-    
-    
 }

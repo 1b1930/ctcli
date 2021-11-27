@@ -9,10 +9,10 @@ import java.util.Scanner;
 
 import com.anhanguera.ctcli.terminal.menu.mensagens.Msg;
 
-
 public class UtilidadesCLI {
 
-    // scanners usados em múltiplos lugares devem ficar fora de um método e ter como características public, static e final
+    // scanners usados em múltiplos lugares devem ficar fora de um método e ter como
+    // características public, static e final
     public static final Scanner scanner = new Scanner(System.in);
 
     // Método que cuida de pegar os dados entrados pelo usuário
@@ -35,27 +35,25 @@ public class UtilidadesCLI {
 
         final String os = System.getProperty("os.name");
 
+        System.out.println(Msg.CLEARSC + "" + Msg.CLEARSC);
 
-        System.out.println(Msg.CLEARSC+""+Msg.CLEARSC);
-
-
-        if(os.contains("Windows")) {
-            for(int i=0;i<=2;i++) {
+        if (os.contains("Windows")) {
+            for (int i = 0; i <= 2; i++) {
                 // System.out.println(Msg.CLEARSC);
-                System.out.println(Msg.CLEARSC+""+Msg.CLEARSC);
+                System.out.println(Msg.CLEARSC + "" + Msg.CLEARSC);
 
             }
         } else {
             // Sempre use println e não print quando usar esse caractere especial
             // Se usar print(), dá erro depois de um tempo.
-            System.out.print("\n"+"\033[H\033[2J");
+            System.out.print("\n" + "\033[H\033[2J");
         }
     }
 
     public static String getDataHora() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd-HH:mm");  
-        LocalDateTime now = LocalDateTime.now();  
-        return(dtf.format(now).toString());
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd-HH:mm");
+        LocalDateTime now = LocalDateTime.now();
+        return (dtf.format(now).toString());
 
     }
 
@@ -79,13 +77,11 @@ public class UtilidadesCLI {
         // For each pathname in the pathnames array
         for (String pathname : pathnames) {
             arqs.add(pathname);
-            
+
             // Print the names of files and directories
             // System.out.println(pathname);
         }
         return arqs;
-
-
 
     }
 

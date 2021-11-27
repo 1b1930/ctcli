@@ -15,6 +15,7 @@ public class Menu {
     // interpretar os comandos
     // É minha primeira vez fazendo algo assim e percebi isso muito tarde, agora não
     // tem tempo.
+    
     protected static final StringBuilder sb = new StringBuilder(50);
 
     protected static final ArquivoConfig ctcliConfig = new ArquivoConfig(Main.CTCLICONFIG);
@@ -59,6 +60,5 @@ public class Menu {
     }
 
     // Pede ao usuário seu nível de atividade física
-
 
 }

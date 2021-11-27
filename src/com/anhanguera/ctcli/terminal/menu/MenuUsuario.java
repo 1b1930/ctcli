@@ -46,7 +46,9 @@ public class MenuUsuario extends Menu {
 
         try {
             cmd[2] = cmd[2].toLowerCase();
-        } catch(ArrayIndexOutOfBoundsException e) {};
+        } catch (ArrayIndexOutOfBoundsException e) {
+        }
+        ;
 
         // Comandos que o usuário pode usar
         // sintaxe: [categoria de comando] [comando] [parametros...]
@@ -63,7 +65,7 @@ public class MenuUsuario extends Menu {
                     entradaUsuario();
                 }
 
-                if(cmd[2].contains(",") || cmd[2].length() > 10) {
+                if (cmd[2].contains(",") || cmd[2].length() > 10) {
                     System.out.println(Erro.ARG_NOME_INVALIDO);
                     entradaUsuario();
                 }
@@ -75,30 +77,30 @@ public class MenuUsuario extends Menu {
 
                 // printa erros conforme o valor retornado por validarDadosUsuario
                 switch (validar) {
-                case 1:
-                    System.out.println(Erro.USUARIO_JA_EXISTE);
-                    System.out.println(CmdUsuario.ADICIONAR.getSintaxe());
-                    entradaUsuario();
+                    case 1:
+                        System.out.println(Erro.USUARIO_JA_EXISTE);
+                        System.out.println(CmdUsuario.ADICIONAR.getSintaxe());
+                        entradaUsuario();
 
-                case 2:
-                    System.out.println(Erro.ARG_PESO_INVALIDO);
-                    System.out.println(CmdUsuario.ADICIONAR.getSintaxe());
-                    entradaUsuario();
+                    case 2:
+                        System.out.println(Erro.ARG_PESO_INVALIDO);
+                        System.out.println(CmdUsuario.ADICIONAR.getSintaxe());
+                        entradaUsuario();
 
-                case 3:
-                    System.out.println(Erro.ARG_ALTURA_INVALIDO);
-                    System.out.println(CmdUsuario.ADICIONAR.getSintaxe());
-                    entradaUsuario();
+                    case 3:
+                        System.out.println(Erro.ARG_ALTURA_INVALIDO);
+                        System.out.println(CmdUsuario.ADICIONAR.getSintaxe());
+                        entradaUsuario();
 
-                case 4:
-                    System.out.println(Erro.ARG_IDADE_INVALIDO);
-                    System.out.println(CmdUsuario.ADICIONAR.getSintaxe());
-                    entradaUsuario();
+                    case 4:
+                        System.out.println(Erro.ARG_IDADE_INVALIDO);
+                        System.out.println(CmdUsuario.ADICIONAR.getSintaxe());
+                        entradaUsuario();
 
-                case 5:
-                    System.out.println(Erro.ARG_SEXO_INVALIDO);
-                    System.out.println(CmdUsuario.ADICIONAR.getSintaxe());
-                    entradaUsuario();
+                    case 5:
+                        System.out.println(Erro.ARG_SEXO_INVALIDO);
+                        System.out.println(CmdUsuario.ADICIONAR.getSintaxe());
+                        entradaUsuario();
 
                 }
 
@@ -148,7 +150,7 @@ public class MenuUsuario extends Menu {
                     entradaUsuario();
 
                 }
-                
+
                 // se cmd[3] não for uma propriedade inválida, printar erro
                 if (!(cmd[3].matches("peso") || cmd[3].matches("altura") || cmd[3].matches("nome")
                         || cmd[3].matches("nivelatv") || cmd[3].matches("idade") || cmd[3].matches("sexo"))) {
@@ -163,14 +165,12 @@ public class MenuUsuario extends Menu {
                 }
 
                 Usuario u2 = new Usuario(cmd[2]);
-                if(u2.alterarDados(cmd[3], cmd[4])) {
+                if (u2.alterarDados(cmd[3], cmd[4])) {
                     System.out.println(Msg.USUARIO_EDITADO_SUCESSO);
-
 
                 } else {
                     System.out.println(Erro.USUARIO_DADOS_INVALIDOS);
                 }
-
 
                 entradaUsuario();
 
@@ -225,7 +225,7 @@ public class MenuUsuario extends Menu {
                     entradaUsuario();
                 }
 
-            } else if(cmdSec.matches("ajuda")) {
+            } else if (cmdSec.matches("ajuda")) {
                 // printa os comandos do usuário em ordem usando os dados das constantes
                 // armazenadas no Enum CmdUsuario
                 UtilidadesCLI.clear();
